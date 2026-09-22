@@ -1,0 +1,18 @@
+USE taskflow_student;
+
+-- השדרוג מוסיף יכולות תכנון ומדידת זמן בלי לפגוע במשימות קיימות
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS estimated_hours DECIMAL(8,2) NOT NULL DEFAULT 0;
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS actual_minutes INT NOT NULL DEFAULT 0;
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS dependency_task_id INT NULL;
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS labels VARCHAR(300) NOT NULL DEFAULT '';
+
+CREATE TABLE IF NOT EXISTS task_work_logs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  task_id INT NOT NULL,
+  user_id INT NOT NULL,
+  minutes INT NOT NULL,
+  note VARCHAR(255) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

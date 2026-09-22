@@ -1,0 +1,52 @@
+<section *ngIf="vm.page === 'chat' && vm.canUseChat" class="communication-center">
+  <header class="chat-hero">
+    <div><span>PROJECT COMMUNICATION HUB</span><h2>מרכז תקשורת וקבצים</h2><p>שיחה מאובטחת, שיתוף מסמכים וגישה מהירה לידע של הפרויקט</p></div>
+    <div class="room-selectors">
+      <label><small>פרויקט פעיל</small><select [(ngModel)]="vm.chatProjectId" (ngModelChange)="changeRoom()"><option *ngFor="let project of vm.visibleProjects" [value]="project.id">{{ project.name }}</option></select></label>
+      <label *ngIf="vm.role !== 'admin'"><small>מנהל השיחה</small><select [(ngModel)]="vm.chatManagerId" (ngModelChange)="changeRoom()"><option *ngFor="let manager of vm.chatManagers" [value]="manager.id">{{ manager.name }}</option></select></label>
+      <span class="secure-room"><span class="app-icon">lock</span>חדר מאובטח</span>
+    </div>
+  </header>
+  <div class="chat-stats">
+    <article><span class="app-icon">forum</span><div><strong>{{ roomMessages.length }}</strong><small>הודעות בחדר</small></div></article>
+    <article><span class="app-icon">folder_shared</span><div><strong>{{ roomFiles.length }}</strong><small>קבצים משותפים</small></div></article>
+    <article><span class="app-icon">groups</span><div><strong>{{ vm.chatTeam.length }}</strong><small>חברי צוות</small></div></article>
+  </div>
+  <section class="conversation-pulse"><div><span class="app-icon">graphic_eq</span><span><small>CONVERSATION PULSE</small><b>האותות החשובים מתוך השיחה</b></span></div><nav><button [class.active]="signalFilter==='all'" (click)="signalFilter='all'">הכול</button><button [class.active]="signalFilter==='decision'" (click)="signalFilter='decision'"><span class="app-icon">task_alt</span>{{ signalCount('decision') }} החלטות</button><button [class.active]="signalFilter==='question'" (click)="signalFilter='question'"><span class="app-icon">help</span>{{ signalCount('question') }} שאלות</button><button [class.active]="signalFilter==='risk'" (click)="signalFilter='risk'"><span class="app-icon">warning</span>{{ signalCount('risk') }} סיכונים</button></nav></section>
+  <div class="chat-workspace" [class.files-collapsed]="!showFiles">
+    <main class="conversation-panel">
+      <div class="conversation-toolbar">
+        <div class="team-stack"><span *ngFor="let member of vm.chatTeam" [title]="member.name">{{ member.name[0] }}</span><b>{{ vm.chatTeam.length }} חברים בחדר</b></div>
+        <div class="message-tools"><label><span class="app-icon">search</span><input type="search" [(ngModel)]="searchText" placeholder="חיפוש בהודעות ובקבצים" /></label><button [class.active]="filesOnly" (click)="filesOnly = !filesOnly"><span class="app-icon">attach_file</span>קבצים בלבד</button><button (click)="showFiles = !showFiles"><span class="app-icon">folder_open</span>{{ showFiles ? 'סגירת מסמכים' : 'פתיחת מסמכים' }}</button></div>
+      </div>
+      <div class="messages" #messageList>
+        <article *ngFor="let message of filteredMessages" [class.mine]="message.userId === vm.currentUserId">
+          <span class="message-avatar">{{ vm.name(message.userId).charAt(0) }}</span>
+          <div class="message-bubble">
+            <header><b>{{ vm.name(message.userId) }}</b><span class="message-signal" [attr.data-signal]="messageSignal(message)">{{ signalName(message) }}</span><small>{{ message.createdAt }}</small></header><p>{{ message.text }}</p>
+            <div class="message-file" *ngIf="message.fileName"><span class="file-icon app-icon">{{ fileIcon(message) }}</span><div><strong>{{ message.fileName }}</strong><small>{{ fileExtension(message) }} · קובץ פרויקט</small></div><button *ngIf="canPreview(message)" (click)="previewFile = message" title="תצוגה מקדימה"><span class="app-icon">visibility</span></button><a [href]="vm.chatFileUrl(message)" title="הורדה"><span class="app-icon">download</span></a></div>
+          </div>
+        </article>
+        <div class="empty-chat" *ngIf="!filteredMessages.length"><span class="app-icon">forum</span><h3>אין הודעות מתאימות</h3><p>אפשר לשנות את החיפוש או לשלוח הודעה חדשה</p></div>
+      </div>
+      <div class="composer">
+        <form (ngSubmit)="sendMessage()"><input name="chat" [(ngModel)]="vm.chatText" placeholder="כתיבת הודעה לחברי הפרויקט..." autocomplete="off" /><button class="primary" [disabled]="!vm.chatText.trim()"><span class="app-icon">send</span>שליחה</button></form>
+        <div class="upload-row"><label><span class="app-icon">attach_file</span>{{ vm.chatFile ? vm.chatFile.name : 'צירוף קובץ' }}<input type="file" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.txt,.zip" (change)="vm.selectChatFile($event)" /></label><button type="button" [disabled]="!vm.chatFile || uploading" (click)="uploadFile()"><span class="app-icon">{{ uploading ? 'progress_activity' : 'cloud_upload' }}</span>{{ uploading ? 'מעלה...' : 'העלאה לחדר' }}</button><small>עד 5MB · PDF, Word, תמונה, טקסט או ZIP</small></div>
+      </div>
+    </main>
+    <aside class="file-vault" *ngIf="showFiles">
+      <div class="vault-title"><span class="app-icon">folder_special</span><div><small>PROJECT FILE VAULT</small><h3>מסמכי הפרויקט</h3></div><b>{{ roomFiles.length }}</b></div>
+      <div class="vault-list"><article *ngFor="let file of roomFiles"><span class="app-icon">{{ fileIcon(file) }}</span><div><strong>{{ file.fileName }}</strong><small>{{ vm.name(file.userId) }} · {{ file.createdAt }}</small></div><button *ngIf="canPreview(file)" (click)="previewFile = file"><span class="app-icon">visibility</span></button><a [href]="vm.chatFileUrl(file)"><span class="app-icon">download</span></a></article></div>
+      <div class="empty-vault" *ngIf="!roomFiles.length"><span class="app-icon">folder_off</span><p>עדיין לא הועלו מסמכים לפרויקט</p></div>
+      <footer><span class="app-icon">verified_user</span><p>הקבצים זמינים רק למנהל ולחברי הצוות של הפרויקט</p></footer>
+    </aside>
+  </div>
+</section>
+<div class="preview-backdrop" *ngIf="previewFile" (click)="previewFile = undefined">
+  <section class="preview-modal" (click)="$event.stopPropagation()">
+    <header><div><span class="app-icon">{{ fileIcon(previewFile) }}</span><div><h3>{{ previewFile.fileName }}</h3><small>תצוגה מקדימה מאובטחת</small></div></div><button (click)="previewFile = undefined"><span class="app-icon">close</span></button></header>
+    <img *ngIf="isImage(previewFile)" [src]="vm.chatFileUrl(previewFile, true)" [alt]="previewFile.fileName" />
+    <iframe *ngIf="!isImage(previewFile)" [src]="safePreviewUrl(previewFile)" [title]="previewFile.fileName"></iframe>
+    <footer><a [href]="vm.chatFileUrl(previewFile)"><span class="app-icon">download</span>הורדת הקובץ</a></footer>
+  </section>
+</div>

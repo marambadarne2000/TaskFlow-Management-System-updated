@@ -1,0 +1,199 @@
+/* עיצוב מקומי של מסך הנוכחות שומר על צבעים ברורים וקלים להבנה */
+.attendance-toolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  margin: 18px 0;
+  border: 1px solid #e7e5f2;
+  border-radius: 18px;
+  background: #faf9ff;
+}
+
+.attendance-toolbar label {
+  display: grid;
+  gap: 50px;
+  color: #62627a;
+}
+
+/* שדה החיפוש מאפשר לאתר עובד בלי לעבור ידנית על כל טבלת הנוכחות. */
+.employee-search {
+  width: 260px;
+  max-width: 100%;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* מעטפת שדה החיפוש מחברת בין סמל החיפוש לבין שדה ההקלדה. */
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding-inline: 10px;
+  border: 1px solid #dcd9ed;
+  border-radius: 10px;
+  background: white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* הדגשה עדינה מסמנת למשתמש ששדה החיפוש פעיל. */
+.search-field:focus-within {
+  border-color: #7565e8;
+  box-shadow: 0 0 0 3px rgba(117, 101, 232, 0.1);
+}
+
+/* שדה ההקלדה משתמש במסגרת של המעטפת כדי לשמור על מראה נקי. */
+.search-field input {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 13px;
+}
+
+/* סמל החיפוש מקבל צבע שמתאים לעיצוב של מסך הנוכחות. */
+.search-field .app-icon {
+  color: #7565e8;
+  font-size: 19px;
+}
+
+.color-help {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  color: #68687d;
+  font-size: 14px;
+}
+
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.dot.red {
+  background: #ef6a73;
+}
+.dot.yellow {
+  background: #eabf43;
+}
+.dot.green {
+  background: #40ad83;
+}
+
+.attendance-summary-table tr td {
+  transition: background 0.2s ease;
+}
+
+.attendance-under td {
+  background: #fff0f1;
+}
+.attendance-over td {
+  background: #fff8dc;
+}
+.attendance-complete td {
+  background: #edf9f3;
+}
+
+td small {
+  display: block;
+  margin-top: 4px;
+  color: #85859a;
+}
+
+.target-editor {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.target-editor input {
+  width: 78px;
+}
+
+.attendance-status {
+  display: inline-block;
+  padding: 7px 11px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.75);
+  font-weight: 700;
+}
+
+.clock-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  margin: 18px 0;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #f1efff, #f8fbff);
+}
+
+.clock-card .icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  color: white;
+  background: #7565e8;
+  font-size: 28px;
+}
+
+.clock-card div:nth-child(2) {
+  margin-inline-end: auto;
+}
+.clock-card h3,
+.clock-card p {
+  margin: 3px 0;
+}
+
+.detail-filters {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.hours-total {
+  display: grid;
+  gap: 3px;
+  margin-inline-start: auto;
+  padding: 10px 18px;
+  border-radius: 14px;
+  color: #ff6a00;
+  background: white;
+  box-shadow: 0 6px 20px rgba(82, 69, 170, 0.1);
+}
+
+.hours-total span,
+.hours-total strong {
+  color: #ff6a00;
+}
+
+.hours-total strong {
+  font-size: 22px;
+}
+.empty-state {
+  padding: 34px;
+  text-align: center;
+  color: #89899a;
+}
+
+/* התאמת העיצוב למסכים קטנים ולתצוגה רספונסיבית. */
+@media (max-width: 760px) {
+  .attendance-toolbar,
+  .clock-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .hours-total {
+    margin-inline-start: 0;
+  }
+  .target-editor {
+    flex-wrap: wrap;
+  }
+}

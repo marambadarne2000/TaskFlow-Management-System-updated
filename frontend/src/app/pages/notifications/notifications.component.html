@@ -1,0 +1,46 @@
+<!-- ניהול התראות: מאפשר למנהל לשלוח הודעה לעובד אחד או לכל העובדים -->
+<section *ngIf="vm.role === 'admin'" class="panel notification-page">
+  <div class="panel-title">
+    <div>
+      <h2>שליחת התראות לעובדים</h2>
+      <p>תקשורת ארגונית, עדכוני פרויקטים ותזכורות לצוות</p>
+    </div>
+  </div>
+  <div class="notification-layout single">
+    <form (ngSubmit)="vm.sendNotice()">
+      <label>שליחה אל</label>
+      <!-- רכיב משותף שמאפשר לחפש ולבחור עובד בלבד. -->
+      <app-employee-picker
+        [employees]="vm.employees"
+        [(selectedId)]="vm.noticeUserId"
+        [allowAll]="true"
+      ></app-employee-picker>
+      <label
+        >תוכן ההודעה<textarea
+          name="noticeMessage"
+          [(ngModel)]="vm.noticeText"
+          placeholder="כתיבת הודעה לעובד..."
+        ></textarea></label
+      ><button class="primary">שליחת ההתראה</button>
+    </form>
+  </div>
+  <h3 class="history-title">היסטוריית התראות</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>עובד</th>
+        <th>הודעה</th>
+        <th>תאריך</th>
+        <th>מצב</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let n of vm.notifications">
+        <td>{{ vm.name(n.userId) }}</td>
+        <td>{{ n.text }}</td>
+        <td>{{ n.createdAt }}</td>
+        <td>{{ n.read ? "נקראה" : "חדשה" }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>

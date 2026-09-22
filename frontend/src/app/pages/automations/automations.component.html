@@ -1,0 +1,26 @@
+<section class="automation-page" dir="rtl">
+  <header class="automation-hero">
+    <div class="hero-copy"><span class="eyebrow">SMART WORKFLOWS</span><h2>מרכז אוטומציות ארגוני</h2><p>ניהול חוקים חכמים שמגנים על תהליכי העבודה, מזהים חריגות ומבצעים פעולות בזמן אמת</p><div class="hero-actions"><button class="run-all" [disabled]="runningAll||loading||!active" (click)="runNow()"><span class="app-icon" [class.spin]="runningAll">{{runningAll?'progress_activity':'play_arrow'}}</span>{{runningAll?'המערכת מריצה את החוקים':'הרצת כל החוקים עכשיו'}}</button><span class="live-indicator"><i></i>{{active}} מתוך {{rules.length}} חוקים פעילים</span></div></div>
+    <div class="automation-score"><div class="score-ring" [style.--coverage]="coverage+'%'"><strong>{{coverage}}%</strong><span>כיסוי פעיל</span></div></div>
+  </header>
+  <div class="feedback" *ngIf="message" [class.error]="messageType==='error'"><span class="app-icon">{{messageType==='success'?'check_circle':'error'}}</span><span>{{message}}</span><button type="button" (click)="message=''" aria-label="סגירת הודעה"><span class="app-icon">close</span></button></div>
+  <div class="automation-kpis">
+    <article><span class="kpi-icon app-icon">bolt</span><div><small>הרצות שבוצעו</small><strong>{{totalRuns}}</strong><p>כל ההרצות שנשמרו במערכת</p></div></article>
+    <article><span class="kpi-icon app-icon">shield</span><div><small>חוקים פעילים</small><strong>{{active}}</strong><p>הגנות שפועלות כרגע</p></div></article>
+    <article><span class="kpi-icon app-icon">task_alt</span><div><small>משימות במעקב</small><strong>{{vm.tasks.length}}</strong><p>משימות שנבדקות מול החוקים</p></div></article>
+    <article><span class="kpi-icon app-icon">history</span><div><small>ריצה אחרונה</small><strong class="date-value">{{latestRun()?(latestRun()|date:'dd/MM HH:mm'):'טרם הורץ'}}</strong><p>מועד הבדיקה האחרונה</p></div></article>
+  </div>
+  <section class="automation-console">
+    <div class="console-heading"><div><span class="eyebrow">RULE CONTROL</span><h3>חוקי האוטומציה</h3><p>כל שינוי נשמר בשרת ומתועד בהיסטוריית הפעילות</p></div><div class="console-tools"><label class="search-box"><span class="app-icon">search</span><input [(ngModel)]="search" placeholder="חיפוש חוק, תנאי או פעולה"></label><div class="filter-tabs"><button [class.active]="filter==='all'" (click)="filter='all'">הכול</button><button [class.active]="filter==='active'" (click)="filter='active'">פעילים</button><button [class.active]="filter==='paused'" (click)="filter='paused'">מושהים</button></div></div></div>
+    <div class="loading-state" *ngIf="loading"><span class="app-icon spin">progress_activity</span><p>טוען את חוקי האוטומציה</p></div>
+    <div class="rules-grid" *ngIf="!loading">
+      <article class="rule-card" *ngFor="let rule of visibleRules" [class.disabled]="!rule.enabled">
+        <div class="rule-head"><div class="rule-identity"><span class="rule-icon app-icon">{{rule.icon}}</span><div><span class="rule-id">{{rule.id}}</span><h3>{{rule.title}}</h3></div></div><button class="switch" type="button" [class.on]="rule.enabled" [disabled]="changingRuleId===rule.id" (click)="toggle(rule)" [attr.aria-label]="rule.enabled?'השהיית החוק':'הפעלת החוק'"><i></i></button></div>
+        <p class="rule-description">{{rule.description}}</p>
+        <div class="flow"><div><span class="step-number">01</span><small>כאשר</small><b>{{rule.trigger}}</b></div><span class="flow-arrow app-icon">arrow_back</span><div><span class="step-number">02</span><small>המערכת מבצעת</small><b>{{rule.action}}</b></div></div>
+        <footer><div class="rule-meta"><span [class.live]="rule.enabled"><i></i>{{rule.enabled?'פעיל בזמן אמת':'מושהה'}}</span><small>{{rule.runs}} הרצות</small><small *ngIf="rule.lastRunAt">אחרונה {{rule.lastRunAt|date:'dd/MM HH:mm'}}</small></div><button class="run-rule" type="button" [disabled]="!rule.enabled||runningRuleId===rule.id||runningAll" (click)="runNow(rule)"><span class="app-icon" [class.spin]="runningRuleId===rule.id">{{runningRuleId===rule.id?'progress_activity':'play_circle'}}</span>{{runningRuleId===rule.id?'מריץ':'בדיקה עכשיו'}}</button></footer>
+      </article>
+    </div>
+    <div class="empty-state" *ngIf="!loading&&!visibleRules.length"><span class="app-icon">filter_alt_off</span><h3>לא נמצאו חוקים מתאימים</h3><p>נסו לשנות את החיפוש או את הסינון</p></div>
+  </section>
+</section>

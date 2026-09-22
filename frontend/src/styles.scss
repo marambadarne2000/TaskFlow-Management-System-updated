@@ -1,0 +1,5667 @@
+/* קובץ זה מגדיר את העיצוב הגלובלי של המערכת. */
+@import url("https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Heebo:wght@400;500;600;700&display=swap");
+* {
+  box-sizing: border-box;
+}
+
+/* ערכת NeoTech הסופית מבטלת משטחים לבנים במסך ושומרת לבן רק להדפסת תלוש */
+@media screen {
+  :root {
+    --neo-bg: #060b18;
+    --neo-bg-2: #0a1326;
+    --neo-surface: #101d35;
+    --neo-surface-2: #162744;
+    --neo-surface-3: #1d3153;
+    --neo-line: #2a456d;
+    --neo-text: #eef5ff;
+    --neo-muted: #9eb1ca;
+    --neo-cyan: #42e8dc;
+    --neo-blue: #6384ff;
+    --neo-violet: #9b6cff;
+  }
+  html body,
+  html body:has(.app-shell) {
+    background: radial-gradient(circle at 80% 5%, #172958 0, transparent 28%), radial-gradient(circle at 5% 70%, #122f42 0, transparent 25%), var(--neo-bg) !important;
+    color: var(--neo-text) !important;
+  }
+  html body .app-shell main { background: transparent !important; color: var(--neo-text) !important; }
+  html body .app-shell aside { background: linear-gradient(180deg,#101c34,#091326) !important; border-color: var(--neo-line) !important; }
+  html body .app-shell .panel,
+  html body .app-shell .stats article,
+  html body .app-shell article,
+  html body .app-shell section:not(.projects-hero):not(.dashboard-hero),
+  html body .app-shell .workspace-toolbar,
+  html body .app-shell .project-card,
+  html body .app-shell .gantt-view,
+  html body .app-shell .calendar-view article,
+  html body .app-shell .kanban > section,
+  html body .app-shell .kanban-card,
+  html body .app-shell .empty-state,
+  html body .app-shell .notice-box,
+  html body .modal {
+    background: linear-gradient(145deg,rgba(22,39,68,.98),rgba(11,22,42,.98)) !important;
+    border-color: var(--neo-line) !important;
+    color: var(--neo-text) !important;
+    box-shadow: 0 20px 55px rgba(0,0,0,.24) !important;
+  }
+  html body .app-shell h1, html body .app-shell h2, html body .app-shell h3,
+  html body .app-shell strong, html body .app-shell b,
+  html body .modal h2, html body .modal h3, html body .modal b { color: var(--neo-text) !important; }
+  html body .app-shell p, html body .app-shell small,
+  html body .app-shell .project-meta, html body .app-shell .project-kpis span,
+  html body .app-shell .project-kpis small, html body .app-shell .calendar-view p,
+  html body .modal label, html body .modal p { color: var(--neo-muted) !important; }
+  html body .app-shell input, html body .app-shell select, html body .app-shell textarea,
+  html body .modal input, html body .modal select, html body .modal textarea {
+    background: #09162b !important; border-color: #35547e !important; color: var(--neo-text) !important;
+  }
+  html body .app-shell button:not(.primary):not(.danger), html body .modal button:not(.primary):not(.danger) {
+    background: #1a2d4d !important; border: 1px solid #304e78 !important; color: #dbe8ff !important;
+  }
+  html body .app-shell button:hover:not(:disabled) { border-color: var(--neo-cyan) !important; color: var(--neo-cyan) !important; }
+  html body .app-shell .primary { background: linear-gradient(120deg,var(--neo-blue),var(--neo-violet)) !important; }
+  html body .app-shell table, html body .app-shell thead, html body .app-shell tbody,
+  html body .app-shell tr, html body .app-shell th, html body .app-shell td {
+    background: transparent !important; border-color: #263d61 !important; color: var(--neo-text) !important;
+  }
+  html body .app-shell tbody tr:hover { background: rgba(72,107,170,.15) !important; }
+  html body .app-shell .project-kpis article:nth-child(1) { background: linear-gradient(145deg,#163b56,#152744) !important; }
+  html body .app-shell .project-kpis article:nth-child(2) { background: linear-gradient(145deg,#45253f,#1b2744) !important; }
+  html body .app-shell .project-kpis article:nth-child(3) { background: linear-gradient(145deg,#183c3f,#172846) !important; }
+  html body .app-shell .project-kpis article:nth-child(4) { background: linear-gradient(145deg,#332b62,#182744) !important; }
+  html body .app-shell .project-stats span, html body .app-shell .tags span,
+  html body .app-shell .priority, html body .modal .milestone {
+    background: #1c3153 !important; border-color: #36557f !important; color: #cbdcff !important;
+  }
+  html body .app-shell .risk-ring { background: radial-gradient(circle,#12223d 55%,transparent 57%),conic-gradient(#ff6c8f calc(var(--risk) * 1%),#243957 0) !important; }
+  html body .app-shell .project-progress, html body .app-shell .mini-progress,
+  html body .app-shell .gantt-track { background-color: #09162b !important; }
+  html body .auth-shell, html body app-auth { background: radial-gradient(circle at 15% 20%,#173b5a,transparent 30%),linear-gradient(140deg,#060b18,#101c37) !important; }
+  html body app-auth .auth-card, html body app-auth .auth-form, html body app-auth .login-card {
+    background: linear-gradient(145deg,#13233e,#0b162a) !important; border-color:#34527a !important; color:var(--neo-text) !important;
+  }
+}
+body {
+  margin: 0;
+  font-family: "Assistant", "Heebo", Arial, sans-serif;
+  background: #f5f7fb;
+  color: #24324a;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+
+/* טאסקפלו */
+:host {
+  --primary: #5877e8;
+  --ink: #26344d;
+  --muted: #8793a8;
+  display: block;
+  min-height: 100vh;
+}
+.app-shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+aside {
+  background: #fff;
+  padding: 28px 18px;
+  border-left: 1px solid #e9edf5;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.brand {
+  font-size: 25px;
+  font-weight: 700;
+  color: var(--ink);
+  padding: 0 10px;
+}
+.brand span {
+  display: inline-grid;
+  place-items: center;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 9px;
+  width: 34px;
+  height: 34px;
+}
+.role-label {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 6px 48px 28px 0;
+}
+nav {
+  display: grid;
+  gap: 7px;
+}
+button {
+  border: 0;
+  background: transparent;
+  color: #66748a;
+  padding: 10px 14px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+nav button {
+  text-align: right;
+  font-weight: 500;
+}
+nav button.active,
+nav button:hover {
+  background: #eef2ff;
+  color: var(--primary);
+}
+.role-switch {
+  margin-top: auto;
+  padding: 14px;
+  background: #f5f7ff;
+  border-radius: 12px;
+  display: grid;
+  gap: 5px;
+}
+.role-switch small {
+  color: var(--muted);
+}
+.role-switch button {
+  background: #fff;
+  color: var(--primary);
+}
+main {
+  padding: 26px 34px;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+header h1 {
+  font-size: 25px;
+}
+header p,
+.panel-title p {
+  color: var(--muted);
+  font-size: 14px;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.bell {
+  background: #fff;
+  position: relative;
+  font-size: 18px;
+}
+.bell b {
+  position: absolute;
+  top: -4px;
+  left: -3px;
+  background: #f26868;
+  color: #fff;
+  border-radius: 20px;
+  font-size: 10px;
+  padding: 1px 5px;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #dce4ff;
+  color: var(--primary);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.stats article,
+.panel {
+  background: #fff;
+  border: 1px solid #ebeff6;
+  border-radius: 14px;
+  box-shadow: 0 3px 14px #34456b0a;
+}
+.stats article {
+  padding: 19px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.stats i,
+.stats .app-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  font-style: normal;
+}
+.blue {
+  background: #e9efff;
+  color: #5778e8;
+}
+.green {
+  background: #e6f7ef;
+  color: #32a874;
+}
+.orange {
+  background: #fff1dc;
+  color: #e59b35;
+}
+.purple {
+  background: #f0e9ff;
+  color: #8c63d8;
+}
+.stats strong {
+  font-size: 25px;
+  display: block;
+}
+.stats span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 18px;
+}
+.panel {
+  padding: 22px;
+}
+.panel-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.panel-title h2,
+.panel h2 {
+  font-size: 18px;
+}
+.panel-title button {
+  color: var(--primary);
+}
+.project-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1.4fr 45px 70px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid #eff2f7;
+}
+.project-name span,
+.page-panel td small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+.progress {
+  height: 7px;
+  background: #edf0f5;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+  border-radius: 10px;
+}
+.progress span.full {
+  background: #ef6b6b;
+}
+em {
+  font-style: normal;
+  color: #d88a25;
+  background: #fff3df;
+  border-radius: 20px;
+  padding: 4px 9px;
+  font-size: 12px;
+  text-align: center;
+}
+em.done {
+  color: #269569;
+  background: #e5f7ef;
+}
+.chart {
+  text-align: center;
+}
+.donut {
+  width: 150px;
+  height: 150px;
+  margin: 25px auto;
+  border-radius: 50%;
+  background: conic-gradient(#5877e8 0 33%, #46be8a 33% 70%, #f0aa43 70%);
+  display: grid;
+  place-items: center;
+}
+.donut:before {
+  content: "";
+  position: absolute;
+  width: 105px;
+  height: 105px;
+  background: #fff;
+  border-radius: 50%;
+}
+.donut span {
+  position: relative;
+  font-size: 24px;
+  font-weight: 700;
+}
+.donut small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+}
+.legend {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--muted);
+}
+.page-panel {
+  min-height: 600px;
+}
+.primary {
+  background: var(--primary) !important;
+  color: #fff !important;
+  padding: 10px 18px !important;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  text-align: right;
+  padding: 15px 10px;
+  border-bottom: 1px solid #edf0f5;
+  font-size: 14px;
+}
+th {
+  color: var(--muted);
+  font-weight: 500;
+  background: #fafbfe;
+}
+td .progress {
+  width: 120px;
+  display: inline-block;
+  margin-left: 8px;
+}
+.employee-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.employee-grid article {
+  border: 1px solid #e9edf4;
+  border-radius: 13px;
+  padding: 20px;
+  text-align: center;
+}
+.avatar.large {
+  width: 54px;
+  height: 54px;
+  margin: auto;
+}
+.employee-grid span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.load {
+  text-align: right;
+  margin: 20px 0;
+}
+.load b {
+  font-size: 12px;
+}
+.load .progress {
+  margin-top: 7px;
+}
+.employee-grid button,
+.empty button {
+  border: 1px solid #dfe5ef;
+}
+.empty {
+  text-align: center;
+  padding: 80px 20px;
+}
+.empty .icon {
+  font-size: 36px;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+.empty p {
+  color: var(--muted);
+  margin: 8px 0 20px;
+}
+.salary {
+  display: block;
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+/* התאמת העיצוב למסכים קטנים ולתצוגה רספונסיבית. */
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+  aside {
+    position: static;
+    height: auto;
+  }
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .employee-grid {
+    grid-template-columns: 1fr;
+  }
+  main {
+    padding: 18px;
+  }
+  .project-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  table {
+    display: block;
+    overflow: auto;
+  }
+}
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #eef2ff, #f8fbff);
+}
+.login-card {
+  width: min(430px, 92vw);
+  background: #fff;
+  padding: 38px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px #394b7a20;
+}
+.login-card h1 {
+  margin-top: 28px;
+}
+.login-card > p {
+  color: var(--muted);
+  margin-bottom: 25px;
+}
+.login-card label,
+.modal label {
+  display: grid;
+  gap: 6px;
+  margin: 13px 0;
+  color: #526078;
+  font-size: 13px;
+}
+.login-card input,
+.modal input,
+.modal select,
+.modal textarea,
+.chat-form input,
+select {
+  border: 1px solid #dfe5ef;
+  border-radius: 9px;
+  padding: 10px;
+  background: #fff;
+}
+.login-card .primary {
+  width: 100%;
+}
+.error {
+  color: #d84949;
+  min-height: 22px;
+  font-size: 13px;
+}
+.demo {
+  margin-top: 20px;
+  padding: 14px;
+  background: #f6f8fd;
+  border-radius: 12px;
+}
+.demo b,
+.demo small {
+  display: block;
+}
+.demo button {
+  color: var(--primary);
+  padding-right: 0;
+}
+.logout {
+  margin-top: auto;
+  border: 1px solid #e7eaf0;
+}
+.header-actions {
+  position: relative;
+}
+.notice-box {
+  position: absolute;
+  top: 52px;
+  left: 45px;
+  width: 340px;
+  max-height: 430px;
+  overflow: auto;
+  background: #fff;
+  border: 1px solid #e5e9f1;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 12px 35px #27365325;
+  z-index: 30;
+}
+.notice-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.notice-title button {
+  font-size: 22px;
+  padding: 0 7px;
+}
+.notice-box > p {
+  padding: 18px 0;
+  color: var(--muted);
+}
+.notice-box article {
+  padding: 10px 0;
+  border-top: 1px solid #edf0f5;
+  display: grid;
+  gap: 5px;
+}
+.notice-box small,
+.notice-box i {
+  color: var(--muted);
+  font-size: 11px;
+}
+.notice-box button {
+  color: var(--primary);
+  padding: 2px;
+  text-align: right;
+}
+.employee-grid article > small {
+  display: block;
+  color: var(--muted);
+}
+.danger {
+  background: #ef6b6b !important;
+  color: #fff !important;
+}
+.attendance-page,
+.payroll-page,
+.chat-page {
+  min-height: 600px;
+}
+.clock-card {
+  text-align: center;
+  padding: 25px;
+  margin-bottom: 25px;
+  background: #f7f9fd;
+  border-radius: 14px;
+}
+.clock-card .icon {
+  font-size: 35px;
+  color: var(--primary);
+}
+.clock-card p {
+  margin: 8px 0 15px;
+}
+.payslip {
+  max-width: 650px;
+  margin: 20px auto;
+  border: 1px solid #dfe5ef;
+  padding: 32px;
+  border-radius: 12px;
+}
+.payslip > h2 {
+  text-align: center;
+  margin: 20px;
+}
+.payslip > p {
+  margin-bottom: 20px;
+}
+.payslip > div:not(.brand) {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px;
+  border-top: 1px solid #e9edf4;
+}
+.payslip .total {
+  background: #eef2ff;
+  color: var(--primary);
+  font-size: 19px;
+}
+.payslip small {
+  display: block;
+  margin-top: 15px;
+  color: var(--muted);
+}
+.messages {
+  height: 400px;
+  overflow: auto;
+  background: #f7f9fd;
+  border-radius: 12px;
+  padding: 18px;
+}
+.messages article {
+  background: #fff;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-width: 70%;
+}
+.messages small {
+  color: var(--muted);
+}
+.chat-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+.chat-form input {
+  flex: 1;
+}
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #17203688;
+  display: grid;
+  place-items: center;
+  z-index: 20;
+  padding: 20px;
+}
+.modal {
+  width: min(520px, 95vw);
+  max-height: 90vh;
+  overflow: auto;
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  position: relative;
+}
+.modal .close {
+  position: absolute;
+  left: 12px;
+  top: 8px;
+  font-size: 25px;
+}
+.modal textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+.team-person {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid #edf0f5;
+}
+.team-person span small {
+  display: block;
+  color: var(--muted);
+}
+/* התאמת העיצוב למסכים קטנים ולתצוגה רספונסיבית. */
+@media print {
+  aside,
+  header,
+  .panel-title button {
+    display: none !important;
+  }
+  .app-shell {
+    display: block;
+  }
+  main {
+    padding: 0;
+  }
+  .panel {
+    border: 0;
+    box-shadow: none;
+  }
+  .payslip {
+    max-width: 100%;
+    border: 0;
+  }
+}
+
+/* שכבת הצבע הסופית מבטלת משטחים לבנים ובהירים בכל מסכי המערכת. */
+@media screen {
+  html body .app-shell input,
+  html body .app-shell select,
+  html body .app-shell textarea,
+  html body .app-shell .search-field,
+  html body .modal input,
+  html body .modal select,
+  html body .modal textarea {
+    border-color: #3a5274 !important;
+    background: #142440 !important;
+    color: #ffffff !important;
+  }
+
+  html body .app-shell input::placeholder,
+  html body .app-shell textarea::placeholder,
+  html body .modal input::placeholder,
+  html body .modal textarea::placeholder {
+    color: #9fb0c9 !important;
+    opacity: 1 !important;
+  }
+
+  html body .app-shell option,
+  html body .modal option {
+    background: #142440 !important;
+    color: #ffffff !important;
+  }
+
+  html body .app-shell table,
+  html body .app-shell thead,
+  html body .app-shell tbody,
+  html body .app-shell tr,
+  html body .app-shell th,
+  html body .app-shell td {
+    border-color: #2f4464 !important;
+    background: #101d35 !important;
+    color: #f5f8ff !important;
+  }
+
+  html body .app-shell .notice-box article,
+  html body .app-shell .hours-total,
+  html body .app-shell .overdue-summary,
+  html body .app-shell .soon-summary,
+  html body .app-shell .finance-note,
+  html body .app-shell .request-details span,
+  html body .app-shell .chat-selectors span,
+  html body .app-shell .employee-search > b,
+  html body .app-shell .light-surface,
+  html body .app-shell .white-surface,
+  html body .modal .project-details > *,
+  html body .modal .light-surface,
+  html body .modal .white-surface {
+    border-color: #3a5274 !important;
+    background: #172945 !important;
+    color: #ffffff !important;
+  }
+
+  html body .app-shell .notice-box article > span,
+  html body .app-shell .notice-box article > small,
+  html body .app-shell .notice-box article > i,
+  html body .app-shell .hours-total *,
+  html body .app-shell .overdue-summary *,
+  html body .app-shell .soon-summary *,
+  html body .app-shell .finance-note *,
+  html body .app-shell .request-details span *,
+  html body .app-shell .chat-selectors span *,
+  html body .modal .project-details > * {
+    color: #ffffff !important;
+  }
+
+  html body .app-shell app-employee-picker .employee-trigger,
+  html body .app-shell app-employee-picker .picker-panel,
+  html body .app-shell app-employee-picker .search-box,
+  html body .app-shell app-employee-picker .employee-list,
+  html body .app-shell app-employee-picker .employee-option,
+  html body .app-shell app-employee-picker .employee-option:disabled {
+    border-color: #344b6c !important;
+    background: #101d35 !important;
+    color: #ffffff !important;
+  }
+
+  html body .app-shell app-employee-picker .employee-option:hover:not(:disabled),
+  html body .app-shell app-employee-picker .employee-option.selected {
+    background: #20375a !important;
+  }
+
+  html body .app-shell app-employee-picker .avatar,
+  html body .app-shell app-employee-picker .load,
+  html body .app-shell app-employee-picker .load.available,
+  html body .app-shell app-employee-picker .load.full {
+    background: #263b5e !important;
+    color: #ff9a3d !important;
+  }
+
+  html body .app-shell .attendance-page table td,
+  html body .app-shell .attendance-page table td span,
+  html body .app-shell .attendance-page table td strong,
+  html body .app-shell .attendance-page table td small,
+  html body .app-shell .attendance-page table td b,
+  html body .app-shell .attendance-page table td label,
+  html body .app-shell .attendance-page table td input,
+  html body .app-shell .attendance-page table td button {
+    color: #f1f6ff !important;
+  }
+}
+
+/* הבהרת ערכת הכחול בשתי דרגות תוך שמירה על הניגודיות והעיצוב הטכנולוגי. */
+:root {
+  --tech-bg: #111d33;
+  --tech-surface: #1b2b47;
+  --tech-surface-strong: #223654;
+  --tech-line: #46617f;
+  --tech-text: #f5f8ff;
+  --tech-muted: #b7c5da;
+  --tech-cyan: #55dcec;
+  --tech-violet: #9189ff;
+}
+
+html body:has(.app-shell) {
+  background:
+    linear-gradient(rgba(100, 205, 230, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 205, 230, .055) 1px, transparent 1px),
+    radial-gradient(circle at 82% 4%, rgba(91, 104, 220, .28), transparent 28%),
+    radial-gradient(circle at 8% 90%, rgba(43, 168, 199, .19), transparent 31%),
+    linear-gradient(145deg, #15223a, #1b2a46 52%, #132038) !important;
+  background-size: 36px 36px, 36px 36px, auto, auto, auto !important;
+  color: var(--tech-text) !important;
+}
+
+html body .app-shell aside {
+  border-left-color: #344e70 !important;
+  background:
+    radial-gradient(circle at 28% 4%, rgba(119, 116, 255, .4), transparent 27%),
+    radial-gradient(circle at 86% 80%, rgba(47, 197, 220, .17), transparent 31%),
+    linear-gradient(165deg, #223456, #1b2b49 52%, #16243e) !important;
+  box-shadow: -18px 0 48px rgba(5, 12, 27, .25) !important;
+}
+
+html body .app-shell main > header {
+  border-color: #3e5778 !important;
+  background: rgba(28, 43, 70, .94) !important;
+  color: var(--tech-text) !important;
+}
+
+html body .app-shell .page-panel,
+html body .app-shell .panel:not(.dashboard-hero),
+html body .app-shell .stats article,
+html body .app-shell .employee-grid article,
+html body .app-shell .request-card,
+html body .app-shell .clock-card,
+html body .app-shell .payslip,
+html body .app-shell .request-form,
+html body .app-shell .notification-layout form,
+html body .app-shell .chat-upload,
+html body .app-shell .notice-box {
+  border-color: #3c5575 !important;
+  background: linear-gradient(145deg, #213552, #192b47) !important;
+  color: var(--tech-text) !important;
+  box-shadow: 0 16px 40px rgba(4, 10, 24, .2) !important;
+}
+
+html body .app-shell .panel-title {
+  border-bottom-color: #405a79 !important;
+  background:
+    radial-gradient(circle at 92% 0, rgba(132, 121, 255, .22), transparent 34%),
+    linear-gradient(135deg, #2a4162, #203552) !important;
+}
+
+html body .app-shell .dashboard-hero {
+  border-color: #5875aa !important;
+  background:
+    linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px),
+    radial-gradient(circle at 12% 25%, rgba(62, 210, 226, .34), transparent 29%),
+    linear-gradient(120deg, #263d67, #4b4ca0 60%, #6665d8) !important;
+  background-size: 28px 28px, 28px 28px, auto, auto !important;
+}
+
+html body .app-shell .filter-bar,
+html body .app-shell .attendance-toolbar,
+html body .app-shell .payroll-controls,
+html body .app-shell .bulk-actions,
+html body .app-shell .messages,
+html body .app-shell .empty-state,
+html body .app-shell .no-results {
+  border-color: #405979 !important;
+  background: #1a2b47 !important;
+  color: var(--tech-text) !important;
+}
+
+html body .app-shell input,
+html body .app-shell select,
+html body .app-shell textarea,
+html body .modal input,
+html body .modal select,
+html body .modal textarea {
+  border-color: #4c6483 !important;
+  background: #223652 !important;
+  color: #f7f9ff !important;
+}
+
+html body .app-shell input:hover,
+html body .app-shell select:hover,
+html body .app-shell textarea:hover,
+html body .modal input:hover,
+html body .modal select:hover,
+html body .modal textarea:hover {
+  border-color: #6984a8 !important;
+  background: #29415f !important;
+}
+
+html body .app-shell table {
+  border-color: #405979 !important;
+  background: #192a46 !important;
+}
+
+html body .app-shell thead th {
+  border-bottom-color: #4a6382 !important;
+  background: #2a405e !important;
+  color: #d3deed !important;
+}
+
+html body .app-shell tbody td {
+  border-bottom-color: #354e6d !important;
+  color: #edf3fc !important;
+}
+
+html body .app-shell tbody tr:hover td,
+html body .app-shell tr.selected-row td {
+  background: #29415d !important;
+}
+
+html body .app-shell button,
+html body .modal button,
+html body .app-shell button.secondary,
+html body .app-shell .secondary {
+  border-color: #506b90 !important;
+  background: #2a4262 !important;
+  color: #f0f5ff !important;
+}
+
+html body .app-shell button:hover,
+html body .modal button:hover {
+  border-color: #718db2 !important;
+  background: #345173 !important;
+}
+
+html body .app-shell button.primary,
+html body .app-shell .primary,
+html body .modal button.primary,
+html body .app-shell .hero-actions button:first-child {
+  border-color: #61d8e8 !important;
+  background: linear-gradient(105deg, #7a70f2, #3d8add 58%, #35bfd1) !important;
+  box-shadow: 0 10px 25px rgba(36, 132, 207, .25) !important;
+}
+
+html body .modal {
+  border-color: #526b8a !important;
+  background:
+    radial-gradient(circle at 92% 0, rgba(137, 125, 255, .22), transparent 30%),
+    linear-gradient(145deg, #263d5c, #1b2e4b) !important;
+  color: var(--tech-text) !important;
+}
+
+html body .modal .project-details p,
+html body .app-shell app-employee-picker .employee-trigger,
+html body .app-shell app-employee-picker .picker-panel,
+html body .app-shell app-employee-picker .search-box,
+html body .app-shell app-employee-picker .employee-option,
+html body .app-shell .chat-members,
+html body .app-shell .attendance-under,
+html body .app-shell .attendance-over,
+html body .app-shell .attendance-complete,
+html body .app-shell .attendance-under td,
+html body .app-shell .attendance-over td,
+html body .app-shell .attendance-complete td {
+  border-color: #466281 !important;
+  background: #203550 !important;
+  color: #f0f5ff !important;
+}
+
+html body .app-shell .donut span,
+html body .app-shell .task-legend article,
+html body .app-shell .salary-summary > div,
+html body .app-shell .payslip-document-meta span,
+html body .app-shell .employee-info span {
+  border-color: #415d7c !important;
+  background: #1d314d !important;
+  color: #f1f5ff !important;
+}
+
+html body .login-page {
+  background:
+    radial-gradient(circle at 14% 15%, rgba(116, 111, 243, .34), transparent 31%),
+    radial-gradient(circle at 90% 84%, rgba(53, 190, 211, .22), transparent 29%),
+    linear-gradient(145deg, #1a2a46, #263b5a) !important;
+}
+
+html body .login-card {
+  border-color: #526b8d !important;
+  background: linear-gradient(145deg, #29415f, #203550) !important;
+  color: #f5f8ff !important;
+}
+
+@media print {
+  /* צבעי ההדפסה נשארים לבן ושחור כדי לשמור על תלוש קריא. */
+  html body:has(.app-shell) { background: #fff !important; }
+}
+
+.print-only-slip { display: none; }
+
+@media print {
+  .payslip.official.print-target > :not(.print-only-slip) { display: none !important; }
+  .payslip.official.print-target .print-only-slip,
+  .payslip.official.print-target .print-only-slip * { visibility: visible !important; }
+  .payslip.official.print-target .print-only-slip {
+    display: block !important;
+    direction: rtl;
+    width: 100%;
+    background: #fff !important;
+    color: #000 !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 9pt !important;
+  }
+  .print-slip-header {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 7mm !important;
+    border-bottom: 2px solid #000 !important;
+    background: #fff !important;
+  }
+  .print-slip-header div { display: grid; gap: 2px; }
+  .print-slip-header h1 { margin: 0 !important; color: #000 !important; font-size: 19pt !important; }
+  .print-slip-header strong { font-size: 17pt !important; }
+  .print-only-slip table {
+    width: 100% !important;
+    margin: 4mm 0 0 !important;
+    border: 1px solid #777 !important;
+    border-collapse: collapse !important;
+    background: #fff !important;
+  }
+  .print-only-slip th,
+  .print-only-slip td {
+    padding: 2.2mm 2.5mm !important;
+    border: 1px solid #999 !important;
+    background: #fff !important;
+    color: #000 !important;
+    text-align: right !important;
+  }
+  .print-only-slip thead th,
+  .print-only-slip tfoot th,
+  .print-info-table th,
+  .print-employer-table th,
+  .print-totals-table th { background: #e5e5e5 !important; font-weight: 700 !important; }
+  .print-payroll-columns { display: grid !important; grid-template-columns: 1.2fr .8fr; gap: 4mm; }
+  .print-payroll-columns table { height: max-content; }
+  .print-totals-table .bank-row th,
+  .print-totals-table .bank-row td { border: 2px solid #000 !important; background: #d7d7d7 !important; font-size: 13pt !important; font-weight: 800 !important; }
+  .print-only-slip h2 { margin: 5mm 0 0 !important; color: #000 !important; font-size: 11pt !important; }
+  .print-only-slip footer { display: flex; justify-content: space-between; margin-top: 6mm; padding-top: 4mm; border-top: 1px solid #000; color: #000 !important; font-size: 8pt; }
+}
+
+html body .app-shell .salary-summary small {
+  display: block;
+  margin-top: 5px;
+  color: #8293af !important;
+  font-size: 10px;
+}
+html body .app-shell .salary-summary .employer-payment {
+  border-color: #285a64 !important;
+  background: #0d252f !important;
+}
+html body .app-shell .salary-summary .employer-payment b { color: #6edce7 !important; }
+
+/* גרסת הדפסה ישראלית נקייה: נייר לבן וכל הטקסט שחור */
+@media print {
+  .payslip.official.print-target,
+  .payslip.official.print-target * {
+    color: #000 !important;
+  }
+  .payslip.official.print-target {
+    background: #fff !important;
+    border: 1px solid #777 !important;
+  }
+  .payslip.official.print-target .payslip-head {
+    border-bottom: 2px solid #000 !important;
+    background: #fff !important;
+  }
+  .payslip.official.print-target .payslip-document-meta span,
+  .payslip.official.print-target .employee-info span,
+  .payslip.official.print-target .salary-summary > div {
+    border-color: #aaa !important;
+    background: #f1f1f1 !important;
+  }
+  .payslip.official.print-target table,
+  .payslip.official.print-target tbody,
+  .payslip.official.print-target tr,
+  .payslip.official.print-target td {
+    border-color: #aaa !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .payslip.official.print-target th {
+    border-color: #888 !important;
+    background: #ddd !important;
+    color: #000 !important;
+  }
+  .payslip.official.print-target .salary-summary .net {
+    border: 2px solid #000 !important;
+    background: #e4e4e4 !important;
+  }
+  .payslip.official.print-target .payslip-footer {
+    border-top-color: #000 !important;
+  }
+}
+.payroll-controls {
+  display: flex;
+  align-items: end;
+  gap: 14px;
+  background: #f7f9fd;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 22px;
+}
+.payroll-controls label {
+  display: grid;
+  gap: 6px;
+  color: #66748a;
+  font-size: 13px;
+}
+.employee-picker-field {
+  display: grid;
+  gap: 6px;
+  min-width: 250px;
+}
+.payroll-controls input,
+.payroll-controls select {
+  border: 1px solid #dfe5ef;
+  border-radius: 9px;
+  padding: 10px;
+  background: #fff;
+}
+.finance-note {
+  margin-top: 20px;
+  padding: 16px;
+  border-right: 4px solid var(--primary);
+  background: #eef2ff;
+  border-radius: 8px;
+  color: #526078;
+}
+.empty-state {
+  text-align: center;
+  padding: 75px 20px;
+  background: #f8f9fc;
+  border-radius: 12px;
+}
+.empty-state p {
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+/* עיצוב חדש ובהיר עם תפריט מנהל ברור */
+aside {
+  background: linear-gradient(180deg, #263b73, #3658a8);
+  color: #fff;
+  box-shadow: -8px 0 30px #17264a20;
+}
+aside .brand {
+  color: #fff;
+}
+.role-label {
+  color: #c8d4f4;
+}
+nav button {
+  color: #dce5ff;
+}
+nav button.active,
+nav button:hover {
+  background: #ffffff18;
+  color: #fff;
+  box-shadow: inset 3px 0 #8fd8cb;
+}
+.logout {
+  color: #fff;
+  border-color: #ffffff33;
+}
+main {
+  background: linear-gradient(145deg, #f8faff, #f1f5fb);
+  padding: 28px 38px;
+}
+.stats article,
+.panel {
+  border-radius: 16px;
+  box-shadow: 0 8px 28px #34456b0d;
+}
+.primary {
+  background: linear-gradient(135deg, #5877e8, #4565d1) !important;
+  box-shadow: 0 5px 14px #5877e833;
+}
+.progress span {
+  background: linear-gradient(90deg, #5877e8, #6c91f2);
+}
+.notification-page {
+  min-height: 600px;
+}
+.notification-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 25px;
+}
+.notification-layout form {
+  display: grid;
+  gap: 15px;
+}
+.notification-layout label {
+  display: grid;
+  gap: 7px;
+}
+.notification-layout select,
+.notification-layout textarea {
+  padding: 12px;
+  border: 1px solid #dfe5ef;
+  border-radius: 10px;
+}
+.notification-layout textarea {
+  min-height: 130px;
+}
+.notice-help {
+  background: linear-gradient(135deg, #eef2ff, #f7f9ff);
+  padding: 25px;
+  border-radius: 14px;
+}
+.notice-help > span {
+  font-size: 30px;
+}
+.notice-help p {
+  color: #68758b;
+  margin-top: 10px;
+}
+.history-title {
+  margin: 30px 0 10px;
+}
+.payslip.official {
+  max-width: 780px;
+  box-shadow: 0 15px 40px #263b7315;
+  background: #fff;
+}
+.payslip-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center;
+  padding-bottom: 18px !important;
+  border-bottom: 2px solid #314f98 !important;
+}
+.payslip-head > div:last-child {
+  text-align: left;
+}
+.employee-info {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 18px !important;
+  background: #f7f9fd;
+  border: 0 !important;
+  margin: 18px 0;
+}
+.payslip.official h3 {
+  margin: 20px 0 8px;
+}
+.salary-summary {
+  display: grid !important;
+  padding: 0 !important;
+  margin-top: 20px;
+  border: 1px solid #e6eaf1 !important;
+}
+.salary-summary > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 11px 15px;
+  border-bottom: 1px solid #edf0f5;
+}
+.salary-summary .deduction {
+  color: #b45b5b;
+}
+.salary-summary .net {
+  background: #eaf7f1;
+  color: #207c59;
+  font-size: 19px;
+}
+.legal-note {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 15px 0;
+}
+.payslip.official > button {
+  border: 1px solid #dce2ec;
+}
+/* התאמת העיצוב למסכים קטנים ולתצוגה רספונסיבית. */
+@media (max-width: 900px) {
+  .notification-layout {
+    grid-template-columns: 1fr;
+  }
+  .employee-info {
+    grid-template-columns: 1fr;
+  }
+  .payroll-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+.forgot-link {
+  padding: 2px 0 10px;
+  color: var(--primary);
+  text-align: right;
+}
+.success {
+  color: #24845e;
+  font-size: 13px;
+  margin: 7px 0;
+}
+.reset-link {
+  display: block;
+  background: #eaf7f1;
+  color: #207c59;
+  padding: 11px;
+  border-radius: 9px;
+  text-align: center;
+  margin: 12px 0;
+  text-decoration: none;
+}
+.local-note {
+  display: block;
+  color: var(--muted);
+  margin-top: 12px;
+  line-height: 1.5;
+}
+.modal label small {
+  color: var(--muted);
+}
+
+/* השפה העיצובית החדשה של טאסקפלו */
+:host {
+  --primary: #176b68;
+  --ink: #20343b;
+  --muted: #718188;
+}
+body {
+  background: #f4f1ea;
+}
+.app-shell {
+  grid-template-columns: 265px 1fr;
+}
+aside {
+  background: #fff !important;
+  color: var(--ink) !important;
+  border-left: 1px solid #e6e2d9;
+  box-shadow: none !important;
+  padding: 30px 20px;
+}
+aside .brand {
+  color: var(--ink) !important;
+}
+.brand span {
+  background: #176b68;
+  border-radius: 12px;
+}
+.role-label {
+  color: #8c999e !important;
+  background: #f3f7f6;
+  border-radius: 20px;
+  padding: 5px 12px;
+  margin: 10px 46px 28px 0;
+  width: max-content;
+}
+nav {
+  gap: 8px;
+}
+nav button {
+  color: #66767b !important;
+  padding: 12px 15px;
+  border-radius: 12px;
+}
+nav button.active,
+nav button:hover {
+  background: #e8f3f1 !important;
+  color: #176b68 !important;
+  box-shadow: none !important;
+  font-weight: 700;
+}
+.logout {
+  color: #b75b5b !important;
+  border: 1px solid #efdada !important;
+  background: #fff8f8;
+}
+main {
+  background: #f6f4ef !important;
+  padding: 32px 42px;
+}
+header {
+  background: #fff;
+  border: 1px solid #e9e5dc;
+  border-radius: 18px;
+  padding: 17px 22px;
+}
+.bell {
+  background: #f3f7f6;
+}
+.avatar {
+  background: #dcefeb;
+  color: #176b68;
+}
+.stats article,
+.panel {
+  border: 1px solid #e7e2d8 !important;
+  border-radius: 18px !important;
+  box-shadow: 0 8px 24px #374e4c0a !important;
+}
+.stats article {
+  border-top: 0 !important;
+  position: relative;
+  overflow: hidden;
+}
+.stats article:after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #76b5aa;
+}
+.primary {
+  background: #176b68 !important;
+  box-shadow: 0 5px 14px #176b6830 !important;
+}
+.progress span {
+  background: #4e9d92 !important;
+}
+.panel-title {
+  border-bottom: 1px solid #eeeae2;
+  padding-bottom: 16px;
+}
+th {
+  background: #f7f5f0;
+  color: #6d7b80;
+}
+tr:hover td {
+  background: #fbfaf7;
+}
+.employee-grid article {
+  background: #fff;
+  border-color: #e6e2d9;
+}
+.donut {
+  background: conic-gradient(#176b68 0 33%, #e2a85b 33% 70%, #7694b2 70%);
+}
+.login-page {
+  background: radial-gradient(circle at 20% 20%, #dfeeea, #f7f3ea 55%, #ece7dc);
+}
+.login-card {
+  border: 1px solid #e6e0d5;
+  box-shadow: 0 25px 70px #314d4930;
+}
+.modal {
+  border: 1px solid #e4ded2;
+  box-shadow: 0 25px 80px #223b3850;
+}
+.notification-layout .notice-help {
+  background: #edf5f3;
+}
+.payslip.official {
+  border-top: 6px solid #176b68;
+}
+.salary-summary .net {
+  background: #e5f3ef;
+  color: #176b68;
+}
+.chat-members {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 13px 16px;
+  background: #f2f7f6;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+.chat-members span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  padding: 5px 9px;
+  border-radius: 18px;
+  font-size: 12px;
+}
+.chat-members i {
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: #dcefeb;
+  color: #176b68;
+  font-style: normal;
+  font-weight: 700;
+}
+.messages {
+  background: #eef3f1;
+}
+.messages article {
+  border-right: 3px solid #76b5aa;
+  box-shadow: 0 3px 10px #29433f0b;
+}
+.empty-chat {
+  text-align: center;
+  color: var(--muted);
+  padding: 70px;
+}
+.chat-form input {
+  border: 1px solid #d8dfdc;
+  background: #fff;
+}
+/* התאמת העיצוב למסכים קטנים ולתצוגה רספונסיבית. */
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+  aside {
+    height: auto;
+    position: static;
+  }
+  main {
+    padding: 18px;
+  }
+  header {
+    padding: 14px;
+  }
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* עיצוב סופי: מודרני, דינמי ונקי */
+:host {
+  --primary: #6c5ce7;
+  --ink: #20233a;
+  --muted: #7b8198;
+}
+.app-shell {
+  grid-template-columns: 255px 1fr;
+}
+aside {
+  background: linear-gradient(180deg, #1d2143, #272d59) !important;
+  border: 0 !important;
+  color: #fff !important;
+}
+aside .brand {
+  color: #fff !important;
+}
+.brand span {
+  background: linear-gradient(135deg, #7c6df0, #9c7cf4);
+}
+.role-label {
+  background: #ffffff12 !important;
+  color: #cfd3f6 !important;
+}
+nav button {
+  color: #c8ccec !important;
+}
+nav button.active,
+nav button:hover {
+  background: linear-gradient(90deg, #7768eb30, #a77cf520) !important;
+  color: #fff !important;
+  border-right: 3px solid #a899ff;
+}
+.logout {
+  color: #ffc5ca !important;
+  border-color: #ffffff20 !important;
+  background: #ffffff08 !important;
+}
+main {
+  background: radial-gradient(
+    circle at 10% 0,
+    #eeeaff 0,
+    #f5f6fb 34%,
+    #f3f5f9 100%
+  ) !important;
+}
+header {
+  border: 0;
+  box-shadow: 0 10px 30px #24284c0c;
+}
+.avatar {
+  background: #eeeaff;
+  color: #6c5ce7;
+}
+.bell {
+  background: #f4f2ff;
+}
+.stats article,
+.panel {
+  border: 0 !important;
+  box-shadow: 0 12px 32px #282c550d !important;
+}
+.stats article:after {
+  width: 5px;
+  background: linear-gradient(#8c7cf0, #d891ee);
+}
+.primary {
+  background: linear-gradient(135deg, #6c5ce7, #8975ed) !important;
+  box-shadow: 0 7px 18px #6c5ce73b !important;
+}
+.progress span {
+  background: linear-gradient(90deg, #7a6aeb, #9d83f3) !important;
+}
+.panel-title {
+  border-color: #eff0f6;
+}
+th {
+  background: #f7f7fb;
+  color: #777d93;
+}
+.login-page {
+  background: radial-gradient(circle at 15% 15%, #ded8ff, #f2f0fb 48%, #e9ecf5);
+}
+.login-card {
+  border: 0;
+  box-shadow: 0 30px 90px #2e31563d;
+}
+.payslip.official {
+  border-top-color: #6c5ce7;
+}
+.salary-summary .net {
+  background: #eeecff;
+  color: #5949cc;
+}
+.chat-members {
+  background: #f2f0ff;
+}
+.chat-members i {
+  background: #e5e1ff;
+  color: #6654dc;
+}
+.messages {
+  background: #f4f3fa;
+}
+.messages article {
+  border-right-color: #8b7aed;
+}
+.notification-layout.single {
+  display: block;
+  max-width: 720px;
+}
+.notification-layout.single form {
+  background: linear-gradient(145deg, #faf9ff, #f4f2ff);
+  padding: 22px;
+  border-radius: 16px;
+}
+.task-legend {
+  display: grid;
+  gap: 9px;
+  margin-top: 18px;
+}
+.task-legend article {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: right;
+  padding: 9px 12px;
+  border-radius: 11px;
+  background: #f8f8fc;
+}
+.task-legend i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+.task-legend b {
+  display: block;
+  font-size: 16px;
+}
+.task-legend span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.task-legend .todo i {
+  background: #ffb65c;
+}
+.task-legend .doing i {
+  background: #6d72e8;
+}
+.task-legend .finished i {
+  background: #31b58b;
+}
+.donut {
+  width: 168px;
+  height: 168px;
+  box-shadow: 0 10px 24px #33365b15;
+  transition: background 0.35s ease;
+}
+.donut:before {
+  width: 116px;
+  height: 116px;
+}
+.donut span {
+  font-size: 28px;
+}
+.donut small {
+  font-size: 10px;
+}
+.chart .panel-title {
+  text-align: right;
+}
+.chart {
+  position: relative;
+  overflow: hidden;
+}
+.chart:after {
+  content: "";
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #eeeaff70;
+  left: -50px;
+  top: -50px;
+}
+.forgot-link {
+  color: #6c5ce7;
+}
+.reset-link {
+  background: #eeecff;
+  color: #5949cc;
+}
+.dashboard-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  padding: 27px 30px;
+  border-radius: 20px;
+  background: linear-gradient(120deg, #6254d9, #8371ed 62%, #a77be9);
+  color: #fff;
+  box-shadow: 0 15px 35px #6655dc30;
+  position: relative;
+  overflow: hidden;
+}
+.dashboard-hero:after {
+  content: "";
+  position: absolute;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background: #ffffff10;
+  left: -45px;
+  top: -100px;
+}
+.dashboard-hero .eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #ddd9ff;
+}
+.dashboard-hero h2 {
+  font-size: 25px;
+  margin: 6px 0;
+}
+.dashboard-hero p {
+  color: #eceaff;
+}
+.hero-actions {
+  display: flex;
+  gap: 9px;
+  position: relative;
+  z-index: 1;
+}
+.hero-actions button {
+  background: #fff;
+  color: #5e50cf;
+  font-weight: 600;
+}
+.hero-actions button:last-child {
+  background: #ffffff18;
+  color: #fff;
+  border: 1px solid #ffffff30;
+}
+.filter-bar {
+  display: flex;
+  align-items: end;
+  gap: 13px;
+  flex-wrap: wrap;
+  padding: 17px 18px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  background: #f7f7fc;
+}
+.filter-bar label {
+  display: grid;
+  gap: 5px;
+  color: #72788e;
+  font-size: 12px;
+}
+.filter-bar select,
+.filter-bar input {
+  min-width: 155px;
+  padding: 9px 11px;
+  border: 1px solid #dedfea;
+  border-radius: 9px;
+  background: #fff;
+}
+.filter-bar button {
+  border: 1px solid #dedfea;
+  background: #fff;
+  color: #6155cb;
+}
+.filter-bar > span {
+  margin-right: auto;
+  color: #858ba0;
+  font-size: 12px;
+}
+
+/* התראות חכמות והיסטוריית פעילות בדשבורד */
+.smart-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 18px;
+  margin-top: 20px;
+}
+.deadline-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.deadline-summary > div {
+  padding: 18px;
+  border-radius: 14px;
+  display: grid;
+  gap: 4px;
+}
+.deadline-summary strong {
+  font-size: 28px;
+}
+.overdue-summary {
+  background: #fff0f1;
+  color: #c64c58;
+}
+.soon-summary {
+  background: #fff5e5;
+  color: #bd7824;
+}
+.activity-panel {
+  max-height: 390px;
+  overflow: auto;
+}
+.activity-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #edf0f5;
+}
+.activity-item span,
+.activity-item small {
+  display: block;
+  color: var(--muted);
+}
+.activity-item small {
+  margin-top: 4px;
+  font-size: 11px;
+}
+.activity-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: #eeecff;
+  color: var(--primary);
+}
+.task-overdue td {
+  background: #fff8f8;
+}
+.task-soon td {
+  background: #fffaf1;
+}
+.deadline-badge,
+.attention-badge {
+  display: block;
+  width: max-content;
+  margin-top: 6px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.deadline-badge.overdue,
+.attention-badge {
+  background: #ffe4e7;
+  color: #be3f4e;
+}
+.deadline-badge.soon {
+  background: #ffedcf;
+  color: #a96717;
+}
+/* התאמת העיצוב למסכים קטנים ולתצוגה רספונסיבית. */
+@media (max-width: 900px) {
+  .smart-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.no-results {
+  text-align: center !important;
+  color: var(--muted) !important;
+  padding: 45px !important;
+}
+.employee-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid #e5e5ee;
+  border-radius: 13px;
+  background: #fafafd;
+}
+.employee-search > span {
+  font-size: 23px;
+  color: #7063d8;
+}
+.employee-search input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  padding: 5px;
+  font: inherit;
+}
+.employee-search b {
+  font-size: 12px;
+  color: #8a8fa1;
+  background: #fff;
+  padding: 6px 10px;
+  border-radius: 15px;
+}
+/* התאמת העיצוב למסכים קטנים ולתצוגה רספונסיבית. */
+@media (max-width: 900px) {
+  .dashboard-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .filter-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .filter-bar select,
+  .filter-bar input {
+    width: 100%;
+  }
+  .filter-bar > span {
+    margin: 0;
+  }
+  .employee-search b {
+    display: none;
+  }
+}
+.manager-chip {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 15px;
+  background: #eeecff;
+  color: #5c50c8;
+  font-size: 12px;
+}
+.team-count {
+  padding: 5px 9px;
+  background: #eef8f5;
+  color: #278268;
+  border-radius: 15px;
+}
+.modal input[type="file"] {
+  padding: 8px;
+  background: #f8f8fc;
+  border-style: dashed;
+}
+.chat-selectors {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.chat-selectors select,
+.chat-selectors span {
+  padding: 9px 11px;
+  border: 1px solid #dedfea;
+  border-radius: 9px;
+  background: #f8f8fc;
+  color: #6155cb;
+}
+.project-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 18px;
+}
+.project-details p {
+  padding: 12px;
+  background: #f7f7fc;
+  border-radius: 10px;
+}
+.project-details p:first-child {
+  grid-column: 1/-1;
+}
+
+/* שכבת העיצוב הסופית של המערכת */
+:root {
+  --tf-primary: #6d5ce8;
+  --tf-primary-dark: #5142c5;
+  --tf-primary-soft: #f0edff;
+  --tf-accent: #25b79b;
+  --tf-ink: #20263a;
+  --tf-muted: #737b92;
+  --tf-line: #e8eaf2;
+  --tf-surface: #ffffff;
+  --tf-page: #f5f6fb;
+  --tf-danger: #df5968;
+  --tf-warning: #e6a23c;
+  --tf-shadow: 0 14px 38px rgba(42, 48, 91, 0.08);
+}
+
+html {
+  direction: rtl;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 8% 0, #ebe7ff 0, transparent 28%),
+    linear-gradient(145deg, #f8f8fc 0, #f3f5fa 100%) !important;
+  color: var(--tf-ink);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+button {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.app-shell {
+  grid-template-columns: 270px minmax(0, 1fr) !important;
+  min-height: 100vh;
+}
+
+aside {
+  padding: 26px 20px !important;
+  background: linear-gradient(180deg, #20254b 0%, #292e5d 58%, #32366b 100%) !important;
+  border: 0 !important;
+  box-shadow: -14px 0 45px rgba(31, 36, 74, 0.13) !important;
+  overflow-y: auto;
+  z-index: 20;
+}
+
+aside .brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: #fff !important;
+  font-size: 24px;
+  letter-spacing: -0.4px;
+}
+
+.brand span {
+  width: 39px;
+  height: 39px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #8b78ff, #b082f0) !important;
+  box-shadow: 0 8px 20px rgba(130, 107, 244, 0.32);
+}
+
+.role-label {
+  margin: 12px 50px 25px 0 !important;
+  padding: 5px 11px !important;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #d8daf5 !important;
+}
+
+aside nav {
+  gap: 7px;
+}
+
+aside nav button {
+  min-height: 46px;
+  padding: 11px 15px !important;
+  border: 1px solid transparent;
+  border-radius: 13px !important;
+  color: #cfd2ec !important;
+  font-weight: 500;
+}
+
+aside nav button:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #fff !important;
+}
+
+aside nav button.active {
+  background: linear-gradient(90deg, rgba(125, 105, 239, 0.34), rgba(166, 122, 236, 0.17)) !important;
+  border-color: rgba(174, 157, 255, 0.18);
+  border-right: 4px solid #ae9dff !important;
+  color: #fff !important;
+  box-shadow: 0 8px 18px rgba(17, 21, 53, 0.16) !important;
+  font-weight: 700;
+}
+
+aside nav button:focus {
+  outline: none;
+}
+
+aside nav button:focus-visible {
+  box-shadow: 0 0 0 3px rgba(174, 157, 255, 0.35) !important;
+}
+
+.logout {
+  width: 100%;
+  margin-top: auto;
+  padding: 11px 14px !important;
+  border: 1px solid rgba(255, 207, 213, 0.17) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #ffd1d6 !important;
+}
+
+.logout:hover {
+  background: rgba(223, 89, 104, 0.13) !important;
+}
+
+main {
+  min-width: 0;
+  padding: 30px clamp(22px, 3vw, 46px) 50px !important;
+  background: transparent !important;
+}
+
+main > header {
+  position: relative;
+  z-index: 12;
+  min-height: 86px;
+  margin-bottom: 25px;
+  padding: 18px 23px !important;
+  border: 1px solid rgba(232, 234, 242, 0.78) !important;
+  border-radius: 21px !important;
+  background: rgba(255, 255, 255, 0.91) !important;
+  box-shadow: var(--tf-shadow) !important;
+  backdrop-filter: blur(12px);
+}
+
+header h1 {
+  color: var(--tf-ink);
+  font-size: clamp(22px, 2vw, 28px);
+  letter-spacing: -0.5px;
+}
+
+header p,
+.panel-title p {
+  margin-top: 3px;
+  color: var(--tf-muted) !important;
+}
+
+.bell,
+.avatar {
+  width: 45px;
+  height: 45px;
+  border: 1px solid #e9e6fb;
+  border-radius: 14px;
+  background: #f5f3ff !important;
+  color: var(--tf-primary) !important;
+}
+
+.bell:hover {
+  box-shadow: 0 8px 20px rgba(109, 92, 232, 0.16);
+  transform: translateY(-1px);
+}
+
+.notice-box {
+  width: min(390px, calc(100vw - 45px));
+  max-height: 470px;
+  padding: 17px;
+  border: 1px solid var(--tf-line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 22px 60px rgba(34, 39, 77, 0.22);
+  overflow-y: auto;
+}
+
+.notice-box article {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid #eeedf6;
+  border-radius: 12px;
+  background: #faf9ff;
+}
+
+.dashboard-hero {
+  padding: 30px 32px !important;
+  border-radius: 24px !important;
+  background: linear-gradient(120deg, #5c4ed2 0%, #7866e9 58%, #a675e5 100%) !important;
+  box-shadow: 0 18px 42px rgba(94, 78, 210, 0.25) !important;
+}
+
+.dashboard-hero:before {
+  content: "";
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  right: -90px;
+  bottom: -170px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.hero-actions button {
+  min-height: 45px;
+  padding-inline: 18px;
+  border-radius: 13px;
+}
+
+.stats {
+  gap: 18px !important;
+  margin: 24px 0 !important;
+}
+
+.stats article {
+  min-height: 120px;
+  padding: 21px !important;
+  border: 1px solid rgba(232, 234, 242, 0.75) !important;
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: var(--tf-shadow) !important;
+}
+
+.stats article:after {
+  width: 5px !important;
+  background: linear-gradient(180deg, #7765e8, #c078e2) !important;
+}
+
+.stats i,
+.stats .app-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 15px;
+}
+
+.stats strong {
+  color: var(--tf-ink);
+  font-size: 28px;
+}
+
+.panel,
+.employee-grid article,
+.payslip.official {
+  border: 1px solid rgba(232, 234, 242, 0.85) !important;
+  border-radius: 21px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: var(--tf-shadow) !important;
+}
+
+.panel {
+  padding: clamp(19px, 2.2vw, 28px) !important;
+}
+
+.panel-title {
+  min-height: 60px;
+  margin-bottom: 21px !important;
+  padding-bottom: 17px !important;
+  border-bottom: 1px solid var(--tf-line) !important;
+}
+
+.panel-title h2,
+.panel h2 {
+  color: var(--tf-ink);
+  font-size: 20px;
+  letter-spacing: -0.25px;
+}
+
+.grid,
+.smart-dashboard-grid {
+  gap: 21px !important;
+}
+
+.filter-bar,
+.employee-search,
+.notification-layout.single form,
+.chat-members {
+  border: 1px solid #ebeaf3 !important;
+  border-radius: 16px !important;
+  background: linear-gradient(145deg, #fbfbfe, #f7f6fc) !important;
+}
+
+.filter-bar {
+  padding: 18px !important;
+}
+
+input,
+select,
+textarea {
+  min-height: 43px;
+  border: 1px solid #dfe2ec !important;
+  border-radius: 11px !important;
+  background: #fff;
+  color: var(--tf-ink);
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+textarea {
+  padding: 11px 13px;
+  resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #9586ee !important;
+  box-shadow: 0 0 0 4px rgba(109, 92, 232, 0.1);
+}
+
+.primary,
+.secondary,
+.danger {
+  min-height: 42px;
+  padding: 9px 17px !important;
+  border-radius: 11px !important;
+  font-weight: 700;
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--tf-primary), #8874ed) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 20px rgba(109, 92, 232, 0.24) !important;
+}
+
+.primary:not(:disabled):hover {
+  box-shadow: 0 11px 25px rgba(109, 92, 232, 0.31) !important;
+  transform: translateY(-1px);
+}
+
+.secondary {
+  border: 1px solid #ddd8fb !important;
+  background: #f4f1ff !important;
+  color: var(--tf-primary-dark) !important;
+}
+
+.danger {
+  border: 1px solid #f2d6da !important;
+  background: #fff1f3 !important;
+  color: var(--tf-danger) !important;
+}
+
+.page-panel,
+.attendance-page,
+.payroll-page,
+.notification-page,
+.chat-page,
+.requests-page {
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0;
+}
+
+thead th {
+  padding: 14px 12px !important;
+  border-block: 1px solid #ebeaf2;
+  background: #f8f8fc !important;
+  color: #697188 !important;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+thead th:first-child {
+  border-radius: 0 12px 12px 0;
+}
+
+thead th:last-child {
+  border-radius: 12px 0 0 12px;
+}
+
+tbody td {
+  padding: 15px 12px !important;
+  border-bottom: 1px solid #eef0f5 !important;
+  vertical-align: middle;
+}
+
+tbody tr {
+  transition: background 0.16s ease;
+}
+
+tbody tr:hover td {
+  background: #faf9ff !important;
+}
+
+.progress {
+  height: 8px !important;
+  background: #eceef4 !important;
+}
+
+.progress span {
+  background: linear-gradient(90deg, #6d5ce8, #a278eb) !important;
+}
+
+.manager-chip,
+.team-count,
+.deadline-badge,
+.attention-badge {
+  font-weight: 700;
+}
+
+.employee-grid {
+  gap: 18px !important;
+}
+
+.employee-grid article {
+  padding: 20px !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.employee-grid article:hover {
+  box-shadow: 0 18px 42px rgba(42, 48, 91, 0.12) !important;
+  transform: translateY(-2px);
+}
+
+.modal-backdrop {
+  padding: 22px;
+  background: rgba(26, 30, 60, 0.52) !important;
+  backdrop-filter: blur(6px);
+}
+
+.modal {
+  width: min(620px, 100%);
+  max-height: calc(100vh - 44px);
+  padding: 27px !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 30px 90px rgba(24, 29, 64, 0.32) !important;
+  overflow-y: auto;
+}
+
+.modal .close {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: #f4f3f9;
+  color: #687086;
+}
+
+.login-page {
+  background:
+    radial-gradient(circle at 12% 18%, #dcd6ff 0, transparent 32%),
+    radial-gradient(circle at 92% 82%, #d9f3ee 0, transparent 30%),
+    #f5f5fb !important;
+}
+
+.login-card {
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  border-radius: 25px !important;
+  box-shadow: 0 32px 90px rgba(45, 48, 91, 0.2) !important;
+}
+
+.messages {
+  min-height: 330px;
+  max-height: 470px;
+  padding: 18px !important;
+  border: 1px solid #e8e7f1;
+  border-radius: 17px !important;
+  background: #f7f6fb !important;
+}
+
+.messages article {
+  width: min(78%, 620px);
+  margin-bottom: 12px;
+  padding: 13px 15px !important;
+  border: 0 !important;
+  border-right: 4px solid #8878e9 !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  box-shadow: 0 6px 18px rgba(40, 45, 83, 0.07) !important;
+}
+
+.chat-form {
+  gap: 10px !important;
+  margin-top: 13px;
+}
+
+.chat-form input {
+  min-height: 48px;
+  padding-inline: 15px;
+}
+
+.chat-upload {
+  margin-top: 13px !important;
+  padding: 15px 17px !important;
+  border: 1px dashed #b0a6ec !important;
+  border-radius: 15px !important;
+  background: linear-gradient(145deg, #fbfaff, #f5f3ff) !important;
+}
+
+.requests-page {
+  gap: 24px !important;
+}
+
+.request-form {
+  padding: 23px !important;
+  border: 1px solid #e7e4f6 !important;
+  border-radius: 18px !important;
+  background: linear-gradient(145deg, #fdfdff, #f7f5ff) !important;
+}
+
+.request-form h3 {
+  margin-bottom: 17px;
+  color: var(--tf-primary-dark);
+}
+
+.request-form label,
+.notification-layout label,
+.modal label {
+  color: #596176;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.request-card {
+  padding: 21px !important;
+  border: 1px solid #e8eaf2 !important;
+  border-right-width: 5px !important;
+  border-radius: 17px !important;
+  background: #fff !important;
+  box-shadow: 0 8px 24px rgba(42, 48, 91, 0.06);
+}
+
+.request-card.pending {
+  border-right-color: var(--tf-warning) !important;
+}
+
+.request-card.approved {
+  border-right-color: var(--tf-accent) !important;
+}
+
+.request-card.rejected {
+  border-right-color: var(--tf-danger) !important;
+}
+
+.request-details span {
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #f6f6fa;
+  font-size: 12px;
+}
+
+.empty-state,
+.no-results {
+  border: 1px dashed #ddddea;
+  background: #fafafd !important;
+  color: var(--tf-muted) !important;
+}
+
+/* התאמת העיצוב למסכים קטנים ולתצוגה רספונסיבית. */
+@media (max-width: 1100px) {
+  .app-shell {
+    grid-template-columns: 235px minmax(0, 1fr) !important;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* התאמת העיצוב למסכים קטנים ולתצוגה רספונסיבית. */
+@media (max-width: 820px) {
+  .app-shell {
+    display: block !important;
+  }
+
+  aside {
+    position: static !important;
+    height: auto !important;
+    padding: 18px !important;
+  }
+
+  aside nav {
+    display: flex !important;
+    padding-bottom: 6px;
+    overflow-x: auto;
+  }
+
+  aside nav button {
+    min-width: max-content;
+  }
+
+  .role-label {
+    margin-bottom: 14px !important;
+  }
+
+  .logout {
+    margin-top: 13px;
+  }
+
+  main {
+    padding: 18px 14px 35px !important;
+  }
+
+  main > header {
+    min-height: 74px;
+    padding: 14px 16px !important;
+  }
+
+  .dashboard-hero {
+    padding: 23px !important;
+  }
+
+  .panel {
+    padding: 17px !important;
+    overflow-x: auto;
+  }
+
+  .panel-title {
+    align-items: flex-start !important;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .request-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .messages article {
+    width: 94%;
+  }
+}
+
+/* ערכת ממשק כהה וטכנולוגית — שינוי מלא של אזור הניהול */
+body:has(.app-shell) {
+  --tech-bg: #060a16;
+  --tech-surface: rgba(15, 23, 45, .88);
+  --tech-surface-strong: #111a32;
+  --tech-line: rgba(131, 151, 205, .18);
+  --tech-text: #edf4ff;
+  --tech-muted: #95a5c4;
+  --tech-cyan: #20d5e8;
+  --tech-violet: #7c70ff;
+  color: var(--tech-text) !important;
+  background:
+    linear-gradient(rgba(74, 210, 232, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74, 210, 232, .045) 1px, transparent 1px),
+    radial-gradient(circle at 80% 5%, rgba(84, 70, 230, .26), transparent 28%),
+    radial-gradient(circle at 8% 88%, rgba(22, 186, 215, .17), transparent 28%),
+    #060a16 !important;
+  background-size: 38px 38px, 38px 38px, auto, auto, auto !important;
+}
+
+body:has(.app-shell)::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, rgba(111, 99, 255, .055), transparent 66%);
+}
+
+.app-shell { background: transparent !important; }
+
+.app-shell aside {
+  border-left: 1px solid rgba(63, 216, 235, .15) !important;
+  background:
+    radial-gradient(circle at 50% 0, rgba(102, 87, 239, .26), transparent 25%),
+    linear-gradient(180deg, rgba(14, 23, 48, .98), rgba(7, 12, 27, .98)) !important;
+  box-shadow: -20px 0 60px rgba(0, 0, 0, .32) !important;
+}
+
+.app-shell aside .brand {
+  color: #fff !important;
+  text-shadow: 0 0 24px rgba(118, 112, 255, .4);
+}
+
+.app-shell aside .brand span {
+  background: linear-gradient(145deg, #7164ff, #13c7df) !important;
+  box-shadow: 0 0 28px rgba(76, 121, 255, .45) !important;
+}
+
+.app-shell aside nav button { color: #9facc8 !important; }
+.app-shell aside nav button .app-icon { color: #7184aa !important; }
+.app-shell aside nav button:hover {
+  border-color: rgba(41, 214, 232, .18) !important;
+  background: rgba(35, 207, 227, .07) !important;
+  color: #e9f9ff !important;
+}
+
+.app-shell aside nav button.active {
+  border-color: rgba(57, 221, 239, .27) !important;
+  background: linear-gradient(100deg, rgba(113, 96, 255, .34), rgba(24, 205, 226, .14)) !important;
+  color: #fff !important;
+  box-shadow: inset -3px 0 var(--tech-cyan), 0 0 25px rgba(73, 111, 255, .14) !important;
+}
+.app-shell aside nav button.active .app-icon { color: var(--tech-cyan) !important; }
+
+.app-shell main > header {
+  border: 1px solid var(--tech-line) !important;
+  background: rgba(12, 20, 40, .76) !important;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .22) !important;
+  backdrop-filter: blur(22px);
+}
+
+.app-shell main > header h1,
+.app-shell main > header h2 { color: var(--tech-text) !important; }
+.app-shell main > header p { color: var(--tech-muted) !important; }
+.app-shell main > header::after {
+  border-color: rgba(45, 215, 233, .2) !important;
+  background: rgba(30, 205, 225, .08) !important;
+  color: #75e8f4 !important;
+}
+
+.bell {
+  border-color: rgba(44, 213, 232, .2) !important;
+  background: rgba(24, 36, 67, .85) !important;
+  color: var(--tech-cyan) !important;
+  box-shadow: 0 0 24px rgba(32, 213, 232, .11) !important;
+}
+
+.dashboard-hero {
+  border: 1px solid rgba(55, 218, 236, .2) !important;
+  background:
+    linear-gradient(rgba(52, 215, 233, .07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(52, 215, 233, .07) 1px, transparent 1px),
+    radial-gradient(circle at 10% 20%, rgba(31, 217, 232, .25), transparent 27%),
+    linear-gradient(125deg, #101b38, #24205f 58%, #352c8f) !important;
+  background-size: 28px 28px, 28px 28px, auto, auto !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .28), 0 0 45px rgba(86, 75, 232, .1) !important;
+}
+
+.page-panel,
+.panel:not(.dashboard-hero),
+.stats article,
+.employee-grid article,
+.request-card,
+.clock-card,
+.payslip,
+.notification-layout form,
+.request-form,
+.chat-upload,
+.notice-box {
+  border-color: var(--tech-line) !important;
+  background: linear-gradient(145deg, rgba(18, 28, 54, .94), rgba(10, 17, 34, .9)) !important;
+  color: var(--tech-text) !important;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, .22) !important;
+  backdrop-filter: blur(18px);
+}
+
+.panel-title {
+  border-bottom-color: var(--tech-line) !important;
+  background:
+    radial-gradient(circle at 90% 0, rgba(118, 100, 255, .18), transparent 35%),
+    linear-gradient(135deg, rgba(23, 35, 67, .96), rgba(12, 20, 40, .9)) !important;
+}
+
+.panel-title h2,
+.panel h2,
+.page-panel h2,
+.stats article strong,
+.request-card h3,
+.clock-card h3 { color: var(--tech-text) !important; }
+.panel-title p,
+.panel p,
+.page-panel p { color: var(--tech-muted) !important; }
+.panel-title::before { background: linear-gradient(90deg, var(--tech-violet), var(--tech-cyan)) !important; }
+
+.stats article::after { background: linear-gradient(90deg, var(--tech-violet), var(--tech-cyan)) !important; }
+.stats .app-icon {
+  border-color: rgba(44, 213, 232, .18) !important;
+  background: rgba(35, 207, 227, .08) !important;
+  color: var(--tech-cyan) !important;
+}
+
+.filter-bar,
+.attendance-toolbar,
+.payroll-controls {
+  border-color: var(--tech-line) !important;
+  background: rgba(7, 13, 28, .55) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.03) !important;
+}
+
+.filter-bar label,
+.attendance-toolbar label,
+.payroll-controls label,
+.modern-form label,
+.request-form label { color: #b5c1d8 !important; }
+
+body:has(.app-shell) input,
+body:has(.app-shell) select,
+body:has(.app-shell) textarea {
+  border-color: rgba(126, 146, 193, .22) !important;
+  background: rgba(6, 12, 27, .72) !important;
+  color: #edf5ff !important;
+}
+
+body:has(.app-shell) input::placeholder,
+body:has(.app-shell) textarea::placeholder { color: #6f7e9c !important; }
+
+body:has(.app-shell) input:focus,
+body:has(.app-shell) select:focus,
+body:has(.app-shell) textarea:focus {
+  border-color: var(--tech-cyan) !important;
+  background: rgba(9, 17, 35, .95) !important;
+  box-shadow: 0 0 0 4px rgba(32, 213, 232, .1), 0 0 25px rgba(32, 213, 232, .07) !important;
+}
+
+body:has(.app-shell) select option { background: #111a31; color: #edf5ff; }
+
+table {
+  border-color: var(--tech-line) !important;
+  background: rgba(8, 15, 31, .58) !important;
+}
+
+thead th {
+  border-color: var(--tech-line) !important;
+  background: rgba(24, 36, 66, .9) !important;
+  color: #9dacc8 !important;
+}
+
+tbody td {
+  border-bottom-color: rgba(127, 145, 189, .12) !important;
+  color: #dbe5f6 !important;
+}
+
+tbody tr:hover { background: rgba(36, 197, 220, .055) !important; }
+tbody td b { color: #fff !important; }
+tbody td small { color: #8f9db8 !important; }
+
+button.secondary,
+.secondary,
+body:has(.app-shell) .filter-bar button:not(.primary) {
+  border-color: rgba(129, 148, 193, .24) !important;
+  background: rgba(24, 35, 65, .85) !important;
+  color: #d8e3f5 !important;
+}
+
+button.primary,
+.primary {
+  background: linear-gradient(110deg, #6558ef, #4e6de8 55%, #18bcd2) !important;
+  box-shadow: 0 12px 30px rgba(63, 91, 228, .27), 0 0 24px rgba(28, 195, 215, .1) !important;
+}
+
+.progress { background: rgba(132, 148, 190, .18) !important; }
+.progress span { background: linear-gradient(90deg, var(--tech-violet), var(--tech-cyan)) !important; }
+
+.modal-backdrop { background: rgba(2, 5, 14, .82) !important; }
+.modal {
+  border-color: rgba(91, 218, 235, .21) !important;
+  background:
+    radial-gradient(circle at 90% 0, rgba(112, 93, 242, .2), transparent 30%),
+    linear-gradient(145deg, #151f3c, #0b1226) !important;
+  color: var(--tech-text) !important;
+  box-shadow: 0 35px 110px rgba(0, 0, 0, .55), 0 0 50px rgba(52, 202, 225, .07) !important;
+}
+.modal h2 { color: #fff !important; border-bottom-color: var(--tech-line) !important; }
+.modal .close { border-color: var(--tech-line) !important; background: rgba(25, 37, 69, .9) !important; color: #b8c7df !important; }
+
+.messages { border-color: var(--tech-line) !important; background: rgba(7, 13, 28, .6) !important; }
+.messages article { background: rgba(20, 31, 58, .9) !important; color: #dce8f8 !important; }
+
+.empty-state,
+.no-results { border-color: var(--tech-line) !important; background: rgba(8, 15, 31, .62) !important; color: var(--tech-muted) !important; }
+
+@media (max-width: 820px) {
+  body:has(.app-shell) { background-size: 28px 28px, 28px 28px, auto, auto, auto !important; }
+}
+
+/* עיצוב מודרני ואחיד לטפסים, מסננים וחלונות פעולה */
+.modal-backdrop {
+  padding: 24px !important;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(98, 92, 232, .24), transparent 30%),
+    rgba(8, 14, 29, .72) !important;
+}
+
+.modal {
+  position: relative;
+  width: min(680px, calc(100vw - 32px)) !important;
+  max-height: min(88vh, 860px) !important;
+  padding: 34px 36px 32px !important;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, .72) !important;
+  border-radius: 26px !important;
+  background:
+    linear-gradient(180deg, rgba(245, 246, 255, .9), #fff 112px) !important;
+  box-shadow: 0 32px 100px rgba(7, 13, 32, .38) !important;
+}
+
+.modal::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 5px;
+  border-radius: 26px 26px 0 0;
+  background: linear-gradient(90deg, #4b43d3, #7469ef 55%, #22adc0);
+}
+
+.modal .close {
+  top: 22px !important;
+  left: 22px !important;
+  width: 38px !important;
+  height: 38px !important;
+  border: 1px solid #e0e4ee !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, .86) !important;
+  color: #69748a !important;
+  box-shadow: 0 5px 15px rgba(25, 35, 62, .07);
+}
+
+.modal .close:hover {
+  border-color: #d2d6e5 !important;
+  background: #f2f1ff !important;
+  color: var(--tf-primary) !important;
+}
+
+.modern-form {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 16px !important;
+}
+
+.modern-form h2 {
+  grid-column: 1 / -1;
+  margin: 0 0 8px !important;
+  padding: 0 0 20px !important;
+  border-bottom: 1px solid #e7eaf2;
+  font-size: 28px !important;
+  font-weight: 800 !important;
+}
+
+.modern-form h2::after {
+  content: "מלאו את הפרטים ושמרו להמשך העבודה";
+  display: block;
+  margin-top: 7px;
+  color: #8490a5;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.modern-form label,
+.employee-picker-field,
+.filter-bar label,
+.attendance-toolbar label,
+.payroll-controls label,
+.request-form label,
+.notification-layout form label {
+  display: grid !important;
+  gap: 8px !important;
+  color: #3f4960 !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
+.modern-form label:has(textarea),
+.modern-form app-employee-picker,
+.modern-form > label:has(+ app-employee-picker) {
+  grid-column: 1 / -1;
+}
+
+.modern-form > label:has(+ app-employee-picker) {
+  margin-bottom: -12px;
+}
+
+.modern-form input,
+.modern-form select,
+.modern-form textarea,
+.filter-bar input,
+.filter-bar select,
+.attendance-toolbar input,
+.attendance-toolbar select,
+.payroll-controls input,
+.payroll-controls select,
+.request-form input,
+.request-form select,
+.request-form textarea,
+.notification-layout form select,
+.notification-layout form textarea {
+  width: 100%;
+  min-height: 48px !important;
+  padding: 11px 14px !important;
+  border: 1px solid #dfe4ee !important;
+  border-radius: 13px !important;
+  background: #f8f9fc !important;
+  color: #1e293f !important;
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+.modern-form textarea,
+.request-form textarea,
+.notification-layout form textarea {
+  min-height: 112px !important;
+  resize: vertical;
+}
+
+.modern-form input:hover,
+.modern-form select:hover,
+.modern-form textarea:hover {
+  border-color: #cbd2e1 !important;
+  background: #fff !important;
+}
+
+.modern-form input:focus,
+.modern-form select:focus,
+.modern-form textarea:focus,
+.filter-bar input:focus,
+.filter-bar select:focus,
+.attendance-toolbar input:focus,
+.attendance-toolbar select:focus,
+.payroll-controls input:focus,
+.payroll-controls select:focus {
+  border-color: #675ee5 !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 4px rgba(92, 82, 220, .11) !important;
+}
+
+.modern-form label small {
+  color: #8b95a8 !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+}
+
+.modern-form input[type="file"] {
+  padding: 8px !important;
+  color: #68738a !important;
+}
+
+.modern-form input[type="file"]::file-selector-button {
+  margin-left: 10px;
+  padding: 8px 13px;
+  border: 0;
+  border-radius: 9px;
+  background: #ecebff;
+  color: #4b43c8;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modern-form > button[type="submit"] {
+  grid-column: 1 / -1;
+  min-height: 50px !important;
+  margin-top: 7px;
+  border-radius: 13px !important;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.filter-bar,
+.attendance-toolbar,
+.payroll-controls {
+  align-items: end !important;
+  padding: 18px 20px !important;
+  border: 1px solid #e3e7f0 !important;
+  border-radius: 18px !important;
+  background: #f8f9fc !important;
+  box-shadow: inset 0 1px #fff;
+}
+
+.filter-bar button,
+.attendance-toolbar button,
+.payroll-controls button {
+  min-height: 46px;
+  padding-inline: 18px !important;
+  border-radius: 12px !important;
+}
+
+.request-form,
+.notification-layout.single form,
+.chat-upload {
+  padding: 24px !important;
+  border: 1px solid #e1e5ef !important;
+  border-radius: 20px !important;
+  background: linear-gradient(145deg, #fff, #f8f8ff) !important;
+  box-shadow: 0 12px 30px rgba(30, 40, 69, .055);
+}
+
+@media (max-width: 680px) {
+  .modal {
+    padding: 28px 20px 24px !important;
+    border-radius: 20px !important;
+  }
+
+  .modern-form {
+    grid-template-columns: 1fr;
+  }
+
+  .modern-form > * {
+    grid-column: 1 !important;
+  }
+}
+
+/* מעטפת טכנולוגית חדשה לכל אזור הניהול */
+body:has(.app-shell) {
+  min-height: 100vh;
+  background:
+    linear-gradient(rgba(87, 94, 230, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(87, 94, 230, .035) 1px, transparent 1px),
+    radial-gradient(circle at 88% 3%, rgba(75, 80, 214, .19), transparent 27%),
+    radial-gradient(circle at 10% 90%, rgba(27, 178, 202, .12), transparent 31%),
+    linear-gradient(145deg, #eef2fa 0%, #f7f8fc 48%, #edf2fa 100%) !important;
+  background-size: 34px 34px, 34px 34px, auto, auto, auto !important;
+  background-attachment: fixed !important;
+}
+
+.app-shell {
+  min-height: 100vh;
+  grid-template-columns: 282px minmax(0, 1fr) !important;
+  gap: 0;
+}
+
+.app-shell aside {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 100vh;
+  padding: 30px 20px !important;
+  border-left: 1px solid rgba(148, 159, 201, .14) !important;
+  background:
+    radial-gradient(circle at 30% 3%, rgba(99, 102, 241, .36), transparent 25%),
+    radial-gradient(circle at 85% 78%, rgba(34, 211, 238, .11), transparent 30%),
+    linear-gradient(165deg, #111936 0%, #10172d 48%, #0b1225 100%) !important;
+  box-shadow: -18px 0 55px rgba(22, 31, 63, .12) !important;
+}
+
+.app-shell aside::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .22;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(to bottom, #000, transparent 75%);
+}
+
+.app-shell aside > * { position: relative; z-index: 1; }
+
+.app-shell aside .brand {
+  padding: 0 8px 23px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  letter-spacing: -.6px;
+}
+
+.app-shell aside .brand span {
+  border: 1px solid rgba(255, 255, 255, .2);
+  background: linear-gradient(145deg, #7774ff, #4d55dd) !important;
+  box-shadow: 0 0 0 6px rgba(108, 105, 240, .1), 0 12px 30px rgba(66, 64, 190, .36) !important;
+}
+
+.app-shell .role-label {
+  width: max-content;
+  margin: 14px 57px 25px 0 !important;
+  padding: 5px 10px;
+  border: 1px solid rgba(151, 160, 205, .13);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .04);
+  color: #aeb9db !important;
+}
+
+.app-shell aside nav { gap: 8px !important; }
+
+.app-shell aside nav button {
+  min-height: 49px;
+  border-radius: 14px !important;
+  color: #bdc7e1 !important;
+}
+
+.app-shell aside nav button:hover {
+  border-color: rgba(139, 143, 255, .16) !important;
+  background: rgba(104, 110, 226, .1) !important;
+}
+
+.app-shell aside nav button.active {
+  border-color: rgba(162, 164, 255, .24) !important;
+  background: linear-gradient(110deg, rgba(101, 98, 232, .5), rgba(84, 91, 204, .18)) !important;
+  box-shadow: inset -3px 0 #8a87ff, 0 8px 22px rgba(12, 18, 43, .2) !important;
+}
+
+.app-shell main {
+  position: relative;
+  padding: 26px clamp(22px, 3vw, 46px) 52px !important;
+}
+
+.app-shell main::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  width: 430px;
+  height: 430px;
+  top: -190px;
+  left: 18%;
+  border-radius: 50%;
+  background: rgba(105, 99, 230, .11);
+  filter: blur(70px);
+}
+
+.app-shell main > header {
+  min-height: 82px;
+  padding: 16px 22px !important;
+  border: 1px solid rgba(255, 255, 255, .86) !important;
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, .72) !important;
+  box-shadow: 0 14px 40px rgba(31, 43, 78, .075) !important;
+  backdrop-filter: blur(22px) saturate(145%);
+}
+
+.app-shell main > header::after {
+  content: "מערכת ניהול חכמה";
+  display: inline-flex;
+  align-items: center;
+  min-height: 27px;
+  margin-inline-start: auto;
+  padding: 0 10px;
+  border: 1px solid #dddffd;
+  border-radius: 999px;
+  background: #f2f1ff;
+  color: #625bcb;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.page-panel,
+.panel:not(.dashboard-hero) {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .88) !important;
+  border-radius: 23px !important;
+  background: rgba(255, 255, 255, .82) !important;
+  box-shadow: 0 18px 50px rgba(36, 48, 82, .075) !important;
+  backdrop-filter: blur(16px) saturate(130%);
+}
+
+.panel-title {
+  position: relative;
+  margin: -1px -1px 20px !important;
+  padding: 22px 24px 20px !important;
+  border-bottom: 1px solid #e8ebf3 !important;
+  background:
+    radial-gradient(circle at 95% 0, rgba(104, 96, 229, .09), transparent 32%),
+    linear-gradient(135deg, rgba(250, 251, 255, .96), rgba(244, 246, 252, .88));
+}
+
+.panel-title::before {
+  content: "";
+  position: absolute;
+  right: 24px;
+  bottom: -1px;
+  width: 58px;
+  height: 3px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #5a52d9, #28adc3);
+}
+
+.dashboard-hero {
+  min-height: 188px;
+  border: 1px solid rgba(122, 129, 255, .2) !important;
+  background:
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+    radial-gradient(circle at 12% 25%, rgba(41, 194, 210, .31), transparent 29%),
+    linear-gradient(120deg, #172347, #38368f 58%, #5855d7) !important;
+  background-size: 28px 28px, 28px 28px, auto, auto !important;
+  box-shadow: 0 25px 60px rgba(40, 43, 119, .22) !important;
+}
+
+.stats article {
+  border: 1px solid rgba(255, 255, 255, .9) !important;
+  border-radius: 20px !important;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.96), rgba(247,248,253,.9)) !important;
+  box-shadow: 0 14px 38px rgba(34, 47, 83, .075) !important;
+}
+
+.stats article::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 3px;
+  background: linear-gradient(90deg, #5b54dd, #35b2c4);
+  opacity: .8;
+}
+
+.stats .app-icon {
+  border: 1px solid #e1e2ff;
+  background: linear-gradient(145deg, #f1f0ff, #e9f8fb) !important;
+  box-shadow: 0 8px 18px rgba(82, 75, 203, .1);
+}
+
+.filter-bar,
+.attendance-toolbar,
+.payroll-controls {
+  margin: 0 0 20px !important;
+  border: 1px solid rgba(221, 226, 239, .9) !important;
+  background:
+    linear-gradient(135deg, rgba(249,250,254,.95), rgba(241,244,251,.88)) !important;
+  box-shadow: 0 9px 24px rgba(38, 50, 82, .045), inset 0 1px #fff !important;
+}
+
+table {
+  overflow: hidden;
+  border: 1px solid #e6eaf2;
+  border-radius: 16px;
+  background: rgba(255,255,255,.7);
+}
+
+thead th {
+  background: linear-gradient(180deg, #f6f8fc, #f0f3f8) !important;
+  color: #647087 !important;
+  letter-spacing: .15px;
+}
+
+tbody tr:hover {
+  background: linear-gradient(90deg, rgba(239,239,255,.65), rgba(244,250,252,.65)) !important;
+}
+
+button:not(.close):not(.bell) {
+  border-radius: 12px;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease !important;
+}
+
+button:not(.close):not(.bell):hover { transform: translateY(-1px); }
+
+button.primary,
+.primary {
+  background: linear-gradient(120deg, #4840c8, #6565e8 65%, #547be5) !important;
+  box-shadow: 0 10px 24px rgba(73, 67, 201, .23) !important;
+}
+
+.employee-grid article,
+.request-card,
+.clock-card,
+.payslip,
+.notification-layout form,
+.request-form,
+.chat-upload {
+  border: 1px solid rgba(255,255,255,.92) !important;
+  background: rgba(255,255,255,.86) !important;
+  box-shadow: 0 16px 42px rgba(34, 47, 83, .07) !important;
+  backdrop-filter: blur(14px);
+}
+
+.modal-backdrop {
+  background:
+    linear-gradient(rgba(112, 118, 230, .06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(112, 118, 230, .06) 1px, transparent 1px),
+    rgba(7, 13, 29, .76) !important;
+  background-size: 32px 32px, 32px 32px, auto !important;
+}
+
+.modal {
+  background:
+    radial-gradient(circle at 95% 0, rgba(91, 85, 222, .12), transparent 28%),
+    rgba(255, 255, 255, .97) !important;
+  backdrop-filter: blur(24px);
+}
+
+@media (max-width: 820px) {
+  body:has(.app-shell) { background-size: 24px 24px, 24px 24px, auto, auto, auto !important; }
+  .app-shell { grid-template-columns: 1fr !important; }
+  .app-shell aside { position: relative; height: auto; border-radius: 0 0 24px 24px !important; }
+  .app-shell main > header::after { display: none; }
+}
+
+/* התאמת העיצוב למסכים קטנים ולתצוגה רספונסיבית. */
+@media (max-width: 560px) {
+  .stats {
+    grid-template-columns: 1fr !important;
+  }
+
+  .hero-actions,
+  .chat-form,
+  .request-actions {
+    align-items: stretch !important;
+    flex-direction: column !important;
+    width: 100%;
+  }
+
+  .hero-actions button,
+  .chat-form button,
+  .request-actions button,
+  .request-actions input {
+    width: 100%;
+  }
+
+  .notice-box {
+    position: fixed !important;
+    top: 80px !important;
+    right: 12px !important;
+    left: 12px !important;
+    width: auto !important;
+  }
+}
+// אייקונים נטענים מספריית ספריית האייקונים כ-קובץ אייקונים ולא כתווים ידניים
+.app-icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  flex: 0 0 auto;
+  overflow: hidden;
+  font-family: "Material Symbols Rounded" !important;
+  font-size: 1.15em;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "liga";
+  vertical-align: -0.15em;
+}
+
+.stats .app-icon {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  font-size: 24px;
+  vertical-align: 0;
+}
+
+.bell .app-icon,
+.modal .close .app-icon,
+.notice-title .app-icon {
+  font-size: 22px;
+  vertical-align: 0;
+}
+
+/* שפה חזותית אחידה לכל מסכי המערכת */
+:root {
+  --tf-navy: #10182c;
+  --tf-navy-soft: #18233e;
+  --tf-primary: #4f46d8;
+  --tf-primary-light: #706ff0;
+  --tf-cyan: #25a9c7;
+  --tf-success: #15966f;
+  --tf-warning: #d98b27;
+  --tf-danger: #d54d5b;
+  --tf-ink: #182136;
+  --tf-muted: #778197;
+  --tf-line: #e4e8f0;
+  --tf-surface: #ffffff;
+  --tf-page: #f3f6fb;
+}
+
+body {
+  background:
+    radial-gradient(circle at 82% 4%, rgba(83, 72, 221, .07), transparent 24%),
+    var(--tf-page);
+  color: var(--tf-ink);
+}
+
+.app-shell {
+  grid-template-columns: 264px minmax(0, 1fr) !important;
+  background: transparent;
+}
+
+.app-shell aside {
+  padding: 27px 18px !important;
+  border: 0 !important;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(111, 109, 240, .23), transparent 27%),
+    linear-gradient(180deg, var(--tf-navy-soft), var(--tf-navy)) !important;
+  color: #fff;
+  box-shadow: -12px 0 34px rgba(15, 24, 44, .08);
+}
+
+.app-shell aside .brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 10px;
+  color: #fff !important;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.app-shell aside .brand span {
+  width: 41px;
+  height: 41px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #6f6df0, #806ce4) !important;
+  box-shadow: 0 9px 22px rgba(87, 76, 216, .34);
+}
+
+.app-shell .role-label {
+  margin: 7px 57px 26px 0 !important;
+  color: #aeb9d4 !important;
+  font-size: 12px;
+}
+
+.app-shell aside nav {
+  display: grid;
+  gap: 6px;
+}
+
+.app-shell aside nav button {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 13px !important;
+  border: 1px solid transparent;
+  border-radius: 12px !important;
+  color: #bfc8dd !important;
+  font-weight: 600;
+  transition: .2s ease;
+}
+
+.app-shell aside nav button .app-icon {
+  color: #919dbc;
+  font-size: 21px;
+}
+
+.app-shell aside nav button:hover {
+  border-color: rgba(255, 255, 255, .08);
+  background: rgba(255, 255, 255, .06) !important;
+  color: #fff !important;
+  transform: translateX(-2px);
+}
+
+.app-shell aside nav button.active {
+  border-color: rgba(147, 145, 255, .22);
+  background: linear-gradient(135deg, rgba(105, 101, 225, .31), rgba(89, 110, 221, .18)) !important;
+  color: #fff !important;
+  box-shadow: inset 3px 0 #8b88ff;
+}
+
+.app-shell aside nav button.active .app-icon { color: #b9b7ff; }
+
+.app-shell .logout,
+.app-shell .role-switch {
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  background: rgba(255, 255, 255, .05) !important;
+  color: #dce2f2 !important;
+}
+
+.app-shell main {
+  min-width: 0;
+  padding: 28px 34px 44px !important;
+}
+
+.app-shell main > header {
+  min-height: 78px;
+  margin-bottom: 25px;
+  padding: 15px 20px !important;
+  border: 1px solid rgba(224, 228, 239, .9);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, .88);
+  box-shadow: 0 9px 25px rgba(30, 42, 70, .05);
+  backdrop-filter: blur(14px);
+}
+
+.app-shell main > header h1,
+.app-shell main > header h2 {
+  color: var(--tf-ink);
+  letter-spacing: -.5px;
+}
+
+.bell {
+  width: 43px !important;
+  height: 43px !important;
+  border: 1px solid var(--tf-line) !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  color: var(--tf-primary) !important;
+  box-shadow: 0 5px 14px rgba(36, 44, 78, .06);
+}
+
+.bell b {
+  border: 2px solid #fff;
+  background: var(--tf-danger) !important;
+}
+
+.dashboard-hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(25px, 4vw, 42px) !important;
+  border: 0 !important;
+  border-radius: 22px !important;
+  background:
+    radial-gradient(circle at 9% 15%, rgba(68, 192, 209, .28), transparent 28%),
+    linear-gradient(125deg, #19264a, #34368b 62%, #4f4ec8) !important;
+  color: #fff !important;
+  box-shadow: 0 20px 44px rgba(36, 45, 103, .19);
+}
+
+.dashboard-hero::after {
+  content: "";
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  left: -65px;
+  bottom: -115px;
+  border: 35px solid rgba(255, 255, 255, .06);
+  border-radius: 50%;
+}
+
+.dashboard-hero h1,
+.dashboard-hero h2,
+.dashboard-hero p { color: #fff !important; }
+
+.dashboard-hero p { color: #dce3fa !important; }
+
+.hero-actions button {
+  border: 1px solid rgba(255, 255, 255, .18) !important;
+  background: rgba(255, 255, 255, .11) !important;
+  color: #fff !important;
+  backdrop-filter: blur(8px);
+}
+
+.hero-actions button:first-child {
+  border-color: #fff !important;
+  background: #fff !important;
+  color: #3838a1 !important;
+}
+
+.stats {
+  gap: 16px !important;
+}
+
+.stats article {
+  position: relative;
+  overflow: hidden;
+  min-height: 118px;
+  padding: 20px !important;
+  border: 1px solid var(--tf-line) !important;
+  border-radius: 17px !important;
+  background: var(--tf-surface) !important;
+  box-shadow: 0 10px 28px rgba(31, 42, 70, .055) !important;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.stats article:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 34px rgba(31, 42, 70, .1) !important;
+}
+
+.stats article strong {
+  color: var(--tf-ink);
+  font-size: 29px;
+}
+
+.stats .app-icon {
+  background: #eeefff;
+  color: var(--tf-primary);
+}
+
+.panel,
+.page-panel {
+  border: 1px solid var(--tf-line) !important;
+  border-radius: 19px !important;
+  background: var(--tf-surface) !important;
+  box-shadow: 0 12px 32px rgba(31, 42, 70, .055) !important;
+}
+
+.panel-title {
+  padding-bottom: 17px;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.panel-title h2 {
+  margin: 0 0 4px;
+  color: var(--tf-ink);
+  font-size: 23px;
+  letter-spacing: -.4px;
+}
+
+.panel-title p { color: var(--tf-muted) !important; }
+
+button.primary,
+.primary {
+  border: 0 !important;
+  background: linear-gradient(135deg, #4238bd, #6672e7) !important;
+  color: #fff !important;
+  box-shadow: 0 9px 20px rgba(70, 62, 190, .2);
+}
+
+button.primary:hover,
+.primary:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+
+button.secondary,
+.secondary {
+  border: 1px solid #dce1eb !important;
+  background: #fff !important;
+  color: #4b5770 !important;
+}
+
+button.danger,
+.danger {
+  border: 1px solid #f2cdd2 !important;
+  background: #fff5f6 !important;
+  color: var(--tf-danger) !important;
+}
+
+.filter-bar,
+.attendance-toolbar,
+.payroll-controls {
+  gap: 13px !important;
+  padding: 16px !important;
+  border: 1px solid #e6e9f1 !important;
+  border-radius: 15px !important;
+  background: linear-gradient(145deg, #fbfcff, #f6f8fc) !important;
+}
+
+input,
+select,
+textarea {
+  border-color: #dce2ec !important;
+  border-radius: 10px !important;
+  color: #263149;
+  outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #7169df !important;
+  box-shadow: 0 0 0 3px rgba(97, 87, 220, .1);
+}
+
+table {
+  border-collapse: separate !important;
+  border-spacing: 0;
+}
+
+thead th {
+  padding: 13px 14px !important;
+  border-top: 1px solid #e8ebf2;
+  border-bottom: 1px solid #e8ebf2 !important;
+  background: #f7f9fc !important;
+  color: #697389 !important;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+tbody td {
+  padding: 15px 14px !important;
+  border-bottom: 1px solid #edf0f5 !important;
+  background-color: transparent;
+}
+
+tbody tr { transition: background .18s ease; }
+tbody tr:hover { background: #fafaff; }
+
+.progress {
+  height: 7px !important;
+  overflow: hidden;
+  border-radius: 999px !important;
+  background: #e9ecf3 !important;
+}
+
+.progress span {
+  border-radius: inherit;
+  background: linear-gradient(90deg, #4e46cf, #29a9bf) !important;
+}
+
+.attention-badge {
+  border: 1px solid #f0d29f;
+  background: #fff7e8 !important;
+  color: #a36714 !important;
+}
+
+.employee-grid article,
+.request-card,
+.clock-card,
+.payslip {
+  border: 1px solid var(--tf-line) !important;
+  border-radius: 17px !important;
+  background: #fff !important;
+  box-shadow: 0 9px 25px rgba(31, 42, 70, .05) !important;
+}
+
+.employee-grid article:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 32px rgba(31, 42, 70, .09) !important;
+}
+
+.avatar {
+  background: linear-gradient(135deg, #ecebff, #e6f6fa) !important;
+  color: #5148c8 !important;
+}
+
+.modal-backdrop {
+  background: rgba(11, 18, 36, .62) !important;
+  backdrop-filter: blur(6px);
+}
+
+.modal {
+  border: 1px solid rgba(255, 255, 255, .8) !important;
+  border-radius: 20px !important;
+  background: #fff !important;
+  box-shadow: 0 28px 80px rgba(12, 20, 42, .28) !important;
+}
+
+.modal h2 { color: var(--tf-ink); letter-spacing: -.4px; }
+
+.notice-box {
+  border: 1px solid var(--tf-line) !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  box-shadow: 0 18px 45px rgba(23, 32, 59, .18) !important;
+}
+
+.messages {
+  border: 1px solid #e5e8f0 !important;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(100, 93, 222, .05), transparent 25%),
+    #f7f9fc !important;
+}
+
+.messages article {
+  border-right-color: var(--tf-primary) !important;
+}
+
+.request-form,
+.chat-upload {
+  border-color: #dcdaf4 !important;
+  background: linear-gradient(145deg, #fcfcff, #f5f4ff) !important;
+}
+
+.empty-state,
+.no-results {
+  border-color: #d8ddea !important;
+  border-radius: 13px;
+  background: #f9fafc !important;
+}
+
+@media (max-width: 820px) {
+  .app-shell aside {
+    border-radius: 0 0 18px 18px;
+  }
+
+  .app-shell aside nav button {
+    min-width: max-content;
+  }
+
+  .app-shell main {
+    padding: 18px 14px 35px !important;
+  }
+}
+
+/* הערכה הסופית נטענת אחרונה כדי להחליף לחלוטין את המראה הקודם */
+html body:has(.app-shell) {
+  color: #edf4ff !important;
+  background:
+    linear-gradient(rgba(53, 207, 229, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(53, 207, 229, .055) 1px, transparent 1px),
+    radial-gradient(circle at 82% 2%, rgba(92, 74, 232, .3), transparent 30%),
+    radial-gradient(circle at 7% 91%, rgba(20, 191, 216, .2), transparent 30%),
+    #060a16 !important;
+  background-size: 38px 38px, 38px 38px, auto, auto, auto !important;
+  background-attachment: fixed !important;
+}
+
+html body .app-shell { background: transparent !important; }
+
+html body .app-shell aside {
+  border-left: 1px solid rgba(58, 213, 235, .16) !important;
+  background:
+    radial-gradient(circle at 50% 0, rgba(111, 91, 246, .3), transparent 28%),
+    linear-gradient(180deg, #101a36, #080e20) !important;
+  color: #fff !important;
+  box-shadow: -20px 0 60px rgba(0, 0, 0, .35) !important;
+}
+
+html body .app-shell aside nav button { color: #aab7d2 !important; }
+html body .app-shell aside nav button.active {
+  border-color: rgba(54, 220, 239, .28) !important;
+  background: linear-gradient(105deg, rgba(108, 90, 242, .42), rgba(22, 199, 222, .16)) !important;
+  color: #fff !important;
+  box-shadow: inset -3px 0 #24d7e9, 0 0 28px rgba(81, 93, 235, .16) !important;
+}
+html body .app-shell aside nav button.active .app-icon { color: #2bd9eb !important; }
+
+html body .app-shell main > header {
+  border-color: rgba(127, 148, 197, .18) !important;
+  background: rgba(12, 20, 40, .82) !important;
+  box-shadow: 0 18px 50px rgba(0,0,0,.26) !important;
+}
+html body .app-shell main > header h1,
+html body .app-shell main > header h2 { color: #f2f7ff !important; }
+html body .app-shell main > header p { color: #91a1c0 !important; }
+
+html body .app-shell .page-panel,
+html body .app-shell .panel:not(.dashboard-hero),
+html body .app-shell .stats article,
+html body .app-shell .employee-grid article,
+html body .app-shell .request-card,
+html body .app-shell .clock-card,
+html body .app-shell .payslip,
+html body .app-shell .notification-layout form,
+html body .app-shell .request-form,
+html body .app-shell .chat-upload,
+html body .app-shell .notice-box {
+  border-color: rgba(128, 148, 197, .18) !important;
+  background: linear-gradient(145deg, rgba(18, 28, 54, .96), rgba(9, 16, 33, .94)) !important;
+  color: #eaf2ff !important;
+  box-shadow: 0 20px 55px rgba(0,0,0,.25) !important;
+}
+
+html body .app-shell .panel-title {
+  border-bottom-color: rgba(128, 148, 197, .16) !important;
+  background:
+    radial-gradient(circle at 92% 0, rgba(109, 91, 242, .2), transparent 35%),
+    linear-gradient(135deg, rgba(25, 37, 70, .97), rgba(12, 20, 40, .94)) !important;
+}
+html body .app-shell .panel-title h2,
+html body .app-shell .panel h2,
+html body .app-shell .page-panel h2,
+html body .app-shell .stats strong,
+html body .app-shell .project-row b { color: #f3f7ff !important; }
+html body .app-shell .panel-title p,
+html body .app-shell .panel p,
+html body .app-shell .page-panel p,
+html body .app-shell .stats span,
+html body .app-shell .project-row span { color: #92a2bf !important; }
+
+html body .app-shell .stats article::after,
+html body .app-shell .panel-title::before { background: linear-gradient(90deg, #7869ff, #22d2e5) !important; }
+html body .app-shell .stats .app-icon {
+  border-color: rgba(39, 211, 230, .2) !important;
+  background: rgba(31, 202, 224, .09) !important;
+  color: #28d5e8 !important;
+}
+
+html body .app-shell .filter-bar,
+html body .app-shell .attendance-toolbar,
+html body .app-shell .payroll-controls {
+  border-color: rgba(128, 148, 197, .18) !important;
+  background: rgba(5, 11, 25, .58) !important;
+  color: #dce7f8 !important;
+}
+
+html body .app-shell input,
+html body .app-shell select,
+html body .app-shell textarea {
+  border-color: rgba(126, 146, 193, .25) !important;
+  background: rgba(5, 11, 25, .78) !important;
+  color: #edf5ff !important;
+}
+html body .app-shell input:focus,
+html body .app-shell select:focus,
+html body .app-shell textarea:focus {
+  border-color: #25d4e7 !important;
+  box-shadow: 0 0 0 4px rgba(37, 212, 231, .11) !important;
+}
+html body .app-shell select option { background: #111a31 !important; color: #edf5ff !important; }
+
+html body .app-shell table {
+  border-color: rgba(128, 148, 197, .17) !important;
+  background: rgba(6, 12, 27, .6) !important;
+}
+html body .app-shell thead th {
+  border-color: rgba(128, 148, 197, .17) !important;
+  background: #172342 !important;
+  color: #9facc5 !important;
+}
+html body .app-shell tbody td {
+  border-bottom-color: rgba(128, 148, 197, .12) !important;
+  color: #dce7f7 !important;
+}
+html body .app-shell tbody tr:hover { background: rgba(34, 206, 226, .06) !important; }
+html body .app-shell tbody td b { color: #fff !important; }
+
+html body .app-shell button.secondary,
+html body .app-shell .filter-bar button:not(.primary) {
+  border-color: rgba(128, 148, 197, .24) !important;
+  background: #182443 !important;
+  color: #dce7f7 !important;
+}
+
+html body .app-shell .progress { background: rgba(130, 147, 188, .18) !important; }
+html body .app-shell .progress span { background: linear-gradient(90deg, #7869ff, #22d2e5) !important; }
+
+html body .modal {
+  border-color: rgba(54, 218, 237, .22) !important;
+  background:
+    radial-gradient(circle at 92% 0, rgba(112, 92, 243, .22), transparent 32%),
+    linear-gradient(145deg, #151f3c, #0a1124) !important;
+  color: #edf4ff !important;
+}
+html body .modal h2 { color: #fff !important; border-bottom-color: rgba(128,148,197,.18) !important; }
+html body .modal label { color: #bbc7dc !important; }
+html body .modal input,
+html body .modal select,
+html body .modal textarea { background: #080f21 !important; color: #edf4ff !important; border-color: rgba(128,148,197,.24) !important; }
+
+@media (max-width: 820px) {
+  html body .app-shell aside { border-radius: 0 0 24px 24px !important; }
+}
+
+/* ליטוש סופי: קריאות גבוהה, היררכיה ברורה ושפה אחידה ללא משטחים לבנים */
+html body:has(.app-shell),
+html body:has(.app-shell) button,
+html body:has(.app-shell) input,
+html body:has(.app-shell) select,
+html body:has(.app-shell) textarea {
+  font-family: "Heebo", Arial, sans-serif !important;
+}
+
+html body .app-shell main { color: #f4f7ff !important; }
+
+html body .app-shell main > header h1 {
+  margin: 0 0 7px !important;
+  font-size: clamp(25px, 2.2vw, 34px) !important;
+  line-height: 1.15 !important;
+  font-weight: 800 !important;
+}
+html body .app-shell main > header p {
+  margin: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+}
+
+html body .app-shell .panel-title {
+  align-items: center !important;
+  min-height: 96px;
+  padding: 24px 28px 22px !important;
+}
+html body .app-shell .panel-title > div { display: grid; gap: 8px; }
+html body .app-shell .panel-title h2 {
+  margin: 0 !important;
+  font-size: clamp(21px, 1.8vw, 28px) !important;
+  line-height: 1.25 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+}
+html body .app-shell .panel-title p {
+  margin: 0 !important;
+  color: #a8b7d1 !important;
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+}
+
+html body .app-shell .dashboard-hero h2 {
+  margin: 10px 0 12px !important;
+  font-size: clamp(25px, 2.4vw, 36px) !important;
+  line-height: 1.25 !important;
+}
+html body .app-shell .dashboard-hero p {
+  max-width: 700px;
+  margin: 0 !important;
+  color: #d8e1f5 !important;
+  font-size: 15px !important;
+  line-height: 1.8 !important;
+}
+
+html body .app-shell .stats article {
+  min-height: 126px !important;
+  padding: 23px !important;
+  border: 1px solid #263758 !important;
+  border-radius: 18px !important;
+  background: #101a31 !important;
+}
+html body .app-shell .stats article strong {
+  color: #fff !important;
+  font-size: 31px !important;
+  line-height: 1 !important;
+}
+html body .app-shell .stats article span:not(.app-icon) {
+  margin-top: 9px;
+  color: #aebbd2 !important;
+  font-size: 13px !important;
+}
+
+html body .app-shell .panel:not(.dashboard-hero),
+html body .app-shell .page-panel {
+  border: 1px solid #233354 !important;
+  border-radius: 20px !important;
+  background: #0e182e !important;
+}
+
+html body .app-shell .grid,
+html body .app-shell .smart-dashboard-grid { gap: 22px !important; }
+
+html body .app-shell .project-row {
+  min-height: 78px;
+  padding: 17px 6px !important;
+  border-bottom: 1px solid #223250 !important;
+}
+html body .app-shell .project-row b { color: #f5f8ff !important; font-size: 14px; }
+html body .app-shell .project-row span { color: #9eacc5 !important; line-height: 1.65; }
+html body .app-shell .project-row em {
+  min-width: 74px;
+  padding: 7px 11px !important;
+  border: 1px solid #594a27 !important;
+  border-radius: 999px !important;
+  background: #2c2415 !important;
+  color: #ffd280 !important;
+  text-align: center;
+}
+
+html body .app-shell .donut {
+  filter: drop-shadow(0 12px 25px rgba(0,0,0,.28));
+}
+
+/* אין משטחים לבנים באף מצב במערכת */
+html body .app-shell main,
+html body .app-shell section,
+html body .app-shell .grid,
+html body .app-shell .smart-dashboard-grid { background-color: transparent !important; }
+
+html body .app-shell button,
+html body .app-shell button:hover,
+html body .app-shell button:focus,
+html body .app-shell button:active,
+html body .app-shell .secondary,
+html body .app-shell .secondary:hover,
+html body .app-shell .team-count,
+html body .app-shell .team-count:hover {
+  border-color: #344866 !important;
+  background: #17243f !important;
+  color: #e8effc !important;
+}
+
+html body .app-shell button.primary,
+html body .app-shell button.primary:hover,
+html body .app-shell .primary,
+html body .app-shell .primary:hover,
+html body .app-shell .hero-actions button:first-child,
+html body .app-shell .hero-actions button:first-child:hover {
+  border-color: #28c5da !important;
+  background: linear-gradient(105deg, #6355e9, #286fca 58%, #18aabd) !important;
+  color: #fff !important;
+}
+
+html body .app-shell .bell,
+html body .app-shell .bell:hover,
+html body .app-shell .avatar,
+html body .app-shell .stats .app-icon,
+html body .app-shell .activity-icon {
+  border-color: #2b4962 !important;
+  background: #10263b !important;
+  color: #2bd5e7 !important;
+}
+
+html body .app-shell input,
+html body .app-shell input:hover,
+html body .app-shell input:focus,
+html body .app-shell select,
+html body .app-shell select:hover,
+html body .app-shell select:focus,
+html body .app-shell textarea,
+html body .app-shell textarea:hover,
+html body .app-shell textarea:focus {
+  background: #101c33 !important;
+  color: #f1f5ff !important;
+}
+
+html body .app-shell .done,
+html body .app-shell em,
+html body .app-shell .attention-badge,
+html body .app-shell .deadline-badge,
+html body .app-shell .manager-chip,
+html body .app-shell .status-badge {
+  background-color: #182743 !important;
+  color: #aeeaf1 !important;
+}
+
+html body .app-shell tbody tr,
+html body .app-shell tbody tr:hover,
+html body .app-shell tbody td,
+html body .app-shell thead,
+html body .app-shell thead tr {
+  background-color: transparent !important;
+}
+
+html body .modal,
+html body .modal form,
+html body .modal form:hover,
+html body .modal .project-details,
+html body .modal .team-person {
+  background-color: #0e182e !important;
+  color: #edf4ff !important;
+}
+html body .modal button,
+html body .modal button:hover,
+html body .modal .close,
+html body .modal .close:hover {
+  border-color: #354967 !important;
+  background: #17243f !important;
+  color: #e6eefb !important;
+}
+html body .modal input,
+html body .modal input:hover,
+html body .modal input:focus,
+html body .modal select,
+html body .modal select:hover,
+html body .modal select:focus,
+html body .modal textarea,
+html body .modal textarea:hover,
+html body .modal textarea:focus {
+  background: #101c33 !important;
+  color: #f1f5ff !important;
+}
+html body .modal input[type="file"]::file-selector-button {
+  border: 1px solid #38516d !important;
+  background: #17304a !important;
+  color: #8de6ef !important;
+}
+
+html body .app-shell .donut span,
+html body .app-shell .task-legend article,
+html body .app-shell .messages,
+html body .app-shell .messages article,
+html body .app-shell .empty-state,
+html body .app-shell .no-results {
+  background-color: #0c172c !important;
+  color: #e8f0fc !important;
+}
+
+/* גם מסך הכניסה משתמש באותה ערכה כהה ללא לבן */
+html body app-auth .auth-page {
+  background:
+    linear-gradient(rgba(44, 208, 229, .05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(44, 208, 229, .05) 1px, transparent 1px),
+    radial-gradient(circle at 15% 8%, rgba(103, 84, 239, .28), transparent 28%),
+    #060a16 !important;
+  background-size: 36px 36px, 36px 36px, auto, auto !important;
+}
+html body app-auth .auth-shell,
+html body app-auth .auth-panel,
+html body app-auth .auth-card,
+html body app-auth .auth-form {
+  border-color: #283b5c !important;
+  background: #0e182e !important;
+  color: #eef4ff !important;
+}
+html body app-auth h1,
+html body app-auth h2,
+html body app-auth strong,
+html body app-auth label { color: #f2f6ff !important; }
+html body app-auth p,
+html body app-auth .brand-subtitle { color: #9eacc5 !important; }
+html body app-auth .input-wrap,
+html body app-auth .input-wrap:hover,
+html body app-auth .input-wrap:focus-within,
+html body app-auth input,
+html body app-auth input:hover,
+html body app-auth input:focus {
+  border-color: #304564 !important;
+  background: #111d35 !important;
+  color: #f2f6ff !important;
+}
+html body app-auth button,
+html body app-auth button:hover {
+  border-color: #35506d !important;
+  background: #172842 !important;
+  color: #dce8f8 !important;
+}
+html body app-auth .submit-button,
+html body app-auth .submit-button:hover {
+  border-color: #28c8dc !important;
+  background: linear-gradient(105deg, #6355e9, #286fca 58%, #18aabd) !important;
+  color: #fff !important;
+}
+
+html body app-auth .auth-form header,
+html body app-auth .auth-form header:hover,
+html body app-auth .form-message,
+html body app-auth .security-note,
+html body app-auth .visual-points span {
+  border-color: #2c405f !important;
+  background: #111d35 !important;
+  color: #dce7f7 !important;
+}
+html body app-auth .auth-form header h1 { color: #f4f7ff !important; }
+html body app-auth .auth-form header p { color: #a7b4cb !important; }
+html body app-auth .form-kicker { color: #52d9e8 !important; }
+
+/* פעמון ההתראות ואות המשתמש מוצמדים יחד לקצה השמאלי */
+html body .app-shell main > header {
+  position: relative !important;
+  padding-left: 132px !important;
+}
+html body .app-shell main > header .header-actions {
+  position: absolute !important;
+  left: 20px !important;
+  right: auto !important;
+  top: 50% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+  transform: translateY(-50%) !important;
+}
+html body .app-shell main > header::after { display: none !important; }
+html body .app-shell main > header .bell,
+html body .app-shell main > header .bell:hover,
+html body .app-shell main > header .avatar,
+html body .app-shell main > header .avatar:hover {
+  width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 !important;
+  border: 1px solid #31506b !important;
+  border-radius: 12px !important;
+  background: #10253b !important;
+  color: #38d7e8 !important;
+}
+html body .app-shell main > header .avatar {
+  display: grid !important;
+  place-items: center !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+}
+html body .app-shell main > header .notice-box {
+  left: 0 !important;
+  right: auto !important;
+  top: 55px !important;
+  border-color: #304563 !important;
+  background: #0d182d !important;
+}
+
+@media (max-width: 680px) {
+  html body .app-shell main > header { padding-left: 112px !important; }
+  html body .app-shell main > header .header-actions { left: 12px !important; }
+}
+
+/* ריווח התפריט, גלילת ההיסטוריה וסידור כלי הנוכחות */
+html body .app-shell aside nav {
+  gap: 13px !important;
+  margin-top: 8px !important;
+}
+html body .app-shell aside nav button {
+  min-height: 52px !important;
+  padding: 0 16px !important;
+}
+
+html body .app-shell .activity-panel { position: relative; }
+html body .app-shell .activity-scroll {
+  max-height: 390px;
+  padding-left: 8px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #2ac8db #111d34;
+}
+html body .app-shell .activity-scroll::-webkit-scrollbar { width: 7px; }
+html body .app-shell .activity-scroll::-webkit-scrollbar-track { background: #111d34; border-radius: 99px; }
+html body .app-shell .activity-scroll::-webkit-scrollbar-thumb { background: #2ac8db; border-radius: 99px; }
+html body .app-shell .activity-scroll-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 16px;
+}
+html body .app-shell .activity-scroll-controls button,
+html body .app-shell .activity-scroll-controls button:hover {
+  width: 42px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+  border: 1px solid #2d7185 !important;
+  border-radius: 50% !important;
+  background: #102b40 !important;
+  color: #32d5e6 !important;
+}
+
+html body .app-shell .attendance-toolbar:not(.detail-filters) {
+  display: grid !important;
+  grid-template-columns: minmax(240px, 1fr) minmax(320px, 1fr) !important;
+  align-items: end !important;
+}
+html body .app-shell .attendance-toolbar:not(.detail-filters) > label,
+html body .app-shell .attendance-toolbar:not(.detail-filters) .employee-search {
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+html body .app-shell .attendance-toolbar:not(.detail-filters) input,
+html body .app-shell .attendance-toolbar:not(.detail-filters) .search-field {
+  width: 100% !important;
+  min-height: 48px !important;
+}
+html body .app-shell .attendance-toolbar:not(.detail-filters) .color-help {
+  grid-column: 1 / -1;
+  margin-top: 3px;
+  color: #9eacc4 !important;
+}
+
+/* כל תגיות המצב משתמשות ברקע כהה ובכתב כתום ברור */
+html body .app-shell em,
+html body .app-shell .done,
+html body .app-shell .attention-badge,
+html body .app-shell .deadline-badge,
+html body .app-shell .attendance-status,
+html body .app-shell .manager-chip,
+html body .app-shell .status-badge,
+html body .app-shell .priority-badge,
+html body .app-shell .project-row em {
+  border-color: #77551e !important;
+  background: #2d220f !important;
+  color: #ffbd55 !important;
+}
+
+html body .app-shell .dot.red { background: #ef647a !important; }
+html body .app-shell .dot.yellow { background: #ffbd55 !important; }
+html body .app-shell .dot.green { background: #35d6a4 !important; }
+
+@media (max-width: 760px) {
+  html body .app-shell .attendance-toolbar:not(.detail-filters) { grid-template-columns: 1fr !important; }
+  html body .app-shell .attendance-toolbar:not(.detail-filters) .color-help { grid-column: 1; }
+}
+
+/* תיקון אזורים בהירים שנותרו והקטנת תצוגת הדשבורד */
+html body .app-shell .chat-members,
+html body .app-shell .chat-members:hover {
+  border: 1px solid #2d405f !important;
+  background: #0d182d !important;
+  color: #ffb84d !important;
+}
+html body .app-shell .chat-members b,
+html body .app-shell .chat-members span,
+html body .app-shell .chat-members i {
+  border-color: #63491f !important;
+  background: #2b210f !important;
+  color: #ffb84d !important;
+}
+
+html body .app-shell app-employee-picker .employee-trigger,
+html body .app-shell app-employee-picker .employee-trigger:hover,
+html body .app-shell app-employee-picker .picker-panel,
+html body .app-shell app-employee-picker .search-box,
+html body .app-shell app-employee-picker .employee-option,
+html body .app-shell app-employee-picker .employee-option:hover,
+html body .app-shell app-employee-picker .employee-option.selected,
+html body .app-shell app-employee-picker .employee-option:disabled {
+  border-color: #304462 !important;
+  background: #101b31 !important;
+  color: #edf3ff !important;
+}
+html body .app-shell app-employee-picker .load,
+html body .app-shell app-employee-picker .load.full {
+  background: #2b210f !important;
+  color: #ffb84d !important;
+}
+
+html body .app-shell .attendance-under,
+html body .app-shell .attendance-over,
+html body .app-shell .attendance-complete,
+html body .app-shell .attendance-under td,
+html body .app-shell .attendance-over td,
+html body .app-shell .attendance-complete td,
+html body .app-shell .request-card,
+html body .app-shell .request-card:hover {
+  background: #0e192e !important;
+  color: #e8effb !important;
+}
+
+html body .app-shell .attendance-under .attendance-status,
+html body .app-shell .attendance-over .attendance-status,
+html body .app-shell .attendance-complete .attendance-status {
+  border-color: #6c4e1c !important;
+  background: #2b210f !important;
+  color: #ffb84d !important;
+}
+
+html body .app-shell .dashboard-hero {
+  min-height: 150px !important;
+  padding: 26px 32px !important;
+}
+html body .app-shell .dashboard-hero h2 {
+  margin: 6px 0 8px !important;
+  font-size: clamp(23px, 2vw, 31px) !important;
+}
+html body .app-shell .dashboard-hero p { font-size: 14px !important; }
+html body .app-shell .stats { gap: 14px !important; margin-block: 18px !important; }
+html body .app-shell .stats article {
+  min-height: 102px !important;
+  padding: 17px 19px !important;
+}
+html body .app-shell .stats article strong { font-size: 26px !important; }
+html body .app-shell .stats .app-icon {
+  width: 42px !important;
+  height: 42px !important;
+  font-size: 20px !important;
+}
+html body .app-shell .grid,
+html body .app-shell .smart-dashboard-grid { gap: 17px !important; }
+html body .app-shell .panel-title {
+  min-height: 82px !important;
+  padding: 18px 22px !important;
+}
+html body .app-shell .panel-title h2 { font-size: clamp(20px, 1.6vw, 25px) !important; }
+
+/* בתפריט מפרידים בין הפעולות בלי להגדיל אותן */
+html body .app-shell aside nav { gap: 10px !important; }
+html body .app-shell aside nav button {
+  min-height: 46px !important;
+  padding: 0 14px !important;
+}
+
+/* החלפת הכתום בטורקיז־כחול בכל תגיות המערכת */
+html body .app-shell .chat-members,
+html body .app-shell .chat-members b,
+html body .app-shell .chat-members span,
+html body .app-shell .chat-members i,
+html body .app-shell em,
+html body .app-shell .done,
+html body .app-shell .attention-badge,
+html body .app-shell .deadline-badge,
+html body .app-shell .attendance-status,
+html body .app-shell .manager-chip,
+html body .app-shell .status-badge,
+html body .app-shell .priority-badge,
+html body .app-shell .project-row em,
+html body .app-shell app-employee-picker .load,
+html body .app-shell app-employee-picker .load.full {
+  border-color: #23647a !important;
+  background: #0d2b3b !important;
+  color: #55dbea !important;
+}
+
+html body .app-shell .attendance-under .attendance-status,
+html body .app-shell .attendance-over .attendance-status,
+html body .app-shell .attendance-complete .attendance-status {
+  border-color: #23647a !important;
+  background: #0d2b3b !important;
+  color: #55dbea !important;
+}
+
+/* רווח ברור בין כפתורי הפעולות בטבלאות ובכרטיסי הפרויקטים */
+html body .app-shell tbody td:last-child button,
+html body .app-shell .project-actions button {
+  margin: 3px 4px !important;
+}
+html body .app-shell tbody td:last-child button + button,
+html body .app-shell .project-actions button + button {
+  margin-inline-start: 8px !important;
+}
+html body .app-shell tbody td:last-child button.danger,
+html body .app-shell tbody td:last-child .danger {
+  margin-inline-start: 12px !important;
+}
+
+/* תלוש שכר מלא וברור בתוך המערכת */
+html body .app-shell .payslip.official {
+  max-width: 920px !important;
+  margin: 28px auto !important;
+  padding: 30px !important;
+  border: 1px solid #31506d !important;
+  border-radius: 20px !important;
+  background: #101b31 !important;
+  color: #edf4ff !important;
+}
+html body .app-shell .payslip-head {
+  padding-bottom: 20px !important;
+  border-bottom: 2px solid #2c445f !important;
+}
+html body .app-shell .payslip-head b { color: #fff !important; font-size: 25px !important; }
+html body .app-shell .payslip-head small { display: block; margin-top: 5px; color: #9fb0ca !important; }
+html body .app-shell .payslip-document-meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 20px 0 14px;
+}
+html body .app-shell .payslip-document-meta span,
+html body .app-shell .employee-info span {
+  padding: 13px 15px;
+  border: 1px solid #2b405f;
+  border-radius: 10px;
+  background: #0c172b !important;
+  color: #9eafc8 !important;
+}
+html body .app-shell .payslip-document-meta b,
+html body .app-shell .employee-info b { display: block; margin-top: 4px; color: #f4f7ff !important; }
+html body .app-shell .employee-info {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+  margin: 0 0 24px !important;
+}
+html body .app-shell .payslip h3 {
+  margin: 26px 0 13px !important;
+  padding-right: 11px;
+  border-right: 3px solid #27cadc;
+  color: #fff !important;
+}
+html body .app-shell .salary-summary {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 11px !important;
+  margin-top: 22px !important;
+}
+html body .app-shell .salary-summary > div {
+  min-height: 76px;
+  padding: 14px !important;
+  border: 1px solid #2d4260 !important;
+  border-radius: 11px !important;
+  background: #0c172b !important;
+}
+html body .app-shell .salary-summary span { color: #9eafc8 !important; }
+html body .app-shell .salary-summary b { display: block; margin-top: 7px; color: #f4f7ff !important; font-size: 18px; }
+html body .app-shell .salary-summary .deduction b { color: #ff91a5 !important; }
+html body .app-shell .salary-summary .net {
+  border-color: #24778a !important;
+  background: #0b2c3b !important;
+}
+html body .app-shell .salary-summary .net span,
+html body .app-shell .salary-summary .net b { color: #65e4ef !important; }
+html body .app-shell .payslip-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid #2b405d;
+  color: #94a5bf;
+  font-size: 12px;
+}
+html body .app-shell .payslip-footer p { max-width: 620px; margin: 0 !important; }
+html body .app-shell .print-payslip { margin-top: 20px !important; }
+
+@media (max-width: 760px) {
+  html body .app-shell .payslip-document-meta,
+  html body .app-shell .employee-info,
+  html body .app-shell .salary-summary { grid-template-columns: 1fr !important; }
+  html body .app-shell .payslip-footer { flex-direction: column; }
+}
+
+/* בהדפסה מוצג רק התלוש שנבחר בפורמט נקי המתאים לדף A4 */
+@media print {
+  @page { size: A4 portrait; margin: 12mm; }
+  body * { visibility: hidden !important; }
+  .payslip.official.print-target,
+  .payslip.official.print-target * { visibility: visible !important; }
+  .payslip.official:not(.print-target) { display: none !important; }
+  .payslip.official.print-target {
+    direction: rtl !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 10mm !important;
+    border: 1px solid #b8c2d0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    color: #14213a !important;
+    box-shadow: none !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .payslip.official.print-target .payslip-head {
+    border-bottom: 3px solid #183b67 !important;
+  }
+  .payslip.official.print-target .brand,
+  .payslip.official.print-target h3,
+  .payslip.official.print-target b { color: #14213a !important; }
+  .payslip.official.print-target small,
+  .payslip.official.print-target span,
+  .payslip.official.print-target p { color: #46556d !important; }
+  .payslip.official.print-target .payslip-document-meta span,
+  .payslip.official.print-target .employee-info span,
+  .payslip.official.print-target .salary-summary > div {
+    border-color: #cbd3df !important;
+    background: #f3f6fa !important;
+  }
+  .payslip.official.print-target table { border-color: #bcc7d5 !important; background: #fff !important; }
+  .payslip.official.print-target th { border-color: #c4cfdb !important; background: #183b67 !important; color: #fff !important; }
+  .payslip.official.print-target td { border-color: #d4dbe5 !important; background: #fff !important; color: #18243a !important; }
+  .payslip.official.print-target .salary-summary .net {
+    border-color: #176b78 !important;
+    background: #dff4f4 !important;
+  }
+  .payslip.official.print-target .salary-summary .net span,
+  .payslip.official.print-target .salary-summary .net b { color: #0b5360 !important; }
+  .payslip.official.print-target .salary-summary .deduction b { color: #a52d47 !important; }
+  .payslip.official.print-target .print-payslip { display: none !important; }
+}
+html body .app-shell .donut span {
+  background: #0b1428 !important;
+  color: #fff !important;
+  box-shadow: inset 0 0 0 1px #263858 !important;
+}
+html body .app-shell .donut span small { color: #9fadc5 !important; }
+html body .app-shell .task-legend article {
+  border: 1px solid #263654 !important;
+  border-radius: 13px !important;
+  background: #121e37 !important;
+  color: #eef4ff !important;
+}
+html body .app-shell .task-legend b { color: #fff !important; }
+html body .app-shell .task-legend span { color: #a6b4cb !important; }
+
+html body .app-shell .filter-bar,
+html body .app-shell .attendance-toolbar,
+html body .app-shell .payroll-controls {
+  gap: 16px !important;
+  padding: 20px !important;
+  border: 1px solid #263654 !important;
+  border-radius: 16px !important;
+  background: #0a1428 !important;
+}
+html body .app-shell .filter-bar label,
+html body .app-shell .attendance-toolbar label,
+html body .app-shell .payroll-controls label {
+  gap: 9px !important;
+  color: #b8c5da !important;
+  font-size: 13px !important;
+}
+
+html body .app-shell input,
+html body .app-shell select,
+html body .app-shell textarea,
+html body .modal input,
+html body .modal select,
+html body .modal textarea {
+  min-height: 48px !important;
+  padding: 11px 14px !important;
+  border: 1px solid #30405f !important;
+  border-radius: 11px !important;
+  background: #111c33 !important;
+  color: #f1f5ff !important;
+  font-size: 14px !important;
+}
+html body .app-shell input:hover,
+html body .app-shell select:hover,
+html body .app-shell textarea:hover,
+html body .modal input:hover,
+html body .modal select:hover,
+html body .modal textarea:hover { border-color: #43577d !important; }
+
+html body .app-shell button,
+html body .modal button {
+  min-height: 42px;
+  padding: 9px 16px !important;
+  border: 1px solid #334565 !important;
+  border-radius: 11px !important;
+  background: #182641 !important;
+  color: #e7eefc !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+html body .app-shell button:hover,
+html body .modal button:hover {
+  border-color: #52678f !important;
+  background: #203150 !important;
+}
+html body .app-shell button.primary,
+html body .app-shell .primary,
+html body .modal button.primary {
+  border-color: #2ac7dc !important;
+  background: linear-gradient(105deg, #6254e7, #246fca 58%, #18a9bd) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 24px rgba(22, 118, 193, .22) !important;
+}
+html body .app-shell button.danger,
+html body .app-shell .danger {
+  border-color: #744054 !important;
+  background: #321a27 !important;
+  color: #ff9bad !important;
+}
+
+html body .app-shell table {
+  border: 1px solid #263654 !important;
+  border-radius: 15px !important;
+  background: #0b1529 !important;
+}
+html body .app-shell thead th {
+  padding: 16px 14px !important;
+  border-bottom: 1px solid #30405f !important;
+  background: #17243d !important;
+  color: #bdc8da !important;
+  font-size: 12px !important;
+}
+html body .app-shell tbody td {
+  padding: 17px 14px !important;
+  border-bottom: 1px solid #202f4b !important;
+  color: #dce5f4 !important;
+}
+
+html body .modal {
+  padding: 36px !important;
+  border: 1px solid #344765 !important;
+  border-radius: 22px !important;
+  background: #0e182e !important;
+}
+html body .modal::before { height: 4px; background: linear-gradient(90deg, #7162ef, #22c8dc) !important; }
+html body .modal .modern-form { gap: 21px 18px !important; }
+html body .modal .modern-form h2 {
+  margin-bottom: 4px !important;
+  padding-bottom: 22px !important;
+  border-bottom: 1px solid #2b3a58 !important;
+  font-size: 27px !important;
+}
+html body .modal .modern-form h2::after {
+  margin-top: 10px;
+  color: #9eacc4 !important;
+  line-height: 1.6;
+}
+html body .modal label { gap: 9px !important; color: #c4cfe0 !important; }
+html body .modal .close {
+  min-height: 38px;
+  padding: 0 !important;
+  border-color: #344563 !important;
+  background: #17243e !important;
+}
+
+html body .app-shell .employee-grid article,
+html body .app-shell .request-card,
+html body .app-shell .clock-card,
+html body .app-shell .payslip,
+html body .app-shell .request-form,
+html body .app-shell .notification-layout form,
+html body .app-shell .chat-upload {
+  border: 1px solid #263654 !important;
+  background: #101a31 !important;
+}
+
+/* חלון פרטי הפרויקט מוצג בכרטיסים כהים ובניגודיות גבוהה. */
+html body .modal .project-details {
+  gap: 12px !important;
+  background: transparent !important;
+}
+
+html body .modal .project-details p,
+html body .modal .project-details p:hover {
+  margin: 0 !important;
+  padding: 14px 16px !important;
+  border: 1px solid #2f4263 !important;
+  border-radius: 12px !important;
+  background: #131f38 !important;
+  color: #e8f0ff !important;
+  line-height: 1.55 !important;
+  box-shadow: none !important;
+}
+
+html body .modal .project-details p:first-child {
+  border-color: #36516f !important;
+  background: #172641 !important;
+}
+
+html body .modal .project-details p b {
+  color: #42d5e7 !important;
+  font-weight: 800 !important;
+}
+
+@media (max-width: 620px) {
+  html body .modal .project-details {
+    grid-template-columns: 1fr !important;
+  }
+
+  html body .modal .project-details p:first-child {
+    grid-column: auto !important;
+  }
+}
+
+/* סרגל הבחירה מאפשר סימון ומחיקה מרובה בלי להעמיס על טבלת הנתונים. */
+html body .app-shell .bulk-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 14px 0;
+  padding: 12px 14px;
+  border: 1px solid #2b3d5d;
+  border-radius: 13px;
+  background: #101b32;
+  color: #dfe8f7;
+}
+html body .app-shell .bulk-check {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+  color: #dfe8f7 !important;
+}
+html body .app-shell .bulk-check input,
+html body .app-shell td > input[type="checkbox"] {
+  width: 18px !important;
+  min-height: 18px !important;
+  height: 18px !important;
+  padding: 0 !important;
+  accent-color: #28c3d7;
+}
+html body .app-shell tr.selected-row {
+  background: rgba(42, 199, 220, .11) !important;
+  box-shadow: inset -3px 0 #28c3d7;
+}
+html body .app-shell button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+html body .app-shell .attention-badge {
+  border-color: #775a24 !important;
+  background: #312711 !important;
+  color: #ffd47f !important;
+}
+html body .app-shell .no-results,
+html body .app-shell .empty-state {
+  border-color: #2b3b59 !important;
+  background: #0b1529 !important;
+  color: #9dacC5 !important;
+}
+
+@media (max-width: 680px) {
+  html body .modal { padding: 28px 20px !important; }
+}
+
+html body .app-shell .hero-actions button:first-child {
+  border: 1px solid #38c9dd !important;
+  background: linear-gradient(105deg, #6658ed, #246fca 60%, #17aabd) !important;
+  color: #fff !important;
+  box-shadow: 0 12px 28px rgba(29, 122, 203, .26) !important;
+}
+
+html body .app-shell .donut {
+  padding: 12px;
+  border: 1px solid #2b3e61;
+  box-shadow: 0 18px 38px rgba(0,0,0,.3), 0 0 28px rgba(32, 205, 225, .08) !important;
+}
+
+html body .app-shell .salary-summary small { display: block; margin-top: 5px; color: #8293af !important; font-size: 10px; }
+html body .app-shell .salary-summary .employer-payment { border-color: #285a64 !important; background: #0d252f !important; }
+html body .app-shell .salary-summary .employer-payment b { color: #6edce7 !important; }
+
+/* תבנית ההדפסה מוסתרת לחלוטין במסך הרגיל. */
+html body .app-shell .payslip.official .print-only-slip,
+html body .app-shell .payslip.official .print-only-slip * {
+  display: none !important;
+}
+
+@media print {
+  html body .app-shell .payslip.official.print-target .print-only-slip {
+    display: block !important;
+  }
+  html body .app-shell .payslip.official.print-target .print-only-slip * {
+    display: revert !important;
+  }
+  html body .app-shell .payslip.official.print-target .print-only-slip table {
+    display: table !important;
+  }
+  html body .app-shell .payslip.official.print-target .print-only-slip thead {
+    display: table-header-group !important;
+  }
+  html body .app-shell .payslip.official.print-target .print-only-slip tbody {
+    display: table-row-group !important;
+  }
+  html body .app-shell .payslip.official.print-target .print-only-slip tr {
+    display: table-row !important;
+  }
+  html body .app-shell .payslip.official.print-target .print-only-slip th,
+  html body .app-shell .payslip.official.print-target .print-only-slip td {
+    display: table-cell !important;
+  }
+  .payslip.official.print-target,
+  .payslip.official.print-target * { color: #000 !important; }
+  .payslip.official.print-target { background: #fff !important; border: 1px solid #777 !important; }
+  .payslip.official.print-target .payslip-head { border-bottom: 2px solid #000 !important; background: #fff !important; }
+  .payslip.official.print-target .payslip-document-meta span,
+  .payslip.official.print-target .employee-info span,
+  .payslip.official.print-target .salary-summary > div { border-color: #aaa !important; background: #f1f1f1 !important; }
+  .payslip.official.print-target table,
+  .payslip.official.print-target tbody,
+  .payslip.official.print-target tr,
+  .payslip.official.print-target td { border-color: #aaa !important; background: #fff !important; color: #000 !important; }
+  .payslip.official.print-target th { border-color: #888 !important; background: #ddd !important; color: #000 !important; }
+  .payslip.official.print-target .salary-summary .net { border: 2px solid #000 !important; background: #e4e4e4 !important; }
+  .payslip.official.print-target .payslip-footer { border-top-color: #000 !important; }
+  html body .app-shell .payslip.official.print-target {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 5mm !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+  html body .app-shell .payslip.official.print-target .print-only-slip {
+    display: block !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    font-size: 8pt !important;
+  }
+  html body .app-shell .payslip.official.print-target .print-slip-header {
+    display: flex !important;
+    padding-bottom: 4mm !important;
+  }
+  html body .app-shell .payslip.official.print-target .print-payroll-columns {
+    display: grid !important;
+    grid-template-columns: 1.2fr .8fr !important;
+    gap: 3mm !important;
+    break-inside: avoid;
+  }
+  html body .app-shell .payslip.official.print-target .print-only-slip table {
+    margin-top: 2.5mm !important;
+    break-inside: avoid;
+  }
+  html body .app-shell .payslip.official.print-target .print-only-slip th,
+  html body .app-shell .payslip.official.print-target .print-only-slip td {
+    padding: 1.5mm 2mm !important;
+    font-size: 8pt !important;
+  }
+  html body .app-shell .payslip.official.print-target .print-only-slip h2 {
+    margin-top: 3mm !important;
+    font-size: 10pt !important;
+  }
+  html body .app-shell .payslip.official.print-target .print-only-slip footer {
+    display: flex !important;
+    margin-top: 3mm !important;
+    padding-top: 2mm !important;
+    break-inside: avoid;
+  }
+}
+
+/* שכבת הצבע הסופית: אותה משפחת כחול, בהירה בשתי דרגות בכל רכיבי המערכת. */
+html body:has(.app-shell) {
+  --tech-bg: #15233b;
+  --tech-surface: #203653;
+  --tech-surface-strong: #294461;
+  --tech-line: #46617f;
+  --tech-text: #f5f8ff;
+  --tech-muted: #b8c6da;
+  --tech-cyan: #55dcec;
+  --tech-violet: #9189ff;
+  background:
+    linear-gradient(rgba(100,205,230,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100,205,230,.055) 1px, transparent 1px),
+    radial-gradient(circle at 82% 4%, rgba(91,104,220,.28), transparent 28%),
+    radial-gradient(circle at 8% 90%, rgba(43,168,199,.19), transparent 31%),
+    linear-gradient(145deg, #15233b, #1d304d 52%, #14223a) !important;
+  background-size: 36px 36px, 36px 36px, auto, auto, auto !important;
+}
+
+html body .app-shell aside {
+  border-left-color: #3b5575 !important;
+  background:
+    radial-gradient(circle at 28% 4%, rgba(119,116,255,.4), transparent 27%),
+    radial-gradient(circle at 86% 80%, rgba(47,197,220,.17), transparent 31%),
+    linear-gradient(165deg, #263b5d, #1e3150 52%, #182943) !important;
+}
+
+html body .app-shell main > header,
+html body .app-shell .page-panel,
+html body .app-shell .panel:not(.dashboard-hero),
+html body .app-shell .stats article,
+html body .app-shell .employee-grid article,
+html body .app-shell .request-card,
+html body .app-shell .clock-card,
+html body .app-shell .payslip,
+html body .app-shell .request-form,
+html body .app-shell .notification-layout form,
+html body .app-shell .chat-upload,
+html body .app-shell .notice-box {
+  border-color: #405b7b !important;
+  background: linear-gradient(145deg, #243a58, #1c304d) !important;
+  color: var(--tech-text) !important;
+}
+
+html body .app-shell .panel-title {
+  border-bottom-color: #46617f !important;
+  background: linear-gradient(135deg, #2d4868, #233a58) !important;
+}
+
+html body .app-shell .dashboard-hero {
+  border-color: #5d7cab !important;
+  background:
+    linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px),
+    radial-gradient(circle at 12% 25%, rgba(62,210,226,.34), transparent 29%),
+    linear-gradient(120deg, #2a436d, #5052a5 60%, #6a68dc) !important;
+  background-size: 28px 28px, 28px 28px, auto, auto !important;
+}
+
+html body .app-shell .filter-bar,
+html body .app-shell .attendance-toolbar,
+html body .app-shell .payroll-controls,
+html body .app-shell .bulk-actions,
+html body .app-shell .messages,
+html body .app-shell .empty-state,
+html body .app-shell .no-results {
+  border-color: #456080 !important;
+  background: #1e3350 !important;
+  color: var(--tech-text) !important;
+}
+
+html body .app-shell input,
+html body .app-shell select,
+html body .app-shell textarea,
+html body .modal input,
+html body .modal select,
+html body .modal textarea {
+  border-color: #526d8e !important;
+  background: #29425f !important;
+  color: #f7f9ff !important;
+}
+
+html body .app-shell table { border-color: #456080 !important; background: #1d314d !important; }
+html body .app-shell thead th { border-bottom-color: #526d8c !important; background: #304966 !important; color: #d9e3f1 !important; }
+html body .app-shell tbody td { border-bottom-color: #3d5876 !important; color: #eef4fc !important; }
+html body .app-shell tbody tr:hover td,
+html body .app-shell tr.selected-row td { background: #2e4966 !important; }
+
+html body .app-shell button,
+html body .modal button,
+html body .app-shell button.secondary,
+html body .app-shell .secondary {
+  border-color: #587497 !important;
+  background: #304c6c !important;
+  color: #f2f6ff !important;
+}
+
+html body .app-shell button:hover,
+html body .modal button:hover { border-color: #7895b9 !important; background: #3a5879 !important; }
+
+html body .app-shell button.primary,
+html body .app-shell .primary,
+html body .modal button.primary,
+html body .app-shell .hero-actions button:first-child {
+  border-color: #62d8e8 !important;
+  background: linear-gradient(105deg, #7b71f3, #438fe0 58%, #38c1d3) !important;
+}
+
+html body .modal {
+  border-color: #5b7595 !important;
+  background: linear-gradient(145deg, #2b4564, #203653) !important;
+  color: var(--tech-text) !important;
+}
+
+html body .modal .project-details p,
+html body .app-shell app-employee-picker .employee-trigger,
+html body .app-shell app-employee-picker .picker-panel,
+html body .app-shell app-employee-picker .search-box,
+html body .app-shell app-employee-picker .employee-option,
+html body .app-shell .chat-members,
+html body .app-shell .donut span,
+html body .app-shell .task-legend article,
+html body .app-shell .salary-summary > div,
+html body .app-shell .payslip-document-meta span,
+html body .app-shell .employee-info span {
+  border-color: #4d6988 !important;
+  background: #263f5c !important;
+  color: #f2f6ff !important;
+}
+
+html body .login-page {
+  background:
+    radial-gradient(circle at 14% 15%, rgba(116,111,243,.34), transparent 31%),
+    radial-gradient(circle at 90% 84%, rgba(53,190,211,.22), transparent 29%),
+    linear-gradient(145deg, #1d304d, #2b4564) !important;
+}
+html body .login-card { border-color: #5b7595 !important; background: linear-gradient(145deg, #304d6d, #243d5b) !important; color: #f5f8ff !important; }
+
+@media print {
+  html body:has(.app-shell) { background: #fff !important; }
+}
+
+/* על כל משטח לבן או בהיר במערכת מוצג כתב כתום חזק וברור. */
+html body .app-shell .overdue-summary,
+html body .app-shell .overdue-summary *,
+html body .app-shell .soon-summary,
+html body .app-shell .soon-summary *,
+html body .app-shell .finance-note,
+html body .app-shell .finance-note *,
+html body .app-shell .request-details span,
+html body .app-shell .request-details span *,
+html body .app-shell .chat-selectors span,
+html body .app-shell .chat-selectors span *,
+html body .app-shell .employee-search > b,
+html body .app-shell .employee-search > b *,
+html body .app-shell .search-field,
+html body .app-shell .search-field > .app-icon {
+  color: #ff6a00 !important;
+}
+
+/* רכיבים בהירים שעלולים להופיע בחלונות, הודעות או מצבים שונים. */
+html body .app-shell .light-surface,
+html body .app-shell .light-surface *,
+html body .app-shell .white-surface,
+html body .app-shell .white-surface *,
+html body .modal .light-surface,
+html body .modal .light-surface *,
+html body .modal .white-surface,
+html body .modal .white-surface * {
+  color: #ff6a00 !important;
+}
+
+@media print {
+  html body .app-shell .overdue-summary,
+  html body .app-shell .soon-summary,
+  html body .app-shell .finance-note,
+  html body .app-shell .request-details span,
+  html body .app-shell .chat-selectors span,
+  html body .app-shell .employee-search > b,
+  html body .app-shell .search-field {
+    color: #000 !important;
+  }
+}
+
+/* החזרת ערכת הכחול הכהה המקורית; רק צבעי הכתב חוזקו לקריאות גבוהה. */
+html body:has(.app-shell) {
+  --tech-bg: #060a16;
+  --tech-surface: rgba(15, 23, 45, .88);
+  --tech-surface-strong: #111a32;
+  --tech-line: rgba(131, 151, 205, .18);
+  --tech-text: #ffffff;
+  --tech-muted: #c2cee1;
+  --tech-cyan: #20d5e8;
+  --tech-violet: #7c70ff;
+  background:
+    linear-gradient(rgba(74, 210, 232, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74, 210, 232, .045) 1px, transparent 1px),
+    radial-gradient(circle at 80% 5%, rgba(84, 70, 230, .26), transparent 28%),
+    radial-gradient(circle at 8% 88%, rgba(22, 186, 215, .17), transparent 28%),
+    #060a16 !important;
+  background-size: 38px 38px, 38px 38px, auto, auto, auto !important;
+  color: #f7faff !important;
+}
+
+html body .app-shell aside {
+  border-left-color: rgba(63, 216, 235, .15) !important;
+  background:
+    radial-gradient(circle at 50% 0, rgba(102, 87, 239, .26), transparent 25%),
+    linear-gradient(180deg, rgba(14, 23, 48, .98), rgba(7, 12, 27, .98)) !important;
+}
+
+html body .app-shell main > header {
+  border-color: var(--tech-line) !important;
+  background: rgba(12, 20, 40, .76) !important;
+}
+
+html body .app-shell .page-panel,
+html body .app-shell .panel:not(.dashboard-hero),
+html body .app-shell .stats article,
+html body .app-shell .employee-grid article,
+html body .app-shell .request-card,
+html body .app-shell .clock-card,
+html body .app-shell .payslip,
+html body .app-shell .request-form,
+html body .app-shell .notification-layout form,
+html body .app-shell .chat-upload,
+html body .app-shell .notice-box {
+  border-color: var(--tech-line) !important;
+  background: linear-gradient(145deg, rgba(18, 28, 54, .94), rgba(10, 17, 34, .9)) !important;
+  color: #f7faff !important;
+}
+
+html body .app-shell .panel-title {
+  border-bottom-color: var(--tech-line) !important;
+  background:
+    radial-gradient(circle at 90% 0, rgba(118, 100, 255, .18), transparent 35%),
+    linear-gradient(135deg, rgba(23, 35, 67, .96), rgba(12, 20, 40, .9)) !important;
+}
+
+html body .app-shell .dashboard-hero {
+  border-color: rgba(55, 218, 236, .2) !important;
+  background:
+    linear-gradient(rgba(52, 215, 233, .07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(52, 215, 233, .07) 1px, transparent 1px),
+    radial-gradient(circle at 10% 20%, rgba(31, 217, 232, .25), transparent 27%),
+    linear-gradient(125deg, #101b38, #24205f 58%, #352c8f) !important;
+  background-size: 28px 28px, 28px 28px, auto, auto !important;
+}
+
+html body .app-shell .filter-bar,
+html body .app-shell .attendance-toolbar,
+html body .app-shell .payroll-controls,
+html body .app-shell .bulk-actions,
+html body .app-shell .messages,
+html body .app-shell .empty-state,
+html body .app-shell .no-results {
+  border-color: #263654 !important;
+  background: #0a1428 !important;
+  color: #f3f7ff !important;
+}
+
+html body .app-shell input,
+html body .app-shell select,
+html body .app-shell textarea,
+html body .modal input,
+html body .modal select,
+html body .modal textarea {
+  border-color: #30405f !important;
+  background: #111c33 !important;
+  color: #ffffff !important;
+}
+
+html body .app-shell input::placeholder,
+html body .app-shell textarea::placeholder,
+html body .modal input::placeholder,
+html body .modal textarea::placeholder {
+  color: #b3c0d5 !important;
+  opacity: 1 !important;
+}
+
+html body .app-shell table { border-color: #263654 !important; background: #0b1529 !important; }
+html body .app-shell thead th { border-bottom-color: #30405f !important; background: #17243d !important; color: #e0e8f5 !important; }
+html body .app-shell tbody td { border-bottom-color: #202f4b !important; color: #f0f5fd !important; }
+html body .app-shell tbody tr:hover td { background: #14233c !important; }
+html body .app-shell tr.selected-row td { background: rgba(42, 199, 220, .11) !important; }
+
+html body .app-shell button,
+html body .modal button,
+html body .app-shell button.secondary,
+html body .app-shell .secondary {
+  border-color: #334565 !important;
+  background: #182641 !important;
+  color: #ffffff !important;
+}
+
+html body .app-shell button:hover,
+html body .modal button:hover { border-color: #52678f !important; background: #203150 !important; }
+
+html body .app-shell button.primary,
+html body .app-shell .primary,
+html body .modal button.primary,
+html body .app-shell .hero-actions button:first-child {
+  border-color: #2ac7dc !important;
+  background: linear-gradient(105deg, #6254e7, #246fca 58%, #18a9bd) !important;
+  color: #fff !important;
+}
+
+html body .modal {
+  border-color: #344765 !important;
+  background: #0e182e !important;
+  color: #ffffff !important;
+}
+
+html body .modal .project-details p,
+html body .app-shell app-employee-picker .employee-trigger,
+html body .app-shell app-employee-picker .picker-panel,
+html body .app-shell app-employee-picker .search-box,
+html body .app-shell app-employee-picker .employee-option,
+html body .app-shell .chat-members,
+html body .app-shell .donut span,
+html body .app-shell .task-legend article,
+html body .app-shell .salary-summary > div,
+html body .app-shell .payslip-document-meta span,
+html body .app-shell .employee-info span {
+  border-color: #304462 !important;
+  background: #101b31 !important;
+  color: #f4f8ff !important;
+}
+
+html body .app-shell h1,
+html body .app-shell h2,
+html body .app-shell h3,
+html body .app-shell h4,
+html body .app-shell strong,
+html body .app-shell b,
+html body .modal h1,
+html body .modal h2,
+html body .modal h3 {
+  color: #ffffff !important;
+}
+
+html body .app-shell p,
+html body .app-shell label,
+html body .app-shell small,
+html body .app-shell .muted,
+html body .modal label,
+html body .modal small {
+  color: #c5d1e4 !important;
+}
+
+html body .app-shell aside nav button { color: #d9e2f1 !important; }
+html body .app-shell aside nav button .app-icon { color: #aebed6 !important; }
+html body .app-shell aside nav button.active,
+html body .app-shell aside nav button:hover { color: #ffffff !important; }
+
+html body .login-page {
+  background:
+    radial-gradient(circle at 12% 18%, #14143d 0, transparent 32%),
+    radial-gradient(circle at 92% 82%, #0e3037 0, transparent 30%),
+    #080e20 !important;
+}
+html body .login-card { border-color: #263a5c !important; background: #0d1930 !important; color: #ffffff !important; }
+html body .login-card h1,
+html body .login-card h2,
+html body .login-card label { color: #ffffff !important; }
+html body .login-card p,
+html body .login-card small { color: #c5d1e4 !important; }
+
+@media print {
+  html body:has(.app-shell) { background: #fff !important; }
+}
+
+/* צבע כתום חד לכל הטקסט שנמצא בפועל על רקע לבן או בהיר. */
+html body .app-shell .overdue-summary,
+html body .app-shell .overdue-summary *,
+html body .app-shell .soon-summary,
+html body .app-shell .soon-summary *,
+html body .app-shell .finance-note,
+html body .app-shell .finance-note *,
+html body .app-shell .request-details span,
+html body .app-shell .request-details span *,
+html body .app-shell .chat-selectors span,
+html body .app-shell .chat-selectors span *,
+html body .app-shell .employee-search > b,
+html body .app-shell .employee-search > b *,
+html body .app-shell .search-field,
+html body .app-shell .search-field > .app-icon,
+html body .app-shell .hours-total,
+html body .app-shell .hours-total *,
+html body .app-shell .notice-box article > span,
+html body .app-shell .notice-box article > small,
+html body .app-shell .notice-box article > i,
+html body .app-shell .attendance-under td,
+html body .app-shell .attendance-under td *,
+html body .app-shell .attendance-over td,
+html body .app-shell .attendance-over td *,
+html body .app-shell .attendance-complete td,
+html body .app-shell .attendance-complete td *,
+html body .app-shell .light-surface,
+html body .app-shell .light-surface *,
+html body .app-shell .white-surface,
+html body .app-shell .white-surface *,
+html body .modal .light-surface,
+html body .modal .light-surface *,
+html body .modal .white-surface,
+html body .modal .white-surface * {
+  color: #ff6a00 !important;
+}
+
+@media print {
+  html body .app-shell .overdue-summary,
+  html body .app-shell .soon-summary,
+  html body .app-shell .finance-note,
+  html body .app-shell .request-details span,
+  html body .app-shell .chat-selectors span,
+  html body .app-shell .employee-search > b,
+  html body .app-shell .search-field,
+  html body .app-shell .hours-total,
+  html body .app-shell .hours-total *,
+  html body .app-shell .notice-box article > span,
+  html body .app-shell .notice-box article > small,
+  html body .app-shell .notice-box article > i,
+  html body .app-shell .attendance-under td,
+  html body .app-shell .attendance-over td,
+  html body .app-shell .attendance-complete td {
+    color: #000 !important;
+  }
+}
+
+/* שכבת הצבע הסופית מבטלת משטחים לבנים ובהירים בכל מסכי המערכת. */
+@media screen {
+  html body .app-shell input,
+  html body .app-shell select,
+  html body .app-shell textarea,
+  html body .app-shell .search-field,
+  html body .modal input,
+  html body .modal select,
+  html body .modal textarea {
+    border-color: #3a5274 !important;
+    background: #142440 !important;
+    color: #ffffff !important;
+  }
+
+  html body .app-shell input::placeholder,
+  html body .app-shell textarea::placeholder,
+  html body .modal input::placeholder,
+  html body .modal textarea::placeholder {
+    color: #9fb0c9 !important;
+    opacity: 1 !important;
+  }
+
+  html body .app-shell option,
+  html body .modal option {
+    background: #142440 !important;
+    color: #ffffff !important;
+  }
+
+  html body .app-shell table,
+  html body .app-shell thead,
+  html body .app-shell tbody,
+  html body .app-shell tr,
+  html body .app-shell th,
+  html body .app-shell td {
+    border-color: #2f4464 !important;
+    background: #101d35 !important;
+    color: #f5f8ff !important;
+  }
+
+  html body .app-shell .notice-box article,
+  html body .app-shell .hours-total,
+  html body .app-shell .overdue-summary,
+  html body .app-shell .soon-summary,
+  html body .app-shell .finance-note,
+  html body .app-shell .request-details span,
+  html body .app-shell .chat-selectors span,
+  html body .app-shell .employee-search > b,
+  html body .app-shell .light-surface,
+  html body .app-shell .white-surface,
+  html body .modal .project-details > *,
+  html body .modal .light-surface,
+  html body .modal .white-surface {
+    border-color: #3a5274 !important;
+    background: #172945 !important;
+    color: #ffffff !important;
+  }
+
+  html body .app-shell .notice-box article > span,
+  html body .app-shell .notice-box article > small,
+  html body .app-shell .notice-box article > i,
+  html body .app-shell .hours-total *,
+  html body .app-shell .overdue-summary *,
+  html body .app-shell .soon-summary *,
+  html body .app-shell .finance-note *,
+  html body .app-shell .request-details span *,
+  html body .app-shell .chat-selectors span *,
+  html body .modal .project-details > * {
+    color: #ffffff !important;
+  }
+
+  html body .app-shell app-employee-picker .employee-trigger,
+  html body .app-shell app-employee-picker .picker-panel,
+  html body .app-shell app-employee-picker .search-box,
+  html body .app-shell app-employee-picker .employee-list,
+  html body .app-shell app-employee-picker .employee-option,
+  html body .app-shell app-employee-picker .employee-option:disabled {
+    border-color: #344b6c !important;
+    background: #101d35 !important;
+    color: #ffffff !important;
+  }
+
+  html body .app-shell app-employee-picker .employee-option:hover:not(:disabled),
+  html body .app-shell app-employee-picker .employee-option.selected {
+    background: #20375a !important;
+  }
+
+  html body .app-shell app-employee-picker .avatar,
+  html body .app-shell app-employee-picker .load,
+  html body .app-shell app-employee-picker .load.available,
+  html body .app-shell app-employee-picker .load.full {
+    background: #263b5e !important;
+    color: #ff9a3d !important;
+  }
+}
+
+/* שכבת NeoTech האחרונה גוברת על כל שכבות העיצוב הישנות במסך */
+@media screen {
+  html body, html body:has(.app-shell) { background: radial-gradient(circle at 80% 5%,#172958 0,transparent 28%),radial-gradient(circle at 5% 70%,#123044 0,transparent 25%),#060b18 !important; color:#eef5ff !important; }
+  html body .app-shell main { background:transparent !important;color:#eef5ff !important; }
+  html body .app-shell aside { background:linear-gradient(180deg,#101c34,#091326) !important;border-color:#2a456d !important; }
+  html body .app-shell .panel, html body .app-shell .stats article, html body .app-shell article,
+  html body .app-shell .workspace-toolbar, html body .app-shell .project-card,
+  html body .app-shell .gantt-view, html body .app-shell .calendar-view article,
+  html body .app-shell .kanban>section, html body .app-shell .kanban-card,
+  html body .app-shell .empty-state, html body .app-shell .notice-box, html body .modal {
+    background:linear-gradient(145deg,rgba(22,39,68,.98),rgba(11,22,42,.98)) !important;
+    border-color:#2a456d !important;color:#eef5ff !important;box-shadow:0 20px 55px rgba(0,0,0,.24) !important;
+  }
+  html body .app-shell h1,html body .app-shell h2,html body .app-shell h3,html body .app-shell b,html body .app-shell strong,html body .modal h2,html body .modal h3,html body .modal b { color:#eef5ff !important; }
+  html body .app-shell p,html body .app-shell small,html body .app-shell .project-meta,html body .modal label,html body .modal p { color:#9eb1ca !important; }
+  html body .app-shell input,html body .app-shell select,html body .app-shell textarea,html body .modal input,html body .modal select,html body .modal textarea { background:#09162b !important;border-color:#35547e !important;color:#eef5ff !important; }
+  html body .app-shell button:not(.primary):not(.danger),html body .modal button:not(.primary):not(.danger) { background:#1a2d4d !important;border:1px solid #304e78 !important;color:#dbe8ff !important; }
+  html body .app-shell button:hover:not(:disabled) { border-color:#42e8dc !important;color:#42e8dc !important; }
+  html body .app-shell table,html body .app-shell thead,html body .app-shell tbody,html body .app-shell tr,html body .app-shell th,html body .app-shell td { background:transparent !important;border-color:#263d61 !important;color:#eef5ff !important; }
+  html body .app-shell .project-stats span,html body .app-shell .tags span,html body .app-shell .priority,html body .modal .milestone { background:#1c3153 !important;border-color:#36557f !important;color:#cbdcff !important; }
+  html body .app-shell .risk-ring { background:radial-gradient(circle,#12223d 55%,transparent 57%),conic-gradient(#ff6c8f calc(var(--risk)*1%),#243957 0) !important; }
+  html body .app-shell .project-progress,html body .app-shell .mini-progress,html body .app-shell .gantt-track { background:#09162b !important; }
+  html body .auth-shell,html body app-auth { background:radial-gradient(circle at 15% 20%,#173b5a,transparent 30%),linear-gradient(140deg,#060b18,#101c37) !important; }
+  html body app-auth .auth-card,html body app-auth .auth-form,html body app-auth .login-card { background:linear-gradient(145deg,#13233e,#0b162a) !important;border-color:#34527a !important;color:#eef5ff !important; }
+  html body .app-shell .dashboard-toolbar,
+  html body .app-shell .date-filter,
+  html body .app-shell .preferences-menu,
+  html body .app-shell .kanban>section>header,
+  html body .app-shell .smart-kanban>section>header,
+  html body .app-shell .filter-bar,
+  html body .app-shell .bulk-actions {
+    background:linear-gradient(145deg,#152945,#0c192e) !important;
+    border-color:#2d4c75 !important;
+    color:#eef5ff !important;
+  }
+  html body .app-shell .preferences-menu label,
+  html body .app-shell .date-filter label,
+  html body .app-shell .filter-bar label { color:#c7d5e8 !important; }
+  html body .app-shell .kanban>section>header span,
+  html body .app-shell .smart-kanban>section>header b { background:#20395e !important;color:#eaf2ff !important; }
+  html body .app-shell .hero-action { background:linear-gradient(120deg,#4f73eb,#8a5cf0) !important;color:white !important; }
+}

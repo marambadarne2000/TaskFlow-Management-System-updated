@@ -1,0 +1,96 @@
+<!-- קובץ זה מציג את טיפול בבקשות עובדים. -->
+<section *ngIf="vm.page === 'requests'" class="panel requests-page">
+  <div class="panel-title">
+    <div>
+      <h2>{{ vm.role === 'admin' ? 'בקשות עובדים' : 'הבקשות שלי' }}</h2>
+      <p>{{ vm.role === 'admin' ? 'אישור ודחייה של בקשות שהגיעו לעיונך' : 'שליחת בקשה מסודרת למנהל ומעקב אחר התשובה' }}</p>
+    </div>
+  </div>
+
+  <form *ngIf="vm.role === 'employee'" class="request-form" (ngSubmit)="vm.createRequest()">
+    <h3>בקשה חדשה</h3>
+    <div class="request-grid">
+      <label>שליחה למנהל
+        <select name="requestManager" [(ngModel)]="vm.requestForm.managerId" required>
+          <option *ngFor="let manager of vm.requestManagers" [value]="manager.id">{{ manager.name }}</option>
+        </select>
+      </label>
+      <label>סוג הבקשה
+        <select name="requestType" [(ngModel)]="vm.requestForm.type">
+          <option value="vacation">חופשה</option>
+          <option value="task_swap">החלפת משימות עם חבר צוות</option>
+          <option value="deadline">הארכת מועד משימה</option>
+          <option value="late_arrival">הגעה באיחור</option>
+          <option value="general">בקשה כללית</option>
+        </select>
+      </label>
+
+      <ng-container *ngIf="vm.requestForm.type === 'vacation'">
+        <label>מתאריך<input name="vacationStart" type="date" [(ngModel)]="vm.requestForm.startDate" required /></label>
+        <label>עד תאריך<input name="vacationEnd" type="date" [(ngModel)]="vm.requestForm.endDate" required /></label>
+      </ng-container>
+
+      <ng-container *ngIf="vm.requestForm.type === 'task_swap'">
+        <label>המשימה שלי
+          <select name="ownTask" [(ngModel)]="vm.requestForm.taskId" required>
+            <option [value]="0">בחירת משימה</option>
+            <option *ngFor="let task of vm.myRequestTasks" [value]="task.id">{{ task.title }}</option>
+          </select>
+        </label>
+        <label>משימת חבר הצוות
+          <select name="swapTask" [(ngModel)]="vm.requestForm.swapTaskId" required>
+            <option [value]="0">בחירת משימה להחלפה</option>
+            <option *ngFor="let task of vm.swapRequestTasks" [value]="task.id">{{ task.title }} — {{ vm.name(task.workerId) }}</option>
+          </select>
+        </label>
+      </ng-container>
+
+      <ng-container *ngIf="vm.requestForm.type === 'deadline'">
+        <label>המשימה
+          <select name="deadlineTask" [(ngModel)]="vm.requestForm.taskId" required>
+            <option [value]="0">בחירת משימה</option>
+            <option *ngFor="let task of vm.myRequestTasks" [value]="task.id">{{ task.title }}</option>
+          </select>
+        </label>
+        <label>מועד הגשה מבוקש<input name="newDueDate" type="date" [(ngModel)]="vm.requestForm.requestedDueDate" required /></label>
+      </ng-container>
+
+      <label *ngIf="vm.requestForm.type === 'late_arrival'">יום ההגעה באיחור
+        <input name="lateDate" type="date" [(ngModel)]="vm.requestForm.startDate" required />
+      </label>
+    </div>
+    <label>סיבת הבקשה
+      <textarea name="requestReason" [(ngModel)]="vm.requestForm.reason" rows="3" required placeholder="כתבי הסבר קצר וברור למנהל"></textarea>
+    </label>
+    <button class="primary">שליחת הבקשה</button>
+  </form>
+
+  <div class="request-list">
+    <article *ngFor="let request of vm.requests" class="request-card" [class.pending]="request.status === 'pending'" [class.approved]="request.status === 'approved'" [class.rejected]="request.status === 'rejected'">
+      <div class="request-head">
+        <div>
+          <b>{{ vm.requestTypeName(request.type) }}</b>
+          <span *ngIf="vm.role === 'admin'">מאת {{ request.employeeName }}</span>
+          <span *ngIf="vm.role === 'employee'">אל {{ request.managerName }}</span>
+        </div>
+        <em>{{ vm.requestStatusName(request.status) }}</em>
+      </div>
+      <p>{{ request.reason }}</p>
+      <div class="request-details">
+        <span *ngIf="request.taskTitle">משימה: {{ request.taskTitle }}</span>
+        <span *ngIf="request.swapTaskTitle">החלפה עם: {{ request.swapTaskTitle }}</span>
+        <span *ngIf="request.startDate">מתאריך: {{ request.startDate }}</span>
+        <span *ngIf="request.endDate">עד תאריך: {{ request.endDate }}</span>
+        <span *ngIf="request.requestedDueDate">מועד מבוקש: {{ request.requestedDueDate }}</span>
+        <span>נשלחה: {{ request.createdAt }}</span>
+      </div>
+      <p *ngIf="request.managerComment"><b>הערת המנהל:</b> {{ request.managerComment }}</p>
+      <div *ngIf="vm.role === 'admin' && request.status === 'pending'" class="request-actions">
+        <input [(ngModel)]="vm.requestComments[request.id]" placeholder="הערה לעובד" />
+        <button class="primary" type="button" (click)="vm.answerRequest(request, 'approved')">אישור</button>
+        <button class="danger" type="button" (click)="vm.answerRequest(request, 'rejected')">דחייה</button>
+      </div>
+    </article>
+    <div class="empty-state" *ngIf="!vm.requests.length">אין בקשות להצגה</div>
+  </div>
+</section>

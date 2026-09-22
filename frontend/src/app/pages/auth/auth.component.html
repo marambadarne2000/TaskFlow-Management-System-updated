@@ -1,0 +1,67 @@
+<!-- מסך כניסה דו־חלקי: טופס מאובטח לצד תמונת סביבת העבודה של המערכת -->
+<main class="auth-page" *ngIf="!vm.loggedIn">
+  <section class="auth-visual" aria-label="ניהול עבודה חכם עם TaskFlow">
+    <img src="assets/images/taskflow-command-center.png" alt="מנהלת פרויקט וצוות תוכנה במרכז שליטה ארגוני" />
+    <div class="visual-shade"></div>
+    <div class="visual-content">
+      <span class="eyebrow">סביבת עבודה אחת. תמונה מלאה.</span>
+      <h2>מתכננים נכון.<br />מתקדמים יחד.</h2>
+      <p>פרויקטים, משימות, עובדים ותוצאות מתחברים למרחב ניהולי ברור ועדכני.</p>
+      <div class="visual-points">
+        <span><i class="app-icon">monitoring</i>מעקב בזמן אמת</span>
+        <span><i class="app-icon">groups</i>עבודה צוותית</span>
+        <span><i class="app-icon">verified_user</i>גישה מאובטחת</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="auth-panel">
+    <div class="auth-panel-inner">
+      <div class="auth-brand">
+        <span class="brand-mark"><i class="app-icon">task_alt</i></span>
+        <span><strong>TaskFlow</strong><small>ניהול שעובד בשבילך</small></span>
+      </div>
+
+      <form class="auth-form" *ngIf="vm.authMode === 'login'" (ngSubmit)="vm.login()">
+        <header>
+          <span class="form-kicker">ברוכים הבאים</span>
+          <h1>התחברות למערכת</h1>
+          <p>המשיכו למרחב העבודה האישי והמאובטח שלכם.</p>
+        </header>
+        <label class="auth-field">
+          <span>דואר אלקטרוני</span>
+          <span class="input-wrap"><i class="app-icon">mail</i><input name="email" [(ngModel)]="vm.loginEmail" type="email" placeholder="name@company.com" autocomplete="email" required /></span>
+        </label>
+        <label class="auth-field">
+          <span>סיסמה</span>
+          <span class="input-wrap"><i class="app-icon">lock</i><input name="password" [(ngModel)]="vm.loginPassword" type="password" placeholder="הזינו את הסיסמה" autocomplete="current-password" required /></span>
+        </label>
+        <button class="forgot-link" type="button" (click)="vm.authMode = 'forgot'; vm.loginError = ''; vm.authMessage = ''">שכחתי סיסמה</button>
+        <div class="form-message error" *ngIf="vm.loginError"><i class="app-icon">error</i>{{ vm.loginError }}</div>
+        <div class="form-message success" *ngIf="vm.authMessage"><i class="app-icon">check_circle</i>{{ vm.authMessage }}</div>
+        <button class="submit-button" type="submit">כניסה למערכת<i class="app-icon">arrow_back</i></button>
+        <small class="security-note"><i class="app-icon">shield_lock</i>פרטי הכניסה נבדקים ומאובטחים בצד השרת</small>
+      </form>
+
+      <form class="auth-form" *ngIf="vm.authMode === 'forgot'">
+        <header><span class="form-kicker">שחזור גישה</span><h1>איפוס סיסמה</h1><p>הזינו את כתובת הדואר וניצור קישור מאובטח שתקף ל־30 דקות.</p></header>
+        <label class="auth-field"><span>דואר אלקטרוני</span><span class="input-wrap"><i class="app-icon">mail</i><input name="forgotEmail" [(ngModel)]="vm.loginEmail" type="email" placeholder="name@company.com" required /></span></label>
+        <div class="form-message error" *ngIf="vm.loginError">{{ vm.loginError }}</div>
+        <div class="form-message success" *ngIf="vm.authMessage">{{ vm.authMessage }}</div>
+        <a class="reset-link" *ngIf="vm.resetLink" [href]="vm.resetLink">פתיחת קישור האיפוס</a>
+        <button class="submit-button" type="button" (click)="vm.forgotPassword()">שליחת קישור</button>
+        <button class="back-button" type="button" (click)="vm.authMode = 'login'; vm.resetLink = ''">חזרה להתחברות</button>
+      </form>
+
+      <form class="auth-form" *ngIf="vm.authMode === 'reset'" (ngSubmit)="vm.resetPassword()">
+        <header><span class="form-kicker">בחירת סיסמה</span><h1>סיסמה חדשה</h1><p>בחרו סיסמה חדשה הכוללת לפחות שמונה תווים, אות ומספר.</p></header>
+        <label class="auth-field"><span>סיסמה חדשה</span><span class="input-wrap"><i class="app-icon">lock</i><input name="newPassword" [(ngModel)]="vm.newPassword" type="password" required /></span></label>
+        <label class="auth-field"><span>אימות הסיסמה</span><span class="input-wrap"><i class="app-icon">verified</i><input name="confirmPassword" [(ngModel)]="vm.confirmPassword" type="password" required /></span></label>
+        <div class="form-message error" *ngIf="vm.loginError">{{ vm.loginError }}</div>
+        <div class="form-message success" *ngIf="vm.authMessage">{{ vm.authMessage }}</div>
+        <button class="submit-button" type="submit">עדכון הסיסמה</button>
+        <button class="back-button" type="button" (click)="vm.authMode = 'login'">חזרה להתחברות</button>
+      </form>
+    </div>
+  </section>
+</main>

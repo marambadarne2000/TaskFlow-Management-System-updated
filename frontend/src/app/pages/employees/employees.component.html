@@ -1,0 +1,51 @@
+<!-- ניהול עובדים: מציג עובדים ומאפשר חיפוש, הוספה, חסימה ושינוי תפקיד -->
+<section class="panel page-panel">
+  <div class="panel-title">
+    <div>
+      <h2>ניהול עובדים</h2>
+      <p>ניהול פרטי עובדים, הרשאות, זמינות ועומסי עבודה</p>
+    </div>
+    <div>
+      <button (click)="vm.modal = 'notice'">שליחת התראה</button
+      ><button class="primary" (click)="vm.openEmployee()">
+        <span class="app-icon" aria-hidden="true">person_add</span> עובד חדש
+      </button>
+    </div>
+  </div>
+  <div class="employee-search">
+    <span>⌕</span
+    ><input
+      [(ngModel)]="vm.employeeSearch"
+      placeholder="חיפוש לפי שם, אימייל או מספר טלפון"
+    /><b>{{ vm.filteredEmployees.length }} עובדים</b>
+  </div>
+  <div class="employee-grid">
+    <article *ngFor="let e of vm.filteredEmployees">
+      <div class="avatar large">{{ e.name[0] }}</div>
+      <h3>{{ e.name }}</h3>
+      <span
+        >{{ e.role === "admin" ? "מנהל/ת" : "עובד/ת" }} ·
+        {{ vm.statusText(e.status) }}</span
+      ><small>{{ e.email }}</small
+      ><small>{{ e.phone }}</small
+      ><small>הצטרף/ה: {{ e.createdAt }}</small>
+      <div class="load">
+        <b>{{ e.active }} / {{ e.limit }} משימות פעילות</b>
+        <div class="progress">
+          <span
+            [class.full]="e.active >= e.limit"
+            [style.width.%]="(e.active / e.limit) * 100"
+          ></span>
+        </div>
+      </div>
+      <button (click)="vm.openProfile(e)">פרטים אישיים</button
+      ><button (click)="vm.toggleRole(e)">שנה תפקיד</button
+      ><button (click)="vm.toggleEmployee(e)">
+        {{ e.status === "active" ? "חסימה" : "הפעלה" }}
+      </button>
+    </article>
+    <div class="no-results" *ngIf="!vm.filteredEmployees.length">
+      לא נמצא עובד מתאים לחיפוש
+    </div>
+  </div>
+</section>

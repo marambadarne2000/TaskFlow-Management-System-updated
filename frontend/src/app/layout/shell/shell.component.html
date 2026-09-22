@@ -1,0 +1,172 @@
+<!-- מעטפת המערכת: מציגה תפריט ניווט, כותרת, משתמש מחובר ופעמון התראות -->
+<div class="app-shell" *ngIf="vm.loggedIn">
+  <!-- תפריט ניווט: האפשרויות משתנות לפי תפקיד מנהל או עובד -->
+  <aside>
+    <div class="brand"><span><span class="app-icon" aria-hidden="true">check_circle</span></span> TaskFlow</div>
+    <p class="role-label">
+      {{ vm.role === "admin" ? "ממשק מנהל" : "ממשק עובד" }}
+    </p>
+    <!-- תפריט ניווט בין מסכי המערכת. -->
+    <nav>
+      <button
+        [class.active]="vm.page === 'dashboard'"
+        (click)="vm.page = 'dashboard'"
+      >
+        <span class="app-icon" aria-hidden="true">dashboard</span> דשבורד
+      </button>
+      <button
+        [class.active]="vm.page === 'projects'"
+        (click)="vm.page = 'projects'"
+      >
+        <span class="app-icon" aria-hidden="true">view_kanban</span> פרויקטים
+      </button>
+      <button [class.active]="vm.page === 'tasks'" (click)="vm.page = 'tasks'">
+        <span class="app-icon" aria-hidden="true">task_alt</span> משימות
+      </button>
+      <button [class.active]="vm.page === 'action-center'" (click)="vm.page = 'action-center'">
+        <span class="app-icon" aria-hidden="true">bolt</span> מרכז פעולה
+      </button>
+      <button *ngIf="vm.role === 'admin'" [class.active]="vm.page === 'insights'" (click)="vm.page = 'insights'">
+        <span class="app-icon" aria-hidden="true">insights</span> תובנות ותחזיות
+      </button>
+      <button *ngIf="vm.role === 'admin'" [class.active]="vm.page === 'reports'" (click)="vm.page = 'reports'">
+        <span class="app-icon" aria-hidden="true">assessment</span> מרכז דוחות
+      </button>
+      <button *ngIf="vm.role === 'admin'" [class.active]="vm.page === 'automations'" (click)="vm.page = 'automations'">
+        <span class="app-icon" aria-hidden="true">automation</span> מרכז אוטומציות
+      </button>
+      <button *ngIf="vm.role === 'admin'" [class.active]="vm.page === 'planner'" (click)="vm.page = 'planner'">
+        <span class="app-icon" aria-hidden="true">calendar_view_week</span> תכנון ספרינט
+      </button>
+      <button [class.active]="vm.page === 'calendar'" (click)="vm.page = 'calendar'">
+        <span class="app-icon" aria-hidden="true">calendar_month</span> יומן ארגוני
+      </button>
+      <button *ngIf="vm.role === 'admin'" [class.active]="vm.page === 'risks'" (click)="vm.page = 'risks'">
+        <span class="app-icon" aria-hidden="true">shield_with_heart</span> מרכז סיכונים
+      </button>
+      <button [class.active]="vm.page === 'quality'" (click)="vm.page = 'quality'">
+        <span class="app-icon" aria-hidden="true">bug_report</span> בקרת איכות
+      </button>
+      <button
+        *ngIf="vm.role === 'admin'"
+        [class.active]="vm.page === 'employees'"
+        (click)="vm.page = 'employees'"
+      >
+        <span class="app-icon" aria-hidden="true">groups</span> ניהול עובדים
+      </button>
+      <button
+        *ngIf="vm.role === 'admin'"
+        [class.active]="vm.page === 'notifications'"
+        (click)="vm.page = 'notifications'"
+      >
+        <span class="app-icon" aria-hidden="true">notifications</span> שליחת התראות
+      </button>
+      <button
+        [class.active]="vm.page === 'attendance'"
+        (click)="vm.page = 'attendance'"
+      >
+        <span class="app-icon" aria-hidden="true">history</span>
+        {{ vm.role === "admin" ? "נוכחות עובדים" : "הנוכחות שלי" }}
+      </button>
+      <button
+        [class.active]="vm.page === 'payroll'"
+        (click)="vm.page = 'payroll'"
+      >
+        <span class="app-icon" aria-hidden="true">payments</span>
+        {{ vm.role === "admin" ? "ניהול שכר" : "התלושים שלי" }}
+      </button>
+      <button
+        [class.active]="vm.page === 'requests'"
+        (click)="vm.page = 'requests'"
+      >
+        <span class="app-icon" aria-hidden="true">checklist</span>
+        {{ vm.role === "admin" ? "בקשות עובדים" : "הבקשות שלי" }}
+      </button>
+      <button
+        *ngIf="vm.canUseChat"
+        [class.active]="vm.page === 'chat'"
+        (click)="vm.openChat()"
+      >
+        <span class="app-icon" aria-hidden="true">chat</span> צ׳אט פרויקטים
+      </button>
+    </nav>
+    <button class="logout" (click)="vm.logout()">יציאה מהמערכת</button>
+  </aside>
+
+  <!-- אזור התוכן המרכזי: מציג קומפוננטה אחת לפי העמוד שנבחר -->
+  <main>
+    <!-- כותרת המסך והפעולות הקבועות של המשתמש. -->
+    <header>
+      <div>
+        <h1>{{ vm.pageTitle }}</h1>
+        <p>
+          {{
+            vm.role === "admin"
+              ? "מרכז השליטה והבקרה הארגוני"
+              : "המשימות, הנוכחות והעדכונים שלך"
+          }}
+        </p>
+      </div>
+      <!-- פעמון ההתראות מציג רק התראות של המשתמש המחובר -->
+      <div class="header-actions">
+        <button class="command-trigger" (click)="openCommand()" aria-label="חיפוש גלובלי">
+          <span class="app-icon">search</span><span>חיפוש במערכת</span><kbd>Ctrl K</kbd>
+        </button>
+        <button
+          class="bell"
+          (click)="vm.showNotices = !vm.showNotices"
+          aria-label="פתיחת התראות"
+        >
+          <span class="app-icon" aria-hidden="true">notifications</span>
+          <b *ngIf="vm.unread.length">{{ vm.unread.length }}</b>
+        </button>
+        <div class="notice-box" *ngIf="vm.showNotices">
+          <div class="notice-title">
+            <h3>התראות</h3>
+            <button (click)="vm.showNotices = false" aria-label="סגירת התראות">
+              <span class="app-icon" aria-hidden="true">close</span>
+            </button>
+          </div>
+          <p *ngIf="!vm.unread.length">אין התראות חדשות</p>
+          <article
+            *ngFor="let n of vm.notifications"
+            [hidden]="n.userId !== vm.currentUserId"
+          >
+            <span>{{ n.text }}</span>
+            <small>{{ n.createdAt }}</small>
+            <button *ngIf="!n.read" (click)="vm.markRead(n)">סמן כנקראה</button>
+            <i *ngIf="n.read">נקראה</i>
+          </article>
+        </div>
+        <div class="avatar">{{ vm.currentUser.name[0] }}</div>
+      </div>
+    </header>
+    <app-dashboard *ngIf="vm.page === 'dashboard'"></app-dashboard>
+    <app-projects *ngIf="vm.page === 'projects'"></app-projects>
+    <app-tasks *ngIf="vm.page === 'tasks'"></app-tasks>
+    <app-employees *ngIf="vm.page === 'employees'"></app-employees>
+    <app-notifications *ngIf="vm.page === 'notifications'"></app-notifications>
+    <app-attendance *ngIf="vm.page === 'attendance'"></app-attendance>
+    <app-payroll *ngIf="vm.page === 'payroll'"></app-payroll>
+    <app-chat *ngIf="vm.page === 'chat'"></app-chat>
+    <app-requests *ngIf="vm.page === 'requests'"></app-requests>
+    <app-insights *ngIf="vm.page === 'insights'"></app-insights>
+    <app-reports *ngIf="vm.page === 'reports'"></app-reports>
+    <app-automations *ngIf="vm.page === 'automations'"></app-automations>
+    <app-planner *ngIf="vm.page === 'planner'"></app-planner>
+    <app-calendar *ngIf="vm.page === 'calendar'"></app-calendar>
+    <app-risks *ngIf="vm.page === 'risks'"></app-risks>
+    <app-quality *ngIf="vm.page === 'quality'"></app-quality>
+    <app-action-center *ngIf="vm.page === 'action-center'"></app-action-center>
+  </main>
+</div>
+
+<!-- מרכז החיפוש מאפשר להגיע במהירות לכל נתון מרכזי במערכת -->
+<div class="command-backdrop" *ngIf="commandOpen" (click)="closeCommand()">
+  <section class="command-center" (click)="$event.stopPropagation()">
+    <div class="command-search"><span class="app-icon">search</span><input class="command-input" [(ngModel)]="commandQuery" placeholder="חיפוש פרויקט, משימה או עובד" /><button (click)="closeCommand()"><span class="app-icon">close</span></button></div>
+    <div class="command-hint" *ngIf="!commandQuery"><span class="app-icon">bolt</span><div><b>חיפוש מהיר מכל מקום</b><small>הקלידו שם פרויקט, משימה או עובד כדי להגיע אליו מיד</small></div></div>
+    <div class="command-results" *ngIf="commandQuery"><button *ngFor="let result of commandResults" (click)="chooseResult(result.page)"><span class="result-icon app-icon">{{ result.icon }}</span><span><b>{{ result.title }}</b><small>{{ result.type }} · {{ result.subtitle }}</small></span><span class="app-icon arrow">arrow_back</span></button><p *ngIf="!commandResults.length">לא נמצאו תוצאות מתאימות</p></div>
+    <footer><span><kbd>Enter</kbd> בחירה</span><span><kbd>Esc</kbd> סגירה</span><strong>TaskFlow Command Center</strong></footer>
+  </section>
+</div>

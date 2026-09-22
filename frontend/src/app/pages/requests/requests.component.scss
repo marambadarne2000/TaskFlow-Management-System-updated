@@ -1,0 +1,81 @@
+/* קובץ זה מגדיר את טיפול בבקשות עובדים. */
+.requests-page {
+  display: grid;
+  gap: 22px;
+}
+
+.request-form,
+.request-card {
+  padding: 20px;
+  border: 1px solid #e5e7f2;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.request-grid,
+.request-details,
+.request-actions {
+  display: grid;
+  gap: 12px;
+}
+
+.request-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.request-list {
+  display: grid;
+  gap: 14px;
+}
+
+.request-head,
+.request-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.request-head div,
+.request-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.request-head span,
+.request-details span {
+  color: #65708a;
+}
+
+.request-card.pending {
+  border-right: 5px solid #f3b63f;
+}
+
+.request-card.approved {
+  border-right: 5px solid #29a77d;
+}
+
+.request-card.rejected {
+  border-right: 5px solid #e45b68;
+}
+
+.request-card em {
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: #f1efff;
+  color: #6251d8;
+  font-style: normal;
+}
+
+/* התאמת העיצוב למסכים קטנים ולתצוגה רספונסיבית. */
+@media (max-width: 750px) {
+  .request-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .request-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

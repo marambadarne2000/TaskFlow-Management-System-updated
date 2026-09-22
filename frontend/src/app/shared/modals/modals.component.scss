@@ -1,0 +1,9 @@
+/* עיצוב החלונות המשותף נמצא בקובץ העיצוב הגלובלי */
+.form-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.milestones-box { margin-top: 18px; padding-top: 14px; border-top: 1px solid #e8ebf3; }
+.milestones-box h3 { margin: 0 0 10px; }
+.milestone { width: 100%; display: grid; grid-template-columns: 24px 1fr auto; gap: 8px; align-items: center; text-align: right; background: #f6f8fc; border: 1px solid #e5e9f2; margin: 6px 0; }
+.milestone.completed { color: #188265; background: #ebfaf5; }
+.milestone small { color: #7c869a; }
+.milestone-form { display: grid; grid-template-columns: 1fr 145px auto; gap: 8px; margin-top: 10px; }
+@media(max-width:650px){.form-pair,.milestone-form{grid-template-columns:1fr}}

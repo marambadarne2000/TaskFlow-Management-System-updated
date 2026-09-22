@@ -1,0 +1,43 @@
+<section class="risk-command">
+  <header class="risk-hero">
+    <div><span>RISK INTELLIGENCE CENTER</span><h2>מרכז סיכונים ארגוני</h2><p>זיהוי מוקדם של איחורים, חסימות ועומסים עם הסבר והמלצה לכל חריגה</p></div>
+    <div class="risk-gauge" [style.--score]="averageScore"><strong>{{ averageScore }}</strong><small>ציון סיכון ממוצע</small></div>
+  </header>
+
+  <div class="risk-kpis">
+    <article class="critical"><span class="app-icon">emergency_home</span><div><strong>{{ criticalCount }}</strong><small>סיכונים קריטיים</small></div></article>
+    <article class="high"><span class="app-icon">warning</span><div><strong>{{ highCount }}</strong><small>סיכונים גבוהים</small></div></article>
+    <article><span class="app-icon">visibility</span><div><strong>{{ openCount }}</strong><small>דורשים התייחסות</small></div></article>
+    <article><span class="app-icon">analytics</span><div><strong>{{ risks.length }}</strong><small>חריגות שזוהו</small></div></article>
+  </div>
+
+  <div class="risk-toolbar">
+    <label class="risk-search"><span class="app-icon">search</span><input type="search" [(ngModel)]="searchText" placeholder="חיפוש סיכון, סיבה או גורם" /></label>
+    <select [(ngModel)]="typeFilter"><option value="">כל התחומים</option><option value="project">פרויקטים</option><option value="task">משימות</option><option value="employee">עובדים</option></select>
+    <select [(ngModel)]="levelFilter"><option value="">כל הרמות</option><option value="critical">קריטי</option><option value="high">גבוה</option><option value="medium">בינוני</option><option value="low">נמוך</option></select>
+    <button (click)="typeFilter = ''; levelFilter = ''; searchText = ''">איפוס</button>
+  </div>
+
+  <div class="risk-layout">
+    <main class="risk-register">
+      <div class="register-title"><div><span>LIVE RISK REGISTER</span><h3>רשימת הסיכונים</h3></div><b>{{ filteredRisks.length }} תוצאות</b></div>
+      <article class="risk-row" *ngFor="let risk of filteredRisks" [attr.data-level]="risk.level" [class.acknowledged]="acknowledged.has(risk.id)">
+        <div class="risk-score"><strong>{{ risk.score }}</strong><small>{{ levelName(risk.level) }}</small></div>
+        <div class="risk-main">
+          <div class="risk-heading"><span class="entity-type"><i class="app-icon">{{ typeIcon(risk.type) }}</i>{{ typeName(risk.type) }}</span><h3>{{ risk.title }}</h3></div>
+          <p>{{ risk.subtitle }}</p>
+          <div class="risk-reasons"><span *ngFor="let reason of risk.reasons"><i class="app-icon">error_outline</i>{{ reason }}</span></div>
+          <div class="recommendation"><span class="app-icon">lightbulb</span><div><small>פעולה מומלצת</small><b>{{ risk.recommendation }}</b></div></div>
+        </div>
+        <div class="risk-actions"><button class="primary" (click)="openRisk(risk)">פתיחת הנתון</button><button (click)="toggleAcknowledged(risk)"><span class="app-icon">{{ acknowledged.has(risk.id) ? 'undo' : 'done' }}</span>{{ acknowledged.has(risk.id) ? 'ביטול טיפול' : 'סומן בטיפול' }}</button></div>
+      </article>
+      <div class="empty-risk" *ngIf="!filteredRisks.length"><span class="app-icon">verified</span><h3>לא נמצאו סיכונים מתאימים</h3><p>אפשר לשנות את המסננים או להמשיך לעקוב אחר הנתונים</p></div>
+    </main>
+
+    <aside class="risk-priority">
+      <span>PRIORITY WATCHLIST</span><h3>שלושת הסיכונים המובילים</h3><p>הנושאים שכדאי לבדוק ראשונים</p>
+      <button *ngFor="let risk of topRisks; let index = index" (click)="openRisk(risk)" [attr.data-level]="risk.level"><b>0{{ index + 1 }}</b><div><strong>{{ risk.title }}</strong><small>{{ typeName(risk.type) }} · ציון {{ risk.score }}</small></div><span class="app-icon">arrow_back</span></button>
+      <div class="method"><span class="app-icon">functions</span><div><b>איך מחושב הציון?</b><p>הציון משלב איחור, פער התקדמות, תלות, חריגת זמן ועומס עובד. כל סיבה מוצגת ליד הנתון</p></div></div>
+    </aside>
+  </div>
+</section>

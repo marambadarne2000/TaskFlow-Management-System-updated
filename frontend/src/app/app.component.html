@@ -1,0 +1,4 @@
+<!-- קומפוננטת השורש: מחליטה אם להציג את מסך הכניסה או את מעטפת המערכת -->
+<app-auth *ngIf="!vm.loggedIn"></app-auth>
+<app-shell *ngIf="vm.loggedIn"></app-shell>
+<app-modals></app-modals>

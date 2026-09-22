@@ -1,0 +1,49 @@
+<!-- מרכז הביצוע החכם מרכז משימות, עומס, זמנים ותלויות -->
+<section class="task-command">
+  <header class="task-hero">
+    <div><span>SMART DELIVERY WORKSPACE</span><h2>מרכז ביצוע משימות</h2><p>תכנון חכם, תלויות, מעקב זמן ושליטה בקצב העבודה</p></div>
+    <button class="primary" *ngIf="vm.role === 'admin'" (click)="vm.openTask()"><span class="app-icon">add_task</span> משימה חדשה</button>
+  </header>
+
+  <div class="task-kpis">
+    <article><i class="app-icon">bolt</i><div><strong>{{ vm.smartDisplayedTasks.length }}</strong><span>משימות בתצוגה</span></div></article>
+    <article><i class="app-icon">warning</i><div><strong>{{ riskTasks }}</strong><span>דורשות טיפול</span></div></article>
+    <article><i class="app-icon">link</i><div><strong>{{ blockedTasks }}</strong><span>חסומות בתלות</span></div></article>
+    <article><i class="app-icon">schedule</i><div><strong>{{ trackedHours | number:'1.0-1' }}</strong><span>שעות שדווחו</span></div></article>
+  </div>
+
+  <div class="task-toolbar">
+    <div class="mode-switch"><button [class.active]="vm.taskViewMode === 'board'" (click)="vm.taskViewMode = 'board'"><span class="app-icon">view_kanban</span>Kanban</button><button [class.active]="vm.taskViewMode === 'table'" (click)="vm.taskViewMode = 'table'"><span class="app-icon">table_rows</span>טבלה</button></div>
+    <div class="task-filters"><label class="board-search"><span class="app-icon">search</span><input type="search" [(ngModel)]="searchText" placeholder="חיפוש משימה, פרויקט או עובד" /></label><select [(ngModel)]="vm.taskYear" (ngModelChange)="vm.taskDate = ''"><option value="">כל השנים</option><option *ngFor="let y of vm.taskYears" [value]="y">{{ y }}</option></select><input type="date" [(ngModel)]="vm.taskDate" /><select [(ngModel)]="vm.taskStateFilter"><option value="">כל המצבים</option><option value="todo">לביצוע</option><option value="in_progress">בתהליך</option><option value="done">הושלמו</option><option value="overdue">באיחור</option><option value="soon">קרובות לסיום</option></select><label><input type="checkbox" [(ngModel)]="vm.taskFocusOnly" /> מצב מיקוד</label><button (click)="vm.clearTaskFilters(); searchText = ''">איפוס</button></div>
+  </div>
+
+  <div class="flow-strip" *ngIf="vm.taskViewMode === 'board'">
+    <div><span class="app-icon">drag_indicator</span><b>גרירה חכמה</b><small>גררו כרטיס לעמודה כדי לעדכן את המצב</small></div>
+    <div class="wip-meter" [class.near-limit]="workInProgressPercent >= 80"><span>עבודה בתהליך</span><progress [max]="workInProgressLimit" [value]="workInProgressCount"></progress><b>{{ workInProgressCount }} / {{ workInProgressLimit }}</b></div>
+  </div>
+
+  <section class="flow-navigator" *ngIf="vm.taskViewMode === 'board'">
+    <div class="flow-orbit"><span class="app-icon">route</span><i></i></div>
+    <div><small>LIVE EXECUTION PATH</small><h3>{{ flowMessage }}</h3><p>המערכת בוחרת משימה מוכנה לפי עדיפות ומועד, בלי להמתין לסיום הזמן שלה</p></div>
+    <div class="flow-counters"><span><b>{{ readyTasks.length }}</b> מוכנות עכשיו</span><span><b>{{ blockedTasks }}</b> ממתינות לתלות</span></div>
+  </section>
+
+  <div class="smart-kanban" *ngIf="vm.taskViewMode === 'board'">
+    <section *ngFor="let column of columns" class="kanban-column" [attr.data-status]="column.id" [class.drop-active]="dropTarget === column.id" (dragover)="allowDrop($event, column.id)" (dragleave)="leaveColumn(column.id)" (drop)="dropTask($event, column.id)"><header><div><span class="status-dot" [attr.data-status]="column.id"></span><span><h3>{{ column.label }}</h3><small>{{ column.hint }}</small></span></div><b>{{ tasksForColumn(column.id).length }}</b></header>
+      <div class="drop-message" *ngIf="dropTarget === column.id"><span class="app-icon">move_to_inbox</span>שחררו כאן להעברה</div>
+      <article class="task-card" *ngFor="let task of tasksForColumn(column.id)" [class.blocked]="vm.taskBlocked(task)" [class.moving]="movingTaskId === task.id" draggable="true" (dragstart)="startDrag(task)" (dragend)="cancelDrag()">
+        <div class="task-card-top"><span class="task-priority" [attr.data-priority]="task.priority">{{ vm.statusText(task.priority) }}</span><span class="health">{{ vm.taskHealth(task) }} בריאות</span></div>
+        <div class="card-title"><span class="app-icon drag-handle">drag_indicator</span><h3>{{ task.title }}</h3></div><p>{{ vm.projectName(task.projectId) }}</p>
+        <div class="task-labels"><span *ngFor="let label of task.labels">#{{ label }}</span></div>
+        <div class="blocked-note" *ngIf="vm.taskBlocked(task)"><span class="app-icon">lock</span>ממתינה ל־{{ vm.dependencyName(task) }}</div>
+        <div class="time-meter"><div><span>זמן</span><b>{{ (task.actualMinutes || 0) / 60 | number:'1.0-1' }} / {{ task.estimatedHours || 0 }} שעות</b></div><progress [max]="task.estimatedHours || 1" [value]="(task.actualMinutes || 0) / 60"></progress></div>
+        <div class="task-person"><span class="avatar-mini">{{ vm.name(task.workerId).charAt(0) }}</span><span>{{ vm.name(task.workerId) }}</span><time [class.late]="vm.deadlineState(task) === 'overdue'">{{ task.due | date:'dd/MM' }}</time></div>
+        <div class="quick-actions"><button (click)="vm.logTaskTime(task)"><span class="app-icon">timer</span> זמן</button><button *ngIf="task.status !== 'done'" [disabled]="vm.taskBlocked(task)" (click)="vm.changeTask(task, task.status === 'todo' ? 'in_progress' : 'done')">{{ task.status === 'todo' ? 'התחלה' : 'השלמה' }}</button><button *ngIf="vm.role === 'admin'" (click)="vm.editTask(task)">עריכה</button></div>
+      </article>
+      <div class="column-empty" *ngIf="!tasksForColumn(column.id).length && dropTarget !== column.id"><span class="app-icon">inbox</span><span>אין משימות בעמודה</span></div>
+    </section>
+  </div>
+
+  <div class="task-table-wrap" *ngIf="vm.taskViewMode === 'table'"><table><thead><tr><th>משימה</th><th>פרויקט</th><th>עובד</th><th>תלות</th><th>זמן</th><th>מועד</th><th>מצב</th><th>פעולות</th></tr></thead><tbody><tr *ngFor="let task of vm.smartDisplayedTasks"><td><b>{{ task.title }}</b><small>{{ task.labels?.join(' · ') }}</small></td><td>{{ vm.projectName(task.projectId) }}</td><td>{{ vm.name(task.workerId) }}</td><td>{{ task.dependencyTaskId ? vm.dependencyName(task) : 'ללא' }}</td><td>{{ (task.actualMinutes || 0) / 60 | number:'1.0-1' }} / {{ task.estimatedHours || 0 }}</td><td>{{ task.due | date:'dd/MM/yyyy' }}</td><td>{{ vm.statusText(task.status) }}</td><td><button (click)="vm.logTaskTime(task)">דיווח זמן</button><button *ngIf="vm.role === 'admin'" (click)="vm.editTask(task)">עריכה</button></td></tr></tbody></table></div>
+  <div class="empty-state" *ngIf="!vm.smartDisplayedTasks.length"><span class="app-icon">task_alt</span><h3>אין משימות בתצוגה</h3><p>אפשר לשנות מסננים או ליצור משימה חדשה</p></div>
+</section>

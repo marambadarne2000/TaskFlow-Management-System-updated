@@ -1,0 +1,215 @@
+<!-- מסך נוכחות: מנהל מקבל סיכום שבועי ועובד מקבל פירוט אישי לפי חודש -->
+<section class="panel attendance-page">
+  <div class="panel-title">
+    <div>
+      <h2>
+        {{ vm.attendanceView === "summary" ? "ניהול נוכחות" : "פירוט נוכחות" }}
+      </h2>
+      <p *ngIf="vm.attendanceView === 'summary'">
+        מעקב אחר מכסת השעות השבועית של עובדי החברה
+      </p>
+      <p *ngIf="vm.attendanceView === 'details'">
+        כניסות ויציאות של {{ vm.name(vm.attendanceEmployeeId) }}
+      </p>
+    </div>
+    <button
+      class="secondary"
+      *ngIf="vm.role === 'admin' && vm.attendanceView === 'details'"
+      (click)="vm.attendanceView = 'summary'"
+    >
+      חזרה לסיכום העובדים
+    </button>
+  </div>
+
+  <!-- סיכום שבועי למנהל בלבד -->
+  <ng-container *ngIf="vm.role === 'admin' && vm.attendanceView === 'summary'">
+    <div class="attendance-toolbar">
+      <label>
+        השבוע שמתחיל בתאריך
+        <input type="date" [(ngModel)]="vm.attendanceWeekStart" />
+      </label>
+      <label class="employee-search">
+        חיפוש עובד
+        <span class="search-field">
+          <span class="app-icon" aria-hidden="true">search</span>
+          <input
+            type="search"
+            [(ngModel)]="employeeSearch"
+            placeholder="שם, אימייל, טלפון או מספר מזהה"
+            autocomplete="off"
+          />
+        </span>
+      </label>
+      <div class="color-help">
+        <span class="dot red"></span> פחות מהמכסה
+        <span class="dot yellow"></span> מעל המכסה
+        <span class="dot green"></span> הושלמה המכסה
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="attendance-summary-table">
+        <thead>
+          <tr>
+            <th>עובד</th>
+            <th>מכסה שבועית</th>
+            <th>שעות בפועל</th>
+            <th>הפרש</th>
+            <th>מצב</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let employee of displayedEmployees"
+            [class.attendance-under]="
+              vm.weeklyAttendanceState(employee.id) === 'under'
+            "
+            [class.attendance-over]="
+              vm.weeklyAttendanceState(employee.id) === 'over'
+            "
+            [class.attendance-complete]="
+              vm.weeklyAttendanceState(employee.id) === 'complete'
+            "
+          >
+            <td>
+              <strong>{{ employee.name }}</strong>
+              <small>{{ employee.email }}</small>
+            </td>
+            <td>
+              <div class="target-editor">
+                <input
+                  type="number"
+                  min="0"
+                  max="168"
+                  step="0.5"
+                  [ngModel]="
+                    vm.weeklyTargetInputs[employee.id] ??
+                    vm.weeklyTargetHours(employee.id)
+                  "
+                  (ngModelChange)="vm.weeklyTargetInputs[employee.id] = $event"
+                />
+                <span>שעות</span>
+                <button
+                  class="small secondary"
+                  (click)="vm.saveWeeklyTarget(employee.id)"
+                >
+                  שמירה
+                </button>
+              </div>
+            </td>
+            <td>{{ vm.weeklyWorkedHours(employee.id) | number: "1.1-2" }}</td>
+            <td>
+              {{ vm.weeklyDifference(employee.id) > 0 ? "+" : ""
+              }}{{ vm.weeklyDifference(employee.id) | number: "1.1-2" }}
+            </td>
+            <td>
+              <span class="attendance-status">{{
+                vm.weeklyAttendanceText(employee.id)
+              }}</span>
+            </td>
+            <td>
+              <button
+                class="small primary"
+                (click)="vm.openAttendanceDetails(employee.id)"
+              >
+                הצגת נוכחות
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="displayedEmployees.length === 0">
+            <td colspan="6" class="empty-state">לא נמצאו עובדים התואמים לחיפוש</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <!-- דף פירוט נוכחות: אצל עובד הוא אישי ואצל מנהל הוא נפתח מכפתור הצגת נוכחות -->
+  <ng-container *ngIf="vm.attendanceView === 'details'">
+    <div class="clock-card" *ngIf="vm.role === 'employee'">
+      <div class="icon"><span class="app-icon" aria-hidden="true">schedule</span></div>
+      <div>
+        <h3>{{ vm.activeAttendance ? "העבודה התחילה" : "אין משמרת פתוחה" }}</h3>
+        <p *ngIf="vm.activeAttendance">
+          שעת כניסה:
+          {{ vm.activeAttendance.clockIn | date: "dd/MM/yyyy HH:mm" }}
+        </p>
+      </div>
+      <button
+        class="primary"
+        *ngIf="!vm.activeAttendance"
+        (click)="vm.clockIn()"
+      >
+        תחילת עבודה
+      </button>
+      <button
+        class="danger"
+        *ngIf="vm.activeAttendance"
+        (click)="vm.clockOut()"
+      >
+        סיום עבודה
+      </button>
+    </div>
+
+    <div class="attendance-toolbar detail-filters">
+      <label>
+        שנה
+        <select [(ngModel)]="vm.attendanceYear">
+          <option value="">כל השנים</option>
+          <option *ngFor="let year of vm.attendanceYears" [value]="year">
+            {{ year }}
+          </option>
+        </select>
+      </label>
+      <label>
+        חודש
+        <select [(ngModel)]="vm.attendanceMonth">
+          <option value="">כל החודשים</option>
+          <option *ngFor="let month of vm.payslipMonths" [value]="month">
+            חודש {{ month }}
+          </option>
+        </select>
+      </label>
+      <button class="secondary" (click)="vm.clearAttendanceFilters()">
+        הצגת הכל
+      </button>
+      <div class="hours-total">
+        <span>סה״כ שעות בתצוגה</span>
+        <strong>{{ vm.filteredAttendanceHours() | number: "1.1-2" }}</strong>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>יום</th>
+            <th>תאריך</th>
+            <th>שעת כניסה</th>
+            <th>שעת יציאה</th>
+            <th>סה״כ שעות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of vm.filteredAttendance">
+            <td>יום {{ vm.attendanceDay(item.clockIn) }}</td>
+            <td>{{ item.clockIn | date: "dd/MM/yyyy" }}</td>
+            <td>{{ item.clockIn | date: "HH:mm" }}</td>
+            <td>
+              {{
+                item.clockOut ? (item.clockOut | date: "HH:mm") : "משמרת פתוחה"
+              }}
+            </td>
+            <td>{{ vm.attendanceHours(item) | number: "1.1-2" }}</td>
+          </tr>
+          <tr *ngIf="vm.filteredAttendance.length === 0">
+            <td colspan="5" class="empty-state">
+              לא נמצאו רישומי נוכחות בתקופה שנבחרה
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+</section>

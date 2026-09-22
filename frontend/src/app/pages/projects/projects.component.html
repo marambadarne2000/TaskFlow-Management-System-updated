@@ -1,0 +1,41 @@
+<!-- מרכז הפרויקטים מציג תמונת מצב ומאפשר לעבור בין ארבע תצוגות עבודה -->
+<section class="projects-hub">
+  <header class="projects-hero">
+    <div><span class="eyebrow">PROJECT CONTROL CENTER</span><h2>מרכז ניהול פרויקטים</h2><p>תכנון, ביצוע, סיכונים ואבני דרך בתמונה אחת ברורה</p></div>
+    <div class="hero-buttons"><button class="archive-button" (click)="archiveOpen = true"><span class="app-icon">inventory_2</span> ארכיון <b>{{ archivedProjects.length }}</b></button><button class="primary hero-action" *ngIf="vm.role === 'admin'" (click)="vm.openProject()"><span class="app-icon">add</span> פרויקט חדש</button></div>
+  </header>
+  <div class="project-kpis">
+    <article><span>פרויקטים מוצגים</span><strong>{{ vm.displayedProjects.length }}</strong><small>בטווח ובמסננים שנבחרו</small></article>
+    <article><span>בסיכון גבוה</span><strong>{{ highRiskCount }}</strong><small>דורשים החלטה ניהולית</small></article>
+    <article><span>התקדמות ממוצעת</span><strong>{{ averageProgress }}%</strong><small>לפי משימות שהושלמו</small></article>
+    <article><span>תקציב מנוהל</span><strong>{{ totalBudget | number:'1.0-0' }} ₪</strong><small>בפרויקטים המוצגים</small></article>
+  </div>
+  <div class="workspace-toolbar">
+    <div class="view-switch"><button *ngFor="let view of views" [class.active]="vm.projectViewMode === view.id" (click)="vm.projectViewMode = view.id"><span class="app-icon">{{ view.icon }}</span>{{ view.label }}</button></div>
+    <div class="filters">
+      <select [(ngModel)]="vm.projectYear" (ngModelChange)="vm.projectDate = ''"><option value="">כל השנים</option><option *ngFor="let y of vm.projectYears" [value]="y">{{ y }}</option></select>
+      <input type="date" [(ngModel)]="vm.projectDate" aria-label="תאריך יצירה" />
+      <select [(ngModel)]="vm.projectStateFilter"><option value="">כל המצבים</option><option value="planned">בתכנון</option><option value="in_progress">בתהליך</option><option value="completed">הושלמו</option><option value="overdue">באיחור</option><option value="attention">דורשים טיפול</option></select>
+      <button (click)="vm.clearProjectFilters()">איפוס</button>
+    </div>
+  </div>
+  <div class="project-grid" *ngIf="vm.projectViewMode === 'list'">
+    <article class="project-card" *ngFor="let p of vm.displayedProjects">
+      <div class="card-top"><div><span class="priority" [attr.data-level]="p.priority">{{ priorityText(p.priority) }}</span><h3>{{ p.name }}</h3><p>{{ p.description || 'ללא תיאור' }}</p></div><div class="risk-ring" [style.--risk]="vm.projectRiskScore(p)"><strong>{{ vm.projectRiskScore(p) }}</strong><small>סיכון</small></div></div>
+      <div class="tags"><span *ngFor="let tag of p.tags">#{{ tag }}</span><span *ngIf="!p.tags?.length">ללא תגיות</span></div>
+      <div class="progress-heading"><span>התקדמות</span><b>{{ vm.progress(p) }}%</b></div><div class="project-progress"><span [style.width.%]="vm.progress(p)"></span></div>
+      <div class="project-meta"><span><i class="app-icon">person</i>{{ vm.name(p.managerId) }}</span><button (click)="vm.openTeam(p)"><i class="app-icon">groups</i>{{ vm.team(p).length }} אנשי צוות</button><span><i class="app-icon">event</i>{{ p.due | date:'dd/MM/yyyy' }}</span></div>
+      <div class="project-stats"><span><b>{{ vm.projectTasks(p.id).length }}</b> משימות</span><span><b>{{ vm.milestonesFor(p.id).length }}</b> אבני דרך</span><span><b>{{ p.plannedHours || 0 }}</b> שעות מתוכננות</span></div>
+      <div class="card-actions"><button (click)="vm.openProjectView(p)">מרכז הפרויקט</button><button *ngIf="vm.role === 'admin'" (click)="vm.openTask(p.id)">משימה</button><button *ngIf="vm.role === 'admin'" (click)="vm.editProject(p)">עריכה</button><button *ngIf="vm.role === 'admin'" (click)="vm.cloneProject(p)">שכפול</button><button *ngIf="vm.role === 'admin'" (click)="vm.archiveProject(p)">{{ p.archived ? 'שחזור' : 'ארכוב' }}</button></div>
+    </article>
+  </div>
+  <div class="kanban" *ngIf="vm.projectViewMode === 'kanban'">
+    <section *ngFor="let column of kanbanColumns"><header><h3>{{ column.label }}</h3><span>{{ projectsByStatus(column.id).length }}</span></header><button class="kanban-card" *ngFor="let p of projectsByStatus(column.id)" (click)="vm.openProjectView(p)"><b>{{ p.name }}</b><small>{{ vm.name(p.managerId) }}</small><div class="mini-progress"><span [style.width.%]="vm.progress(p)"></span></div><em>סיכון {{ vm.projectRisk(p) }}</em></button></section>
+  </div>
+  <div class="calendar-view" *ngIf="vm.projectViewMode === 'calendar'"><article *ngFor="let p of projectsByDueDate"><time><strong>{{ p.due | date:'dd' }}</strong><span>{{ p.due | date:'MMM' }}</span></time><div><h3>{{ p.name }}</h3><p>{{ vm.statusText(p.status) }} · {{ vm.progress(p) }}% · {{ vm.team(p).length }} אנשי צוות</p></div><span class="priority" [attr.data-level]="p.priority">{{ priorityText(p.priority) }}</span><button (click)="vm.openProjectView(p)">פתיחה</button></article></div>
+  <div class="gantt-view" *ngIf="vm.projectViewMode === 'gantt'"><div class="gantt-scale"><span>התחלה</span><span>ציר זמן הפרויקטים</span><span>סיום</span></div><div class="gantt-row" *ngFor="let p of vm.displayedProjects"><b>{{ p.name }}</b><div class="gantt-track"><button [ngStyle]="vm.ganttStyle(p)" [attr.data-status]="p.status" (click)="vm.openProjectView(p)">{{ vm.progress(p) }}%</button></div><small>{{ p.due | date:'dd/MM' }}</small></div></div>
+  <div class="empty-state" *ngIf="!vm.displayedProjects.length"><span class="app-icon">folder_off</span><h3>לא נמצאו פרויקטים</h3><p>אפשר לשנות את המסננים או ליצור פרויקט חדש</p></div>
+</section>
+
+<!-- חלון הארכיון שומר פרויקטים ישנים ומאפשר לשחזר אותם -->
+<div class="archive-backdrop" *ngIf="archiveOpen" (click)="archiveOpen = false"><aside class="archive-drawer" (click)="$event.stopPropagation()"><header><div><span>PROJECT ARCHIVE</span><h2>ארכיון פרויקטים</h2><p>פרויקטים שנשמרו מחוץ לעבודה הפעילה</p></div><button (click)="archiveOpen = false"><span class="app-icon">close</span></button></header><article *ngFor="let project of archivedProjects"><div><span class="priority" [attr.data-level]="project.priority">{{ priorityText(project.priority) }}</span><h3>{{ project.name }}</h3><p>{{ project.description || 'ללא תיאור' }}</p><small>מנהל: {{ vm.name(project.managerId) }} · {{ project.due | date:'dd/MM/yyyy' }}</small></div><button class="restore" *ngIf="vm.role === 'admin'" (click)="vm.archiveProject(project)"><span class="app-icon">restore</span> שחזור</button></article><div class="archive-empty" *ngIf="!archivedProjects.length"><span class="app-icon">inventory_2</span><h3>הארכיון ריק</h3><p>פרויקט שיועבר לארכיון יופיע כאן</p></div></aside></div>

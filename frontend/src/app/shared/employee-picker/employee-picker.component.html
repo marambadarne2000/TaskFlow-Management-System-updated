@@ -1,0 +1,68 @@
+<!-- קובץ זה מציג את חיפוש ובחירת עובדים. -->
+<div class="employee-picker">
+  <button
+    class="employee-trigger"
+    type="button"
+    (click)="open = !open"
+    [attr.aria-expanded]="open"
+  >
+    <span *ngIf="selectedEmployee as employee; else placeholderText">
+      <b>{{ employee.name }}</b>
+      <small>{{ employee.email }} · ID {{ employee.id }} · מקסימום {{ employee.limit }} משימות</small>
+    </span>
+    <ng-template #placeholderText>
+      <span class="placeholder">
+        <span class="app-icon" aria-hidden="true">search</span>{{ placeholder }}
+      </span>
+    </ng-template>
+    <span class="app-icon" aria-hidden="true">expand_more</span>
+  </button>
+
+  <div class="picker-panel" *ngIf="open">
+    <div class="search-box">
+      <span class="app-icon" aria-hidden="true">search</span>
+      <input
+        [(ngModel)]="search"
+        placeholder="שם, אימייל, טלפון או מספר מזהה"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="employee-list">
+      <button
+        *ngIf="allowAll"
+        type="button"
+        class="employee-option all-employees"
+        [class.selected]="selectedId === 0"
+        (click)="choose(0)"
+      >
+        <span class="avatar"><span class="app-icon" aria-hidden="true">groups</span></span>
+        <span class="details"><b>כל העובדים הפעילים</b></span>
+      </button>
+
+      <button
+        type="button"
+        class="employee-option"
+        *ngFor="let employee of filteredEmployees"
+        [class.selected]="employee.id === selectedId"
+        [disabled]="unavailable(employee)"
+        (click)="choose(employee.id)"
+      >
+        <span class="avatar">{{ employee.name[0] }}</span>
+        <span class="details">
+          <b>{{ employee.name }}</b>
+          <small>{{ employee.email }}</small>
+          <small>
+            {{ employee.phone || "ללא טלפון" }} · מספר מזהה {{ employee.id }} ·
+            מקסימום {{ employee.limit }} משימות
+          </small>
+        </span>
+        <span class="load" [class.available]="employee.active === 0" [class.full]="employee.active >= employee.limit">
+          {{ employee.active === 0 ? "פנוי/ה" : employee.active + " משימות" }}
+        </span>
+      </button>
+
+      <p class="empty" *ngIf="!filteredEmployees.length">לא נמצאו עובדים</p>
+    </div>
+  </div>
+</div>

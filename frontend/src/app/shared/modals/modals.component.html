@@ -1,0 +1,224 @@
+<!-- חלונות קופצים: טפסים להוספת פרויקט, משימה, עובד והתראה ותצוגת פרטים -->
+<div class="modal-backdrop" *ngIf="vm.modal">
+  <div class="modal">
+    <button
+      class="close"
+      type="button"
+      (click)="vm.modal = ''"
+      aria-label="סגירת חלון"
+    >
+      <span class="app-icon" aria-hidden="true">close</span>
+    </button>
+
+    <form class="modern-form project-form" *ngIf="vm.modal === 'project'" (ngSubmit)="vm.saveProject()">
+      <h2>{{ vm.editingProjectId === null ? "פרויקט חדש" : "עריכת פרויקט" }}</h2>
+      <label
+        >שם<input name="projectName" [(ngModel)]="vm.projectForm.name" required
+      /></label>
+      <label
+        >תיאור<textarea
+          name="projectDescription"
+          [(ngModel)]="vm.projectForm.description"
+        ></textarea>
+      </label>
+      <label
+        >מועד סיום<input
+          name="projectDue"
+          type="date"
+          [(ngModel)]="vm.projectForm.due"
+          required
+      /></label>
+      <div class="form-pair">
+        <label>תאריך התחלה<input name="projectStart" type="date" [(ngModel)]="vm.projectForm.startDate" /></label>
+        <label>עדיפות<select name="projectPriority" [(ngModel)]="vm.projectForm.priority"><option value="low">נמוכה</option><option value="medium">בינונית</option><option value="high">גבוהה</option><option value="critical">קריטית</option></select></label>
+      </div>
+      <div class="form-pair">
+        <label>תקציב בשקלים<input name="projectBudget" type="number" min="0" [(ngModel)]="vm.projectForm.budget" /></label>
+        <label>שעות מתוכננות<input name="projectHours" type="number" min="0" [(ngModel)]="vm.projectForm.plannedHours" /></label>
+      </div>
+      <label>תגיות<input name="projectTags" [(ngModel)]="vm.projectForm.tags" placeholder="פיתוח, לקוח, דחוף" /><small>יש להפריד בין תגיות בפסיק</small></label>
+      <label>קישור למסמכי הפרויקט<input name="projectLink" type="url" [(ngModel)]="vm.projectForm.externalLink" placeholder="https://" /></label>
+      <button class="primary" type="submit">
+        {{ vm.editingProjectId === null ? "יצירת פרויקט" : "שמירת שינויים" }}
+      </button>
+    </form>
+
+    <form class="modern-form task-form" *ngIf="vm.modal === 'task'" (ngSubmit)="vm.saveTask()">
+      <h2>{{ vm.editingTaskId === null ? "משימה חדשה" : "עריכת משימה" }}</h2>
+      <label
+        >כותרת<input name="taskTitle" [(ngModel)]="vm.taskForm.title" required
+      /></label>
+      <label
+        >פרויקט<select name="taskProject" [(ngModel)]="vm.taskForm.projectId">
+          <option *ngFor="let p of vm.projects" [value]="p.id">
+            {{ p.name }}
+          </option>
+        </select></label
+      >
+      <label>הקצאה לעובד</label>
+      <!-- רכיב משותף שמאפשר לחפש ולבחור עובד בלבד. -->
+      <app-employee-picker
+        [employees]="vm.employees"
+        [(selectedId)]="vm.taskForm.workerId"
+        [disableAtLimit]="true"
+      ></app-employee-picker>
+      <label
+        >עדיפות<select name="taskPriority" [(ngModel)]="vm.taskForm.priority">
+          <option value="low">נמוכה</option>
+          <option value="medium">בינונית</option>
+          <option value="high">גבוהה</option>
+        </select></label
+      >
+      <label
+        >מועד<input
+          name="taskDue"
+          type="date"
+          [(ngModel)]="vm.taskForm.due"
+          required
+      /></label>
+      <div class="form-pair">
+        <label>הערכת שעות<input name="taskEstimate" type="number" min="0" step="0.5" [(ngModel)]="vm.taskForm.estimatedHours" /></label>
+        <label>תלויה במשימה<select name="taskDependency" [(ngModel)]="vm.taskForm.dependencyTaskId"><option [ngValue]="0">ללא תלות</option><option *ngFor="let task of vm.tasks" [ngValue]="task.id" [disabled]="task.id === vm.editingTaskId">{{ task.title }}</option></select></label>
+      </div>
+      <label>תגיות<input name="taskLabels" [(ngModel)]="vm.taskForm.labels" placeholder="Frontend, בדיקה, לקוח" /><small>יש להפריד בין תגיות בפסיק</small></label>
+      <button class="primary" type="submit">
+        {{ vm.editingTaskId === null ? "יצירת משימה ושליחת התראה" : "שמירת שינויים" }}
+      </button>
+    </form>
+
+    <form class="modern-form employee-form" *ngIf="vm.modal === 'employee'" (ngSubmit)="vm.saveEmployee()">
+      <h2>עובד חדש</h2>
+      <label
+        >שם מלא<input
+          name="employeeName"
+          [(ngModel)]="vm.employeeForm.name"
+          required
+      /></label>
+      <label
+        >דואר אלקטרוני<input
+          name="employeeEmail"
+          type="email"
+          [(ngModel)]="vm.employeeForm.email"
+          required
+      /></label>
+      <label
+        >סיסמה ראשונית<input
+          name="employeePassword"
+          type="password"
+          minlength="8"
+          pattern="(?=.*[A-Za-z])(?=.*\d).{8,}"
+          [(ngModel)]="vm.employeeForm.password"
+          required
+        /><small>לפחות 8 תווים הכוללים אות ומספר. העובד יוכל להתחבר איתה.</small></label
+      >
+      <label
+        >טלפון<input name="employeePhone" [(ngModel)]="vm.employeeForm.phone"
+      /></label>
+      <label
+        >קורות חיים<input
+          name="employeeCv"
+          type="file"
+          accept=".pdf,.doc,.docx"
+          (change)="vm.onCvSelected($event)"
+        /><small>PDF, DOC או DOCX — עד 5MB</small></label
+      >
+      <label
+        >שכר לשעה<input
+          name="employeeRate"
+          type="number"
+          min="0"
+          [(ngModel)]="vm.employeeForm.rate"
+      /></label>
+      <label
+        >מגבלת משימות<input
+          name="employeeLimit"
+          type="number"
+          min="1"
+          [(ngModel)]="vm.employeeForm.limit"
+      /></label>
+      <label
+        >תפקיד<select name="employeeRole" [(ngModel)]="vm.employeeForm.role">
+          <option value="employee">עובד/ת</option>
+          <option value="admin">מנהל/ת</option>
+        </select></label
+      >
+      <button class="primary" type="submit">שמירת העובד החדש</button>
+    </form>
+
+    <div *ngIf="vm.modal === 'team' && vm.selectedProject">
+      <h2>צוות {{ vm.selectedProject.name }}</h2>
+      <div class="team-person" *ngFor="let e of vm.team(vm.selectedProject)">
+        <div class="avatar">{{ e.name[0] }}</div>
+        <span
+          ><b>{{ e.name }}</b
+          ><small>{{ e.email }}</small></span
+        >
+      </div>
+      <p *ngIf="!vm.team(vm.selectedProject).length">לפרויקט אין עדיין צוות</p>
+    </div>
+
+    <div *ngIf="vm.modal === 'projectView' && vm.selectedProject">
+      <h2>{{ vm.selectedProject.name }}</h2>
+      <div class="project-details">
+        <p><b>תיאור:</b> {{ vm.selectedProject.description || "ללא תיאור" }}</p>
+        <p><b>מנהל יוצר:</b> {{ vm.name(vm.selectedProject.managerId) }}</p>
+        <p>
+          <b>תאריך יצירה:</b>
+          {{ vm.selectedProject.createdAt | date: "dd/MM/yyyy" }}
+        </p>
+        <p>
+          <b>מועד סיום:</b> {{ vm.selectedProject.due | date: "dd/MM/yyyy" }}
+        </p>
+        <p><b>סטטוס:</b> {{ vm.statusText(vm.selectedProject.status) }}</p>
+        <p><b>התקדמות:</b> {{ vm.progress(vm.selectedProject) }}%</p>
+        <p>
+          <b>מספר משימות:</b>
+          {{ vm.projectTasks(vm.selectedProject.id).length }}
+        </p>
+        <p><b>חברי צוות:</b> {{ vm.team(vm.selectedProject).length }}</p>
+        <p><b>רמת סיכון:</b> {{ vm.projectRisk(vm.selectedProject) }} ({{ vm.projectRiskScore(vm.selectedProject) }}/100)</p>
+        <p><b>תקציב:</b> {{ vm.selectedProject.budget || 0 | number:'1.0-0' }} ₪</p>
+        <p><b>שעות מתוכננות:</b> {{ vm.selectedProject.plannedHours || 0 }}</p>
+        <p *ngIf="vm.selectedProject.externalLink"><a [href]="vm.selectedProject.externalLink" target="_blank" rel="noopener">פתיחת מסמכי הפרויקט</a></p>
+      </div>
+      <section class="milestones-box">
+        <h3>אבני דרך</h3>
+        <button class="milestone" *ngFor="let item of vm.milestonesFor(vm.selectedProject.id)" [class.completed]="item.status === 'completed'" (click)="vm.role === 'admin' && vm.toggleMilestone(item)"><span class="app-icon">{{ item.status === 'completed' ? 'check_circle' : 'radio_button_unchecked' }}</span><b>{{ item.title }}</b><small>{{ item.dueDate | date:'dd/MM/yyyy' }}</small></button>
+        <p *ngIf="!vm.milestonesFor(vm.selectedProject.id).length">עדיין לא נוספו אבני דרך</p>
+        <form class="milestone-form" *ngIf="vm.role === 'admin'" (ngSubmit)="vm.addMilestone(vm.selectedProject)"><input name="milestoneTitle" [(ngModel)]="vm.milestoneForm.title" placeholder="שם אבן הדרך" required /><input name="milestoneDate" type="date" [(ngModel)]="vm.milestoneForm.dueDate" required /><button class="primary" type="submit">הוספה</button></form>
+      </section>
+    </div>
+
+    <div *ngIf="vm.modal === 'profile'">
+      <h2>פרטים אישיים</h2>
+      <p><b>שם:</b> {{ vm.selectedEmployee?.name }}</p>
+      <p><b>אימייל:</b> {{ vm.selectedEmployee?.email }}</p>
+      <p><b>טלפון:</b> {{ vm.selectedEmployee?.phone }}</p>
+      <p><b>שכר לשעה:</b> {{ vm.selectedEmployee?.rate }} ₪</p>
+      <p><b>תאריך הצטרפות:</b> {{ vm.selectedEmployee?.createdAt }}</p>
+      <p *ngIf="vm.selectedEmployee?.blockedAt">
+        <b>תאריך חסימה:</b> {{ vm.selectedEmployee?.blockedAt }}
+      </p>
+      <p><b>קורות חיים:</b> {{ vm.selectedEmployee?.cv || "לא הועלה קובץ" }}</p>
+    </div>
+
+    <form class="modern-form notice-form" *ngIf="vm.modal === 'notice'" (ngSubmit)="vm.sendNotice()">
+      <h2>שליחת התראה</h2>
+      <label>שליחה אל</label>
+      <!-- רכיב משותף שמאפשר לחפש ולבחור עובד בלבד. -->
+      <app-employee-picker
+        [employees]="vm.employees"
+        [(selectedId)]="vm.noticeUserId"
+        [allowAll]="true"
+      ></app-employee-picker>
+      <label
+        >הודעה<textarea
+          name="noticeText"
+          [(ngModel)]="vm.noticeText"
+          required
+        ></textarea>
+      </label>
+      <button class="primary" type="submit">שליחה</button>
+    </form>
+  </div>
+</div>

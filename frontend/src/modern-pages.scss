@@ -1,0 +1,9 @@
+/* התאמת הדפים החדשים לערכת NeoTech של שלב 6 */
+@media screen {
+  html body .app-shell :is(.insight-kpis article,.insights-grid>article,.report-kpis article,.report-grid>.panel){background:linear-gradient(145deg,#162744,#0b162a)!important;border:1px solid #2a456d!important;color:#eef5ff!important;box-shadow:0 18px 42px #0004!important}
+  html body .app-shell :is(.insights-page,.reports-page) :is(h2,h3,b,strong,label){color:#eef5ff!important}
+  html body .app-shell :is(.insights-page,.reports-page) :is(p,small){color:#9eb1ca!important}
+  html body .app-shell :is(.scenario-result,.recommendations-card>button){background:#101d35!important;border-color:#2a456d!important;color:#eef5ff!important}
+  html body .app-shell :is(.scenario-result,.recommendations-card>button) :is(p,b){color:#eef5ff!important}
+  html body .app-shell :is(.forecast-track,.capacity-bar,.report-progress){background:#09162b!important}
+}

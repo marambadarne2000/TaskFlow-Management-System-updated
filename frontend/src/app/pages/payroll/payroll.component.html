@@ -1,0 +1,301 @@
+<!-- מסך שכר: המנהל מפיק תלושים והעובד מסנן וצופה בתלושים שלו -->
+<section *ngIf="vm.page === 'payroll'" class="panel payroll-page">
+  <ng-container *ngIf="vm.role === 'admin'; else employeePayroll">
+    <!-- צד מנהל: בחירת עובד וחודש, חישוב שכר והפקת תלוש -->
+    <div class="panel-title">
+      <div>
+        <h2>ניהול שכר ותלושים</h2>
+        <p>ניהול שעות עבודה, תעריפים והפקת תלושי שכר חודשיים</p>
+      </div>
+    </div>
+    <div class="payroll-controls">
+      <div class="employee-picker-field">
+        <label>עובד</label>
+        <!-- רכיב משותף שמאפשר לחפש ולבחור עובד בלבד. -->
+        <app-employee-picker
+          [employees]="vm.employees"
+          [(selectedId)]="vm.payrollEmployeeId"
+        ></app-employee-picker>
+      </div>
+      <label
+        >חודש שכר<input type="month" [(ngModel)]="vm.payrollMonth" /></label
+      ><button class="primary" (click)="vm.generatePayroll()">
+        הפקת תלוש ושליחה לעובד
+      </button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>עובד</th>
+          <th>חודש</th>
+          <th>שעות</th>
+          <th>שכר לשעה</th>
+          <th>שכר כולל</th>
+          <th>זמין לעובד</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of vm.payslips">
+          <td>{{ vm.name(p.userId) }}</td>
+          <td>{{ p.month }}</td>
+          <td>{{ p.hours | number: "1.1-2" }}</td>
+          <td>{{ p.rate }} ₪</td>
+          <td>
+            <b>{{ p.total | currency: "ILS" : "symbol" : "1.0-2" }}</b>
+          </td>
+          <td>החל מ־{{ p.availableFrom }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="finance-note">
+      <b>בקרת שכר:</b> החישוב מבוסס על משמרות מאושרות הכוללות שעת כניסה ושעת
+      יציאה. לאחר ההפקה נשלחת לעובד התראה והתלוש נשמר באזור האישי שלו.
+    </div>
+    <div class="payslip official" *ngIf="vm.payrollPreview as p" [attr.data-payslip-id]="p.id">
+      <ng-container [ngTemplateOutlet]="printSlip" [ngTemplateOutletContext]="{ $implicit: p }"></ng-container>
+      <div class="payslip-head">
+        <div class="brand"><span><span class="app-icon" aria-hidden="true">check_circle</span></span> TaskFlow</div>
+        <div><b>תלוש שכר חודשי</b><small>TaskFlow — מחלקת כספים ומשאבי אנוש</small></div>
+      </div>
+      <div class="payslip-document-meta">
+        <span>מספר תלוש <b>{{ p.id }}</b></span>
+        <span>תקופת שכר <b>{{ p.month }}</b></span>
+        <span>תאריך הפקה <b>{{ p.availableFrom }}</b></span>
+      </div>
+      <div class="employee-info">
+        <span
+          >עובד/ת: <b>{{ vm.name(p.userId) }}</b></span
+        ><span
+          >חודש שכר: <b>{{ p.month }}</b></span
+        ><span
+          >מספר עובד: <b>{{ p.userId }}</b></span
+        ><span
+          >תאריך פרסום: <b>{{ p.availableFrom }}</b></span
+        >
+        <span>דואר אלקטרוני: <b>{{ vm.employee(p.userId)?.email || "לא הוגדר" }}</b></span>
+        <span>טלפון: <b>{{ vm.employee(p.userId)?.phone || "לא הוגדר" }}</b></span>
+      </div>
+      <h3>פירוט ימי עבודה</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>תאריך</th>
+            <th>כניסה</th>
+            <th>יציאה</th>
+            <th>שעות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of vm.payslipDays(p)">
+            <td>{{ a.clockIn | date: "dd/MM/yyyy" }}</td>
+            <td>{{ a.clockIn | date: "HH:mm" }}</td>
+            <td>{{ a.clockOut | date: "HH:mm" }}</td>
+            <td>{{ vm.attendanceHours(a) | number: "1.1-2" }}</td>
+          </tr>
+          <tr *ngIf="!vm.payslipDays(p).length"><td colspan="4">לא נמצאו משמרות סגורות בחודש זה</td></tr>
+        </tbody>
+      </table>
+      <div class="salary-summary">
+        <div>
+          <span>שעות עבודה</span><b>{{ p.hours | number: "1.1-2" }}</b>
+        </div>
+        <div>
+          <span>תעריף לשעה</span
+          ><b>{{ p.rate | currency: "ILS" : "symbol" }}</b>
+        </div>
+        <div>
+          <span>שכר ברוטו</span
+          ><b>{{ p.total | currency: "ILS" : "symbol" }}</b>
+        </div>
+        <div class="deduction">
+          <span>הפרשת עובד לפנסיה — 6%</span
+          ><b>-{{ vm.pension(p) | currency: "ILS" : "symbol" }}</b>
+        </div>
+        <div class="deduction total-deductions"><span>סה״כ ניכויים</span><b>-{{ vm.pension(p) + vm.insurance(p) | currency: "ILS" : "symbol" }}</b></div>
+        <div class="deduction">
+          <span>ניכוי ביטוח — 3.5%</span
+          ><b>-{{ vm.insurance(p) | currency: "ILS" : "symbol" }}</b>
+        </div>
+        <div class="net">
+          <span>נטו לתשלום</span
+          ><b>{{ vm.netSalary(p) | currency: "ILS" : "symbol" }}</b>
+        </div>
+      </div>
+      <div class="payslip-footer">
+        <p class="legal-note">התלוש הופק על בסיס משמרות סגורות, נתוני הנוכחות והתעריף המעודכן של העובד. מסמך זה הופק באופן ממוחשב במערכת TaskFlow.</p>
+        <span>אישור מחלקת שכר: ____________________</span>
+      </div>
+      <button class="print-payslip" (click)="vm.printPayslip(p.id)">הדפסת התלוש</button>
+    </div>
+  </ng-container>
+  <!-- צד עובד: צפייה וסינון של תלושים שהמנהל כבר הפיק -->
+  <ng-template #employeePayroll
+    ><div class="panel-title">
+      <div>
+        <h2>התלושים שלי</h2>
+        <p>ארכיון תלושי השכר שהופקו עבורך לפי חודש ושנה</p>
+      </div>
+    </div>
+    <div class="filter-bar payslip-filters">
+      <label>
+        שנה
+        <select [(ngModel)]="vm.payslipYear">
+          <option value="">כל השנים</option>
+          <option *ngFor="let year of vm.employeePayslipYears" [value]="year">
+            {{ year }}
+          </option>
+        </select>
+      </label>
+      <label>
+        מספר חודש
+        <select [(ngModel)]="vm.payslipMonthNumber">
+          <option value="">כל החודשים</option>
+          <option *ngFor="let month of vm.payslipMonths" [value]="month">
+            חודש {{ month }}
+          </option>
+        </select>
+      </label>
+      <button (click)="vm.clearPayslipFilters()">הצג הכל</button>
+      <span>נמצאו {{ vm.filteredEmployeePayslips.length }} תלושים</span>
+    </div>
+    <div *ngIf="!vm.filteredEmployeePayslips.length" class="empty-state">
+      <h3>לא נמצאו תלושים</h3>
+      <p *ngIf="!vm.employeePayslips.length">המנהל עדיין לא הפיק עבורך תלוש.</p>
+      <p *ngIf="vm.employeePayslips.length">לא נמצא תלוש בשנה ובחודש שנבחרו.</p>
+    </div>
+    <div class="payslip official" *ngFor="let p of vm.filteredEmployeePayslips" [attr.data-payslip-id]="p.id">
+      <ng-container [ngTemplateOutlet]="printSlip" [ngTemplateOutletContext]="{ $implicit: p }"></ng-container>
+      <div class="payslip-head">
+        <div class="brand"><span><span class="app-icon" aria-hidden="true">check_circle</span></span> TaskFlow</div>
+        <div>
+          <b>תלוש שכר</b>
+          <small
+            >חודש {{ p.month.slice(5, 7) }} / {{ p.month.slice(0, 4) }}</small
+          >
+        </div>
+      </div>
+      <div class="payslip-document-meta">
+        <span>מספר תלוש <b>{{ p.id }}</b></span>
+        <span>תקופת שכר <b>{{ p.month }}</b></span>
+        <span>תאריך הפקה <b>{{ p.availableFrom }}</b></span>
+      </div>
+      <div class="employee-info">
+        <span
+          >עובד/ת: <b>{{ vm.currentUser.name }}</b></span
+        ><span
+          >מספר עובד: <b>{{ vm.currentUser.id }}</b></span
+        ><span
+          >מועד פרסום: <b>{{ p.availableFrom }}</b></span
+        ><span
+          >שכר לשעה: <b>{{ p.rate }} ₪</b></span
+        >
+        <span>דואר אלקטרוני: <b>{{ vm.currentUser.email }}</b></span>
+        <span>טלפון: <b>{{ vm.currentUser.phone || "לא הוגדר" }}</b></span>
+      </div>
+      <h3>פירוט ימי עבודה</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>תאריך</th>
+            <th>כניסה</th>
+            <th>יציאה</th>
+            <th>סה״כ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of vm.payslipDays(p)">
+            <td>{{ a.clockIn | date: "dd/MM/yyyy" }}</td>
+            <td>{{ a.clockIn | date: "HH:mm" }}</td>
+            <td>{{ a.clockOut | date: "HH:mm" }}</td>
+            <td>{{ vm.attendanceHours(a) | number: "1.1-2" }}</td>
+          </tr>
+          <tr *ngIf="!vm.payslipDays(p).length"><td colspan="4">לא נמצאו משמרות סגורות בחודש זה</td></tr>
+        </tbody>
+      </table>
+      <div class="salary-summary">
+        <div><span>שעות עבודה</span><b>{{ p.hours | number: "1.1-2" }}</b></div>
+        <div><span>תעריף לשעה</span><b>{{ p.rate | currency: "ILS" : "symbol" }}</b></div>
+        <div>
+          <span>שכר ברוטו</span
+          ><b>{{ p.total | currency: "ILS" : "symbol" }}</b>
+        </div>
+        <div class="deduction">
+          <span>פנסיה 6%</span
+          ><b>-{{ vm.pension(p) | currency: "ILS" : "symbol" }}</b>
+        </div>
+        <div class="deduction total-deductions"><span>סה״כ ניכויים</span><b>-{{ vm.pension(p) + vm.insurance(p) | currency: "ILS" : "symbol" }}</b></div>
+        <div class="deduction">
+          <span>ניכוי ביטוח 3.5%</span
+          ><b>-{{ vm.insurance(p) | currency: "ILS" : "symbol" }}</b>
+        </div>
+        <div class="net">
+          <span>נטו לתשלום</span
+          ><b>{{ vm.netSalary(p) | currency: "ILS" : "symbol" }}</b>
+        </div>
+      </div>
+      <div class="payslip-footer">
+        <p class="legal-note">התלוש מבוסס על משמרות סגורות, נתוני הנוכחות והתעריף האישי המעודכן במערכת. מסמך זה הופק באופן ממוחשב במערכת TaskFlow.</p>
+        <span>אישור מחלקת שכר: ____________________</span>
+      </div>
+      <button class="print-payslip" (click)="vm.printPayslip(p.id)">הדפסת התלוש</button>
+    </div></ng-template
+  >
+</section>
+
+<!-- תבנית הדפסה צפופה המדמה מבנה מקובל של תלוש משכורת בישראל. -->
+<ng-template #printSlip let-p>
+  <div class="print-only-slip">
+    <header class="print-slip-header">
+      <div><strong>TaskFlow</strong><span>מערכת ניהול פרויקטים ומשאבי אנוש</span></div>
+      <div><h1>תלוש משכורת</h1><b>לחודש {{ p.month }}</b></div>
+    </header>
+
+    <table class="print-info-table">
+      <tbody>
+        <tr><th>מספר תלוש</th><td>{{ p.id }}</td><th>תאריך הפקה</th><td>{{ p.availableFrom }}</td><th>אופן תשלום</th><td>העברה בנקאית</td></tr>
+        <tr><th>שם העובד/ת</th><td>{{ vm.name(p.userId) }}</td><th>מספר עובד</th><td>{{ p.userId }}</td><th>תקופת שכר</th><td>{{ p.month }}</td></tr>
+        <tr><th>דואר אלקטרוני</th><td colspan="2">{{ vm.employee(p.userId)?.email || "לא הוגדר" }}</td><th>טלפון</th><td colspan="2">{{ vm.employee(p.userId)?.phone || "לא הוגדר" }}</td></tr>
+      </tbody>
+    </table>
+
+    <div class="print-payroll-columns">
+      <table>
+        <thead><tr><th colspan="4">תשלומים</th></tr><tr><th>רכיב</th><th>כמות</th><th>תעריף</th><th>סכום</th></tr></thead>
+        <tbody><tr><td>שכר עבודה לפי שעות</td><td>{{ p.hours | number: "1.1-2" }}</td><td>{{ p.rate | currency: "ILS" : "symbol" }}</td><td>{{ p.total | currency: "ILS" : "symbol" }}</td></tr></tbody>
+        <tfoot><tr><th colspan="3">שכר ברוטו לפני ניכויים</th><th>{{ p.total | currency: "ILS" : "symbol" }}</th></tr></tfoot>
+      </table>
+      <table>
+        <thead><tr><th colspan="2">ניכויי עובד</th></tr><tr><th>רכיב</th><th>סכום</th></tr></thead>
+        <tbody>
+          <tr><td>מס הכנסה — ללא נתוני מס</td><td>{{ vm.incomeTax(p) | currency: "ILS" : "symbol" }}</td></tr>
+          <tr><td>ביטוח לאומי ובריאות — 3.5%</td><td>{{ vm.insurance(p) | currency: "ILS" : "symbol" }}</td></tr>
+          <tr><td>חלק עובד לפנסיה — 6%</td><td>{{ vm.pension(p) | currency: "ILS" : "symbol" }}</td></tr>
+        </tbody>
+        <tfoot><tr><th>סה״כ ניכויי עובד</th><th>{{ vm.totalDeductions(p) | currency: "ILS" : "symbol" }}</th></tr></tfoot>
+      </table>
+    </div>
+
+    <table class="print-employer-table">
+      <thead><tr><th colspan="4">הפרשות מעסיק — אינן מופחתות משכר הנטו</th></tr></thead>
+      <tbody><tr><th>פנסיה מעסיק — 6.5%</th><td>{{ vm.employerPension(p) | currency: "ILS" : "symbol" }}</td><th>רכיב פיצויים — 6%</th><td>{{ vm.employerSeverance(p) | currency: "ILS" : "symbol" }}</td></tr></tbody>
+    </table>
+
+    <table class="print-totals-table">
+      <tbody>
+        <tr><th>שכר ברוטו</th><td>{{ p.total | currency: "ILS" : "symbol" }}</td><th>סה״כ ניכויים</th><td>{{ vm.totalDeductions(p) | currency: "ILS" : "symbol" }}</td></tr>
+        <tr class="bank-row"><th colspan="3">נטו להעברה לבנק</th><td>{{ vm.netSalary(p) | currency: "ILS" : "symbol" }}</td></tr>
+      </tbody>
+    </table>
+
+    <h2>פירוט נוכחות ששימש לחישוב</h2>
+    <table class="print-attendance-table">
+      <thead><tr><th>תאריך</th><th>כניסה</th><th>יציאה</th><th>שעות</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let a of vm.payslipDays(p)"><td>{{ a.clockIn | date: "dd/MM/yyyy" }}</td><td>{{ a.clockIn | date: "HH:mm" }}</td><td>{{ a.clockOut | date: "HH:mm" }}</td><td>{{ vm.attendanceHours(a) | number: "1.1-2" }}</td></tr>
+        <tr *ngIf="!vm.payslipDays(p).length"><td colspan="4">לא נמצאו משמרות סגורות בחודש זה</td></tr>
+      </tbody>
+    </table>
+
+    <footer><span>מסמך זה הופק באופן ממוחשב במערכת TaskFlow.</span><span>אישור מחלקת שכר: ____________________</span></footer>
+  </div>
+</ng-template>

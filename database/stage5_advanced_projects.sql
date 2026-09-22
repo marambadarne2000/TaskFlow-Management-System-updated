@@ -1,0 +1,20 @@
+USE taskflow_student;
+
+-- השדרוג מוסיף שדות חדשים בלי למחוק פרויקטים קיימים
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS budget DECIMAL(12,2) NOT NULL DEFAULT 0;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS planned_hours DECIMAL(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS priority ENUM('low', 'medium', 'high', 'critical') NOT NULL DEFAULT 'medium';
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS tags VARCHAR(500) NOT NULL DEFAULT '';
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS external_link VARCHAR(500) NULL;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS archived_at DATETIME NULL;
+
+CREATE TABLE IF NOT EXISTS project_milestones (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  project_id INT NOT NULL,
+  title VARCHAR(150) NOT NULL,
+  due_date DATE NOT NULL,
+  status ENUM('pending', 'completed') NOT NULL DEFAULT 'pending',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
